@@ -11,28 +11,28 @@ export class Cliente extends HTMLElement {
         const container = document.createElement('div');
         container.id = 'cliente-container';
         container.innerHTML = /*html*/`
-        <form class="needs-validation formCliente bg-dark p-2 rounded" novalidate>
-        <h2 class="text-white">Cliente</h2>
-        <div class="container">
-        <div class="form-group">
-          <label for="validationCustom05" class="form-label text-white">Celular</label>
-          <input type="number" class="form-control" id="validationCustom05" required>
-          <div class="invalid-feedback">
-            Debe tener 10 dígitos mínimo.
-          </div>
-        </div>
-        <div class="form-group">
-          <label for="validationCustom01" class="form-label text-white">Nombre y apellido</label>
-          <input type="text" class="form-control" id="validationCustom01" required>
-          <div class="invalid-feedback">
-            Debe tener un nombre.
-          </div>
-        </div>
-        <div class="form-group mx-auto" style="margin-top:10px;">
-          <button id="btnGuardarCliente" class="btn btn-primary" type="submit">Guardar</button>
-        </div>
-        </div>
-      </form>
+            <form class="needs-validation formCliente bg-dark p-2 rounded" novalidate>
+                <h2 class="text-white">Cliente</h2>
+                <div class="container">
+                    <div class="form-group">
+                        <label for="validationCustom05" class="form-label text-white">Celular</label>
+                        <input type="number" class="form-control" id="validationCustom05" required>
+                        <div class="invalid-feedback">
+                            Debe tener 10 dígitos mínimo.
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="validationCustom01" class="form-label text-white">Nombre y apellido</label>
+                        <input type="text" class="form-control" id="validationCustom01" required>
+                        <div class="invalid-feedback">
+                            Debe tener un nombre.
+                        </div>
+                    </div>
+                    <div class="form-group mx-auto" style="margin-top:10px;">
+                        <button id="btnGuardarCliente" class="btn btn-primary" type="submit">Guardar</button>
+                    </div>
+                </div>
+            </form>
         `;
         this.appendChild(container);
         this.$celular = this.querySelector('#validationCustom05');
@@ -47,6 +47,9 @@ export class Cliente extends HTMLElement {
 
         this.$celular.classList.remove('is-valid');
         this.$nombre.classList.remove('is-valid');
+
+        //eliminar la clase was-validated}
+        this.querySelector('.formCliente').classList.remove('was-validated');
 
         //habilitar el boton guardar
         this.$celular.disabled = false;

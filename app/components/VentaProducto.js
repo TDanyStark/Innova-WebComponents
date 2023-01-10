@@ -24,7 +24,7 @@ export class VentaProducto extends HTMLElement {
         
         <busqueda-producto-element ></busqueda-producto-element>
         <hr />
-        <h3 class="text-center">Cliente: <span id="clienteName">Cliente</span> - <span class="text-center" id="clienteId">Celular</span> </h3>
+        <h3 class="text-center" style="color:#fff;">Cliente: <span id="clienteName">Cliente</span> - <span class="text-center" id="clienteId">Celular</span> </h3>
         <hr />
 
         <div class="tablaProductos rounded">

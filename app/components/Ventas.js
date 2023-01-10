@@ -13,7 +13,7 @@ export class Ventas extends HTMLElement {
             <div class="container">
                 <div class="row">
                     <div class="col-12">
-                        <h1 class="text-center" style="cursor:pointer;">Ventas</h1>
+                        <h1 class="text-center" style="cursor:pointer; color:#fff;">Ventas</h1>
                         
                     </div>
                     <div id="clienteElement" class="col-12 col-md-4">
