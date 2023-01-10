@@ -63,7 +63,11 @@ export class Header extends HTMLElement {
                         ${estadoSesion.email.split('@')[0].toUpperCase()}
                     </a>
                     <ul class="dropdown-menu dropdown-menu-end">
-                        <li><a class="dropdown-item" href="#">Configuracion</a></li>
+                    ${window.isAdmin ? /*html*/`
+                        <li><a class="dropdown-item" href="#/usuarios">Usuarios</a></li>
+                        ` : ''
+                    }
+                        <li><a class="dropdown-item" href="#/configuracion">Configuracion</a></li>
                         <li><hr class="dropdown-divider"></li>
                         <li><btn-cerrar-sesion></btn-cerrar-sesion></li>
                     </ul>
