@@ -41,10 +41,14 @@ export class VentaProducto extends HTMLElement {
                 </thead>
             <tbody id="bodyTabla"></tbody>
             <tfoot>
+                <tr id="trAbono" class="d-none">
+                    <td class="tfootAbono bg-dark" colspan="3" style="text-align:right;">Abono: </td>
+                    <td id="filaAbono" colspan="3"><input class="inputAbono" type="number" pattern="[0-9]*" oninput="this.value = this.value.replace(/[^0-9]/g, '');" /></td>
+                </tr>
                 <tr>
                     <td class="tfootDescuento bg-dark">Descuento</td>
                     <td id="filaDescuento"><input class="inputDescuento" type="number" /></td>
-                    <td class="izquierda phoneNone" colspan="2">Total: </td>
+                    <td style="text-align:right; padding-right: 40px;" colspan="2">Total: </td>
                     <td id="totalVenta">$ 0</td>
                     <td><button type="button" class="btn btn-primary" id="btnCobrarVenta">Cobrar</button></td>
                 </tr>
@@ -58,6 +62,8 @@ export class VentaProducto extends HTMLElement {
         this.$clienteName = this.querySelector('#clienteName');
         this.$clienteId = this.querySelector('#clienteId');
         this.cliente = {}
+        this.$filaAbono = this.querySelector("#trAbono");
+        this.$inputAbono = this.querySelector(".inputAbono");
 
     }
 
@@ -124,6 +130,7 @@ export class VentaProducto extends HTMLElement {
             sumarTotal();
         }
         agregarProducto(e.detail);
+        this.$filaAbono.classList.remove("d-none");
     }
 
     async clickHandler(e) {
@@ -169,6 +176,17 @@ export class VentaProducto extends HTMLElement {
                 });
                 return;
             }
+            // comprobar si el abono es mayor al total de la venta
+            let totalVenta = parseInt($this.querySelector("#totalVenta").dataset.total);
+            if (this.$inputAbono.value > totalVenta) {
+                this.$inputAbono.value = ""; 
+                Swal.fire({
+                    icon: "error",
+                    title: "Oops...",
+                    text: "El abono no puede ser mayor al total de la venta",
+                });
+                return;
+            }
             // verificar que usuario esta realizando la venta
             console.log(estadoSesion.email);
               // obtener los productos de la venta
@@ -188,13 +206,25 @@ export class VentaProducto extends HTMLElement {
             });
               // obtener el total de la venta en numero
             let total = parseInt($this.querySelector("#totalVenta").getAttribute("data-total"));
+
+            let abono = parseInt(this.$inputAbono.value);
+            console.log(abono);
+            if (isNaN(abono)) {
+                abono = 0;
+            }
+
+            let descuento = parseInt($this.querySelector(".inputDescuento").value)
+            if (isNaN(descuento)) {
+                descuento = 0;
+            }
               //cliente, productos, total, descuento, vendedor
             let dataVenta = {
                 cliente: $this.cliente.celular,
                 nombre: $this.cliente.nombre,
                 productos: productosVenta,
+                abono,
                 total,
-                descuento: parseInt($this.querySelector(".inputDescuento").value),
+                descuento,
                 vendedor: estadoSesion.email,
             };
             let res = await guardarVenta(dataVenta);
@@ -221,7 +251,9 @@ export class VentaProducto extends HTMLElement {
                     timerProgressBar: true,
                     showConfirmButton: false,
                 }).then(() => {
+                    this.$filaAbono.classList.add("d-none");
                     this.classList.add('d-none');
+                    this.$inputAbono.value = "";
                     document.dispatchEvent(new CustomEvent('ventaRealizada'));
                 });
             }else{
@@ -283,6 +315,10 @@ export class VentaProducto extends HTMLElement {
             $this.querySelector(".inputDescuento").value = "";
             return;
         }
+        //comprobar si el input es el de abono
+        if (e.target.matches('.inputAbono')) {
+            // establecer un dataAttribute para el input abono
+        }
     }
 
     inputHandler(e) {
@@ -327,7 +363,6 @@ export class VentaProducto extends HTMLElement {
             const $tablaVUnitario = $filaTabla.querySelector("#tablaVUnitario");
             let cantidad = parseInt(e.target.value);
             let precio = $tablaVUnitario.dataset.price;
-
             let inventario = parseInt(e.target.dataset.inventario);
             // Validar si el valor ingresado es mayor al valor máximo permitido
             if (cantidad > inventario) {
@@ -337,7 +372,6 @@ export class VentaProducto extends HTMLElement {
                 title: "Oops...",
                 text: "La cantidad ingresada es mayor al inventario",
                 });
-
             // Establecer el valor máximo permitido como el valor del input
             // console.log(inventario);
                 e.target.value = inventario;
@@ -346,7 +380,8 @@ export class VentaProducto extends HTMLElement {
             $tablaVTotal.textContent = milesFuncion(cantidad * precio);
             // sumar el total de la venta
             sumarTotal();
-    }
+            return;
+        }
 }
 
     connectedCallback() {

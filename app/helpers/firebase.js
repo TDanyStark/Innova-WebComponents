@@ -205,7 +205,7 @@ export let buscarProductoDescripcionLike = async (descripcion) => {
 
 //guardar en la base de datos firestore una venta
 export let guardarVenta = async (data) => {
-  let { cliente, nombre, productos, total, descuento, vendedor } = data;
+  let { cliente, nombre, productos, abono, total, descuento, vendedor } = data;
   let id = new Date().getTime();
   id = id.toString();
   const docData = {
@@ -214,6 +214,7 @@ export let guardarVenta = async (data) => {
     cliente,
     nombre,
     productos,
+    abono,
     total,
     descuento,
     vendedor,
