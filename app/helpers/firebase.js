@@ -205,7 +205,7 @@ export let buscarProductoDescripcionLike = async (descripcion) => {
 
 //guardar en la base de datos firestore una venta
 export let guardarVenta = async (data) => {
-  let { cliente, nombre, productos, abono, total, descuento, vendedor } = data;
+  let { cliente, nombre, productos, abono, total, descuento, vendedor, StinVenta } = data;
   let id = new Date().getTime();
   id = id.toString();
   const docData = {
@@ -218,6 +218,7 @@ export let guardarVenta = async (data) => {
     total,
     descuento,
     vendedor,
+    StinVenta,
   };
   // console.log(docData);
   try {
@@ -228,4 +229,25 @@ export let guardarVenta = async (data) => {
     return false;
   }
 };
+
+export let obtenerData = async (collectionName) => {
+  const querySnapshot = await getDocs(collection(db, collectionName));
+  let docs = [];
+  querySnapshot.forEach((doc) => {
+    docs.push({ id: doc.id, ...doc.data() });
+  });
+  return docs;
+};
+
+export let eliminarData = async (collectionName, id) => {
+  try {
+    await deleteDoc(doc(db, collectionName, id));
+    return true;
+  } catch (e) {
+    console.log(e);
+    return false;
+  }
+}
+
+
 export { estadoSesion };

@@ -1,5 +1,5 @@
 import { clienteFound, guardarCliente } from '../helpers/firebase.js';
-let $nombre, $celular, form;
+let form;
 export class Cliente extends HTMLElement {
     constructor() {
         super();

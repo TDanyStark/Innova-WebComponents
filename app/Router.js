@@ -2,6 +2,7 @@ import { Login } from "./components/Login.js";
 import { Counter } from "./components/Counter.js";
 import { Home } from "./components/Home.js";
 import { Ventas } from "./components/Ventas.js";
+import { Clientes } from "./components/Clientes.js";
 import { estadoSesion, Admin } from "./helpers/firebase.js";
 
 
@@ -37,8 +38,10 @@ export async function Router(){
     } else if(hash.includes('#/ventas')){
         $root.innerHTML = '<ventas-element></ventas-element>';
     } else if(hash === '#/login'){
-        console.log('login here');
         $root.innerHTML = '<login-element></login-element>';
+    } else if(hash === '#/clientes'){
+        $root.innerHTML = "";
+        $root.innerHTML = '<clientes-element></clientes-element>';
     } else {
         $root.innerHTML = '<h1>Ruta no disponible</h1>';
     }

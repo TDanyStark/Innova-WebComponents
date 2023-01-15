@@ -50,7 +50,7 @@ export class Header extends HTMLElement {
                     </li>
                     
                     <li class="nav-item">
-                    <a class="nav-link disabled">Disabled</a>
+                        <a class="nav-link" data-url="#/cuentas" href="#/cuentas">cuentas</a>
                     </li>
                 </ul>
                 <ul class="navbar-nav">

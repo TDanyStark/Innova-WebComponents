@@ -190,6 +190,8 @@ export class VentaProducto extends HTMLElement {
             // verificar que usuario esta realizando la venta
             console.log(estadoSesion.email);
               // obtener los productos de la venta
+            let StinVenta = false;
+
             let productosVenta = [];
             let $filasTabla = $this.querySelectorAll("#bodyTabla tr");
             $filasTabla.forEach((fila) => {
@@ -203,6 +205,9 @@ export class VentaProducto extends HTMLElement {
                     total: cantidad * precio,
                 };
                 productosVenta.push(producto);
+                if (fila.children[1].textContent.includes("Servicio Tecnico")) {
+                    StinVenta = true;
+                }
             });
               // obtener el total de la venta en numero
             let total = parseInt($this.querySelector("#totalVenta").getAttribute("data-total"));
@@ -226,6 +231,7 @@ export class VentaProducto extends HTMLElement {
                 total,
                 descuento,
                 vendedor: estadoSesion.email,
+                StinVenta,
             };
             let res = await guardarVenta(dataVenta);
             console.log(res);
