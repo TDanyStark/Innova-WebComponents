@@ -76,7 +76,6 @@ export class ListClientes extends HTMLElement {
                 <td>
                     <button class="btn btn-success" id="btnVerCliente" data-cliente="${cliente.id}">Ver</button>
                     <button class="btn btn-danger" id="btnEliminarCliente" data-cliente="${cliente.id}">Eliminar</button>
-
                 </td>
             `;
             tableBody.appendChild(tr);
@@ -222,7 +221,7 @@ export class ListClientes extends HTMLElement {
 
         this.addEventListener('click', this.clickHandler);
     }
-    
+
     disconnectedCallback() {
         this.$prevPageBtn.removeEventListener('click', () => {
             if (this.currentPage > 1) {

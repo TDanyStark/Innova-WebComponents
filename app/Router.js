@@ -3,6 +3,7 @@ import { Counter } from "./components/Counter.js";
 import { Home } from "./components/Home.js";
 import { Ventas } from "./components/Ventas.js";
 import { Clientes } from "./components/Clientes.js";
+import { Inventario } from "./components/Inventario.js";
 import { estadoSesion, Admin } from "./helpers/firebase.js";
 
 
@@ -34,14 +35,20 @@ export async function Router(){
     }
     console.log(window.isAdmin)
     if(hash === '#/home'){
+        $root.innerHTML = "";
         $root.innerHTML = '<home-element></home-element>';
     } else if(hash.includes('#/ventas')){
+        $root.innerHTML = "";
         $root.innerHTML = '<ventas-element></ventas-element>';
     } else if(hash === '#/login'){
+        $root.innerHTML = "";
         $root.innerHTML = '<login-element></login-element>';
     } else if(hash === '#/clientes'){
         $root.innerHTML = "";
         $root.innerHTML = '<clientes-element></clientes-element>';
+    } else if(hash === '#/inventario'){
+        $root.innerHTML = "";
+        $root.innerHTML = '<inventario-element></inventario-element>';
     } else {
         $root.innerHTML = '<h1>Ruta no disponible</h1>';
     }
