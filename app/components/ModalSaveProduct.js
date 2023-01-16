@@ -82,6 +82,7 @@ export class ModalSaveProduct extends HTMLElement {
             if (res) {
                 Swal.fire('success', 'Producto guardado correctamente').then(() => {
                     this.ventanaModal.hide();
+                    document.dispatchEvent(new CustomEvent('productoFound', { bubbles: true, detail: producto }));
                 });
             } else {
                 Swal.fire('error', 'No se pudo guardar el producto');
@@ -119,7 +120,7 @@ export class ModalSaveProduct extends HTMLElement {
             this.$proveedor.disabled = true;
 
 
-            this.$descripcion.value = 'Servicio Tecnico';
+            this.$descripcion.value = 'Servicio Tecnico ' + precio + 'K';
             this.$cantidadInventario.value = 1;
             this.$precioUnidad.value = parseInt(precio*1000);
             this.$proveedor.value = 'Servicio Tecnico';
@@ -136,6 +137,12 @@ export class ModalSaveProduct extends HTMLElement {
         console.log('Se ha agregado el componente');
         this.addEventListener('click', this.clickHandler);
         document.addEventListener('saveProduct', this.saveProductHandler);
+    }
+
+    disconnectedCallback() {
+        console.log('Se ha eliminado el componente');
+        this.removeEventListener('click', this.clickHandler);
+        document.removeEventListener('saveProduct', this.saveProductHandler);
     }
 }
 

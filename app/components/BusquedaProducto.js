@@ -14,6 +14,7 @@ export class BusquedaProducto extends HTMLElement {
         this.inputHandler = this.inputHandler.bind(this);
         this.clickulHandler = this.clickulHandler.bind(this);
         this.clientFoundHandler = this.clientFoundHandler.bind(this);
+        this.clickResultadosHandler = this.clickResultadosHandler.bind(this);
 
         const container = document.createElement('div');
         container.id = 'busquedaProducto-container';
@@ -86,6 +87,11 @@ export class BusquedaProducto extends HTMLElement {
                         title: "El producto ya existe en la tabla",
                         showConfirmButton: false,
                         timer: 1000,
+                    }).then(()=>{
+                        this.$busquedaID.value = '';
+                        this.$busquedaDescripcion.value = '';
+                        this.$busquedaID.focus();
+
                     });
                     return;
                 }
@@ -166,11 +172,18 @@ export class BusquedaProducto extends HTMLElement {
         document.dispatchEvent(new CustomEvent('productoFound', { bubbles: true, detail: res }));
     }
 
+    clickResultadosHandler(e) {
+        this.$busquedaDescripcion.value = "";
+        this.$resultadosDescripcion.innerHTML = "";
+        this.$resultadosDescripcion.classList.add("d-none");
+    }
+
     connectedCallback() {
         document.addEventListener('clienteFound', this.clientFoundHandler);
         this.$busquedaID.addEventListener('keyup', this.keyupHandler);
         this.addEventListener('input', this.inputHandler);
         this.$resultadosDescripcion.addEventListener('click', this.clickulHandler);
+        this.addEventListener('click', this.clickResultadosHandler);
     }
 
     disconnectedCallback() {
@@ -178,6 +191,7 @@ export class BusquedaProducto extends HTMLElement {
         this.$busquedaID.removeEventListener('keyup', this.keyupHandler);
         this.removeEventListener('input', this.inputHandler);
         this.$resultadosDescripcion.removeEventListener('click', this.clickulHandler);
+        this.removeEventListener('click', this.clickResultadosHandler);
     }
 }
 customElements.define('busqueda-producto-element', BusquedaProducto);
