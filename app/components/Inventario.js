@@ -1,14 +1,18 @@
 import { BusquedaProducto } from "./BusquedaProducto.js";
 import { Header } from "./Header.js";
 import { ListInventario } from "./ListInventario.js";
+import { ModalSaveProduct } from "./ModalSaveProduct.js";
+
 
 export class Inventario extends HTMLElement {
     constructor() {
         super();
+        // bind 
         const container = document.createElement('div');
         container.id = 'inventario-container';
         container.innerHTML = /*html*/`
             <header-element></header-element>
+            <modal-save-product-element></modal-save-product-element>
             <div class="container">
                 <div class="row">
                     <div class="col-12">
@@ -24,7 +28,9 @@ export class Inventario extends HTMLElement {
             </div>
             `;
         this.appendChild(container);
+
     }
+
 }
 
 customElements.define('inventario-element', Inventario);

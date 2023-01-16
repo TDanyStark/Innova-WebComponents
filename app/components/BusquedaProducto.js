@@ -65,26 +65,10 @@ export class BusquedaProducto extends HTMLElement {
         if (e.key === 'Enter') {
             let res = await buscarProducto(this.$busquedaID.value);
             if (res === false) {
-                Swal.fire({
-                    title: 'Producto no encontrado, que desea hacer?',
-                    showDenyButton: true,
-                    showCancelButton: true,
-                    confirmButtonText: 'Guardar',
-                    denyButtonText: `Buscar por Descripcion`,
-                    }).then((result) => {
-                        /* Read more about isConfirmed, isDenied below */
-                        if (result.isConfirmed) {
-                            Swal.fire('Saved!', '', 'success')
-                        } else if (result.isDenied) {
-                            this.$busquedaID.value = '';
-                            this.$busquedaDescripcion.value = '';
-                            setTimeout(() => {
-                            this.$busquedaDescripcion.focus();
-                            }, 300);
-                            
-                        }
-                    })
-                    return;
+                document.dispatchEvent(new CustomEvent('saveProduct', { bubbles: true, detail: this.$busquedaID.value }));
+                this.$busquedaDescripcion.value = '';
+                this.$busquedaDescripcion.focus();
+                return;
             }else{
                 async function revisarProducto(id) {
                     const $filasTabla = Array.from(document.querySelectorAll(".filaTabla"));

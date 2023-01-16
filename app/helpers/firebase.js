@@ -156,7 +156,6 @@ export let guardarCliente = async (data) => {
 export let guardarProducto = async (data) => {
   let { id, descripcion, precio, cantidad_inventario, proveedor } = data;
   // console.log(data);
-  let idEnvio = id;
   let docData = {
     id,
     descripcion,
@@ -164,6 +163,7 @@ export let guardarProducto = async (data) => {
     cantidad_inventario,
     proveedor,
   };
+  console.log(docData)
   try {
     await setDoc(doc(db, "productos", id), docData);
     return true;
@@ -248,6 +248,41 @@ export let eliminarData = async (collectionName, id) => {
     return false;
   }
 }
+
+export let editarData = async (collectionName, id, data) => {
+  try {
+    await updateDoc(doc(db, collectionName, id), data);
+    return true;
+  } catch (e) {
+    console.log(e);
+    return false;
+  }
+}
+
+// const citiesRef = collection(db, "productos");
+
+// await setDoc(doc(citiesRef, "SF"), {
+//   cantidad_inventario: 10, descripcion: "CAasdasdasd", id: "SF",
+//     precio: 20000, proveedor: "jyr" });
+
+// await setDoc(doc(citiesRef, "LA"), {
+//   cantidad_inventario: 10, descripcion: "CAasdasdasd", id: "LA",
+//     precio: 20000, proveedor: "jyr" });
+
+// await setDoc(doc(citiesRef, "DC"), {
+//   cantidad_inventario: 10, descripcion: "CAasdasdasd", id: "DC",
+//     precio: 20000, proveedor: "jyr" });
+
+// await setDoc(doc(citiesRef, "TOK"), {
+//   cantidad_inventario: 10, descripcion: "CAasdasdasd", id: "TOK",
+//     precio: 20000, proveedor: "jyr" });
+
+// await setDoc(doc(citiesRef, "BJ"), {
+//   cantidad_inventario: 10, descripcion: "CAasdasdasd", id: "BJ",
+//     precio: 20000, proveedor: "jyr" });
+
+
+
 
 
 export { estadoSesion };

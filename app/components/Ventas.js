@@ -1,6 +1,8 @@
 import { Cliente } from "./Cliente.js";
 import { Header } from "./Header.js";
 import { VentaProducto } from "./VentaProducto.js";
+import { ModalSaveProduct } from "./ModalSaveProduct.js";
+
 export class Ventas extends HTMLElement {
     constructor() {
         super();
@@ -10,6 +12,7 @@ export class Ventas extends HTMLElement {
         container.id = 'ventas-container';
         container.innerHTML = /*html*/`
             <header-element></header-element>
+            <modal-save-product-element></modal-save-product-element>
             <div class="container">
                 <div class="row">
                     <div class="col-12">
