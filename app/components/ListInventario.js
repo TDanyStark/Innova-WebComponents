@@ -8,6 +8,8 @@ export class ListInventario extends HTMLElement {
         this.clickHandler = this.clickHandler.bind(this);
         this.pintarProductos = this.pintarProductos.bind(this);
         this.keyupHandler = this.keyupHandler.bind(this);
+        this.productoFoundHandler = this.productoFoundHandler.bind(this);
+
         const container = document.createElement('div');
         container.id = 'list-inventario-container';
         container.innerHTML = /*html*/`
@@ -17,8 +19,10 @@ export class ListInventario extends HTMLElement {
                         <th scope="col" class="col-sm-3 col-md-3 col-lg-2">ID</th>
                         <th scope="col" class="col-sm-3 col-md-3 col-lg-2">Descripcion</th>
                         <th scope="col" class="col-sm-3 col-md-3 col-lg-2">Cantidad Inventario</th>
-                        <th scope="col" class="col-sm-3 col-md-3 col-lg-2">Precio</th>
+                        <th scope="col" class="col-sm-3 col-md-3 col-lg-2">Precio Compra</th>
+                        <th scope="col" class="col-sm-3 col-md-3 col-lg-2">Precio Final</th>
                         <th scope="col" class="col-sm-3 col-md-3 col-lg-2">Proveedor</th>
+                        <th scope="col" class="col-sm-3 col-md-3 col-lg-2">User</th>
                         <th scope="col" class="col-sm-3 col-md-3 col-lg-2">Accion</th>
                     </tr>
                 </thead>
@@ -48,8 +52,10 @@ export class ListInventario extends HTMLElement {
                     <td data-id="true">${producto.id}</td>
                     <td class="form-control-sm">${producto.descripcion}</td>
                     <td>${producto.cantidad_inventario}</td>
+                    <td>${producto.precio_compra}</td>
                     <td>${producto.precio}</td>
                     <td class="form-control-sm">${producto.proveedor}</td>
+                    <td>${producto.usuario}</td>
                     <td>
                         <button class="btn btn-danger" id="btn-delete" data-id="${producto.id}"><i data-id="${producto.id}"  class="fa fa-trash"></i></button>
                     </td>
@@ -108,6 +114,14 @@ export class ListInventario extends HTMLElement {
         // comprobar si es el input inputEditActive
         if( e.target.matches('.inputEditActive')){
             if(e.key == 'Enter'){
+                if(e.target.value == '') {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Oops...',
+                        text: 'No puedes dejar campos vacios!',
+                    })
+                    return;
+                };
                 const input = e.target;
                 const value = input.value;
                 const td = input.parentNode;
@@ -128,15 +142,24 @@ export class ListInventario extends HTMLElement {
         }
     }
 
+    productoFoundHandler(e) {
+        console.log(e.detail);
+        //eliminar la tabla
+        $('#tablaProductos').DataTable().destroy();
+        this.pintarProductos();
+        }
+
     connectedCallback() {
         this.pintarProductos();
         this.addEventListener('click', this.clickHandler);
         this.addEventListener('keyup', this.keyupHandler);
+        document.addEventListener('productoFound', this.productoFoundHandler);
     }
 
     disconnectedCallback() {
         this.removeEventListener('click', this.clickHandler);
         this.removeEventListener('keyup', this.keyupHandler);
+        document.removeEventListener('productoFound', this.productoFoundHandler);
     }
 }
 

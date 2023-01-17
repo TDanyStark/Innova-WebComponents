@@ -67,6 +67,7 @@ export class BusquedaProducto extends HTMLElement {
             let res = await buscarProducto(this.$busquedaID.value);
             if (res === false) {
                 document.dispatchEvent(new CustomEvent('saveProduct', { bubbles: true, detail: this.$busquedaID.value }));
+                this.$busquedaID.value = '';
                 this.$busquedaDescripcion.value = '';
                 this.$busquedaDescripcion.focus();
                 return;
