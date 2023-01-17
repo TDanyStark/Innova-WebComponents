@@ -37,16 +37,24 @@ export async function Router(){
     if(hash === '#/home'){
         $root.innerHTML = "";
         $root.innerHTML = '<home-element></home-element>';
-    } else if(hash.includes('#/ventas')){
-        $root.innerHTML = "";
-        $root.innerHTML = '<ventas-element></ventas-element>';
     } else if(hash === '#/login'){
         $root.innerHTML = "";
         $root.innerHTML = '<login-element></login-element>';
+    } else if(hash.includes('#/ventas')){
+        $root.innerHTML = "";
+        $root.innerHTML = '<ventas-element></ventas-element>';
     } else if(hash === '#/clientes'){
+        if(!window.isAdmin){
+            $root.innerHTML = '<h1>Acceso denegado</h1>';
+            return;
+        }
         $root.innerHTML = "";
         $root.innerHTML = '<clientes-element></clientes-element>';
     } else if(hash === '#/inventario'){
+        if(!window.isAdmin){
+            $root.innerHTML = '<h1>Acceso denegado</h1>';
+            return;
+        }
         $root.innerHTML = "";
         $root.innerHTML = '<inventario-element></inventario-element>';
     } else {

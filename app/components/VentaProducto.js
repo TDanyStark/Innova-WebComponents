@@ -4,6 +4,7 @@ import {
     guardarProducto,
     guardarVenta,
     estadoSesion,
+    editDocMerge,
 } from "../helpers/firebase.js";
 
 import { BusquedaProducto } from "./BusquedaProducto.js";
@@ -119,7 +120,7 @@ export class VentaProducto extends HTMLElement {
                 <td data-th="Cantidad: " data-id=${props.id} >
                     <input class="filaCantidad" style="width:90%;" type="number" min="1" value= "1" data-id=${props.id} data-inventario=${props.cantidad_inventario} />
                 </td>
-                <td data-th="V. Unitario: " id="tablaVUnitario" data-id=${props.id} data-price=${props.precio}>${milesFuncion(props.precio)}</td>
+                <td data-th="V. Unitario: " id="tablaVUnitario" data-pricesale="${props.precio_compra}" data-id=${props.id} data-price=${props.precio}>${milesFuncion(props.precio)}</td>
                 <td data-th="V. Total: " id="tablaVTotal" data-id=${props.id}>${milesFuncion(props.precio)}</td>
                 <td data-th="Accion: " data-id=${props.id}>
                     <button id="btnEliminar" class="btn btn-danger" type="button" data-id=${props.id}>Eliminar</button>
@@ -193,6 +194,7 @@ export class VentaProducto extends HTMLElement {
             let StinVenta = false;
 
             let productosVenta = [];
+            let cantidadyInventario = [];
             let $filasTabla = $this.querySelectorAll("#bodyTabla tr");
             $filasTabla.forEach((fila) => {
                 let cantidad = parseInt(fila.children[2].children[0].value)
@@ -204,11 +206,19 @@ export class VentaProducto extends HTMLElement {
                     precio: precio,
                     total: cantidad * precio,
                 };
+
+                cantidadyInventario.push({
+                    id: fila.children[0].textContent,
+                    cantidad: cantidad,
+                    inventario: parseInt(fila.children[2].children[0].getAttribute("data-inventario")),
+                });
+
                 productosVenta.push(producto);
                 if (fila.children[1].textContent.includes("Servicio Tecnico")) {
                     StinVenta = true;
                 }
             });
+            console.log(cantidadyInventario);
               // obtener el total de la venta en numero
             let total = parseInt($this.querySelector("#totalVenta").getAttribute("data-total"));
 
@@ -234,10 +244,17 @@ export class VentaProducto extends HTMLElement {
                 StinVenta,
             };
             let res = await guardarVenta(dataVenta);
-            console.log(res);
+            // editar el stock de los productos
 
+            console.log(res);
             if (res === true) {
                 //limpiar los elementos de la venta
+                cantidadyInventario.forEach(async (producto) => {
+                    if(producto.id.startsWith("ST")) return;
+                    let res2 = await editDocMerge("productos", producto.id, { cantidad_inventario: producto.inventario - producto.cantidad });
+                    console.log(res2);
+
+                });
                 $this.querySelector("#bodyTabla").innerHTML = "";
                 $this.querySelector("#totalVenta").textContent = "$ 0";
                 $this.querySelector(".inputDescuento").value = "";

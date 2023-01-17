@@ -133,7 +133,8 @@ export class ListInventario extends HTMLElement {
                     descripcion: td.parentNode.children[1].innerText,
                     cantidad_inventario: td.parentNode.children[2].innerText,
                     precio: td.parentNode.children[3].innerText,
-                    proveedor: td.parentNode.children[4].innerText
+                    precio_compra: td.parentNode.children[4].innerText,
+                    proveedor: td.parentNode.children[5].innerText
                 }
                 console.log(data);
                 await editarData('productos', id, data);
@@ -142,7 +143,7 @@ export class ListInventario extends HTMLElement {
         }
     }
 
-    productoFoundHandler(e) {
+        productoFoundHandler(e) {
         console.log(e.detail);
         //eliminar la tabla
         $('#tablaProductos').DataTable().destroy();

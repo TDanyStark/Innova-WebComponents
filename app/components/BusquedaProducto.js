@@ -96,6 +96,21 @@ export class BusquedaProducto extends HTMLElement {
                     });
                     return;
                 }
+                // comprobar si el inventario es mayor a 0
+                if (res.cantidad_inventario <= 0) {
+                    Swal.fire({
+                        icon: "error",
+                        title: "El producto no tiene inventario",
+                        showConfirmButton: false,
+                        timer: 1000,
+                    }).then(()=>{
+                        this.$busquedaID.value = '';
+                        this.$busquedaDescripcion.value = '';
+                        this.$busquedaID.focus();
+
+                    });
+                    return;
+                }
                 this.$busquedaID.value = '';
                 this.$busquedaDescripcion.value = '';
                 document.dispatchEvent(new CustomEvent('productoFound', { bubbles: true, detail: res }));
@@ -165,6 +180,21 @@ export class BusquedaProducto extends HTMLElement {
             });
             return;
         }
+        if (res.cantidad_inventario <= 0) {
+            Swal.fire({
+                icon: "error",
+                title: "El producto no tiene inventario",
+                showConfirmButton: false,
+                timer: 1000,
+            }).then(()=>{
+                this.$busquedaID.value = '';
+                this.$busquedaDescripcion.value = '';
+                this.$busquedaID.focus();
+
+            });
+            return;
+        }
+        
         this.$busquedaID.value = '';
         this.$busquedaDescripcion.value = '';
         this.$busquedaID.focus();

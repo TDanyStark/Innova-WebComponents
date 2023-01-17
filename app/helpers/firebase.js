@@ -261,6 +261,25 @@ export let editarData = async (collectionName, id, data) => {
   }
 }
 
+export let editDocMerge = async (collectionName, id, data) => {
+  try{
+    const cityRef = doc(db, collectionName, id);
+    await setDoc(cityRef, data, { merge: true });
+    return true;
+  }catch(e){
+    console.log(e);
+    return false;
+  }
+}
+export let obtenerDataWhere = async (collectionName, field, operator, value) => {
+  const querySnapshot = await getDocs(query(collection(db, collectionName), where(field, operator, value)));
+  let docs = [];
+  querySnapshot.forEach((doc) => {
+    docs.push({ id: doc.id, ...doc.data() });
+  });
+  return docs;
+}
+
 // const citiesRef = collection(db, "productos");
 
 // await setDoc(doc(citiesRef, "SF"), {
