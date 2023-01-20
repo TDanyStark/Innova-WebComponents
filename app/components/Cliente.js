@@ -29,7 +29,7 @@ export class Cliente extends HTMLElement {
                         </div>
                     </div>
                     <div class="form-group mx-auto" style="margin-top:10px;">
-                        <button id="btnGuardarCliente" class="btn btn-primary" type="submit">Guardar</button>
+                        <button id="btnGuardarCliente" class="btn btn-primary" type="submit"><i class="fa-solid fa-floppy-disk"></i>  Guardar</button>
                     </div>
                 </div>
             </form>

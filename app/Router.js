@@ -4,6 +4,7 @@ import { Home } from "./components/Home.js";
 import { Ventas } from "./components/Ventas.js";
 import { Clientes } from "./components/Clientes.js";
 import { Inventario } from "./components/Inventario.js";
+import { VistaCliente } from "./components/VistaCliente.js";
 import { estadoSesion, Admin } from "./helpers/firebase.js";
 
 
@@ -57,6 +58,11 @@ export async function Router(){
         }
         $root.innerHTML = "";
         $root.innerHTML = '<inventario-element></inventario-element>';
+    } else if(hash.includes('#/cliente/')){
+        const idCliente = hash.split('/')[2];
+        const nombreCliente = hash.split('/')[3];
+        $root.innerHTML = "";
+        $root.innerHTML = `<vista-cliente-element idCliente=${idCliente} nombreCliente=${nombreCliente}></vista-cliente-element>`;
     } else {
         $root.innerHTML = '<h1>Ruta no disponible</h1>';
     }

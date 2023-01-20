@@ -74,7 +74,7 @@ export class ListClientes extends HTMLElement {
                 <td>${cliente.id}</td>
                 <td>${cliente.nombre}</td>
                 <td>
-                    <button class="btn btn-success" id="btnVerCliente" data-cliente="${cliente.id}"><i title="ver cliente" class="fa-solid fa-eye"></i></button>
+                    <a class="btn btn-success" href="#/cliente/${cliente.id}/${cliente.nombre.replace(" ", '@@')}" id="btnVerCliente" data-cliente="${cliente.id}"><i title="ver cliente" class="fa-solid fa-eye"></i></a>
                     <button class="btn btn-danger" id="btnEliminarCliente" data-cliente="${cliente.id}"><i data-cliente="${cliente.id}"  class="fa fa-trash"></i></button>
                 </td>
             `;

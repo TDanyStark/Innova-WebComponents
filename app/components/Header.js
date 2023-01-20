@@ -20,25 +20,25 @@ export class Header extends HTMLElement {
                 <div class="collapse navbar-collapse" id="navbarSupportedContent">
                 <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                     <li class="nav-item">
-                        <a class="nav-link" data-url="#/ventas" href="#/ventas">Ventas</a>
+                        <a class="nav-link" data-url="#/ventas" href="#/ventas"><i class="fa-solid fa-money-bill"></i> Ventas</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" data-url="#/pagos" href="#/pagos">Pagos</a>
+                        <a class="nav-link" data-url="#/pagos" href="#/pagos"><i class="fa-solid fa-cash-register"></i> Pagos</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" data-url="#/stecnico" href="#/stecnico">Servicio Tecnico</a>
+                        <a class="nav-link" data-url="#/stecnico" href="#/stecnico"><i class="fa-solid fa-screwdriver-wrench"></i> Servicio Tecnico</a>
                     </li>
 
                     ${window.isAdmin ? /*html*/`
                         <li class="nav-item">
-                            <a class="nav-link" data-url="#/inventario" href="#/inventario">Inventario</a>
+                            <a class="nav-link" data-url="#/inventario" href="#/inventario"><i class="fa-solid fa-truck-fast"></i> Inventario</a>
                         </li>
                         ` 
                         : ''
                     }
                     ${window.isAdmin ? /*html*/`
                         <li class="nav-item">
-                            <a class="nav-link" data-url="#/clientes" href="#/clientes">Clientes</a>
+                            <a class="nav-link" data-url="#/clientes" href="#/clientes"><i class="fa-solid fa-users"></i> Clientes</a>
                         </li>
                         ` 
                         : ''
@@ -46,17 +46,17 @@ export class Header extends HTMLElement {
                     
                     
                     <li class="nav-item">
-                        <a class="nav-link" data-url="#/prestamos" href="#/prestamos">Prestamos</a>
+                        <a class="nav-link" data-url="#/prestamos" href="#/prestamos"><i class="fa-solid fa-book"></i> Prestamos</a>
                     </li>
                     
                     <li class="nav-item">
-                        <a class="nav-link" data-url="#/cuentas" href="#/cuentas">cuentas</a>
+                        <a class="nav-link" data-url="#/cuentas" href="#/cuentas"><i class="fa-solid fa-coins"></i> cuentas</a>
                     </li>
                 </ul>
                 <ul class="navbar-nav">
                 <li class="nav-item dropdown">
                         <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                        ${estadoSesion.email.split('@')[0].toUpperCase()}
+                        <i class="fa-solid fa-user-tie"></i> ${estadoSesion.email.split('@')[0].toUpperCase()}
                     </a>
                     <ul class="dropdown-menu dropdown-menu-end">
                     ${window.isAdmin ? /*html*/`
