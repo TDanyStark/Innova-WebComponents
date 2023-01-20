@@ -2,6 +2,7 @@ import { Cliente } from "./Cliente.js";
 import { Header } from "./Header.js";
 import { VentaProducto } from "./VentaProducto.js";
 import { ModalSaveProduct } from "./ModalSaveProduct.js";
+import { ModalServicioTecnico } from "./ModalServicioTecnico.js";
 
 export class Ventas extends HTMLElement {
     constructor() {
@@ -13,10 +14,11 @@ export class Ventas extends HTMLElement {
         container.innerHTML = /*html*/`
             <header-element></header-element>
             <modal-save-product-element></modal-save-product-element>
+            <modal-servicio-tecnico></modal-servicio-tecnico>
             <div class="container">
                 <div class="row">
                     <div class="col-12">
-                        <h1 class="text-center" style="cursor:pointer; color:#fff;">Ventas</h1>
+                        <h1 id="title" class="text-center" style="cursor:pointer; color:#fff;">Ventas</h1>
                         
                     </div>
                     <div id="clienteElement" class="col-12 col-md-4">
@@ -29,9 +31,12 @@ export class Ventas extends HTMLElement {
             </div>
         `;
         this.appendChild(container);
+
     }
 
-    clickHandler() {
+    clickHandler(e) {
+        //comprobar si se hace click en el h1
+        if(e.target.id !== 'title') return;
         location.reload();
     }
 
@@ -52,15 +57,13 @@ export class Ventas extends HTMLElement {
     }
 
     connectedCallback() {
-        const $h1 = this.querySelector('h1');
-        $h1.addEventListener('click', this.clickHandler);
+        this.addEventListener('click', this.clickHandler);
         document.addEventListener('clienteFound', this.clienteFoundHandler);
         document.addEventListener('ventaRealizada', this.ventaRealizadaHandler)
     }
 
     disconnectedCallback() {
-        const $h1 = this.querySelector('h1');
-        $h1.removeEventListener('click', this.clickHandler);
+        this.removeEventListener('click', this.clickHandler);
         document.removeEventListener('clienteFound', this.clienteFoundHandler);
         document.removeEventListener('ventaRealizada', this.ventaRealizadaHandler)
     }

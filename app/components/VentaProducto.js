@@ -248,13 +248,14 @@ export class VentaProducto extends HTMLElement {
 
             console.log(res);
             if (res === true) {
-                //limpiar los elementos de la venta
+                // creo 
                 cantidadyInventario.forEach(async (producto) => {
                     if(producto.id.startsWith("ST")) return;
                     let res2 = await editDocMerge("productos", producto.id, { cantidad_inventario: producto.inventario - producto.cantidad });
                     console.log(res2);
-
+                    
                 });
+                //limpiar los elementos de la venta
                 $this.querySelector("#bodyTabla").innerHTML = "";
                 $this.querySelector("#totalVenta").textContent = "$ 0";
                 $this.querySelector(".inputDescuento").value = "";

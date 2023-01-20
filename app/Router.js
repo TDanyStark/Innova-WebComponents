@@ -5,6 +5,7 @@ import { Ventas } from "./components/Ventas.js";
 import { Clientes } from "./components/Clientes.js";
 import { Inventario } from "./components/Inventario.js";
 import { VistaCliente } from "./components/VistaCliente.js";
+import { ServicioTecnico } from "./components/ServicioTecnico.js";
 import { estadoSesion, Admin } from "./helpers/firebase.js";
 
 
@@ -58,6 +59,9 @@ export async function Router(){
         }
         $root.innerHTML = "";
         $root.innerHTML = '<inventario-element></inventario-element>';
+    } else if(hash === '#/stecnico'){
+        $root.innerHTML = "";
+        $root.innerHTML = '<servicio-tecnico-element></servicio-tecnico-element>';
     } else if(hash.includes('#/cliente/')){
         const idCliente = hash.split('/')[2];
         const nombreCliente = hash.split('/')[3];

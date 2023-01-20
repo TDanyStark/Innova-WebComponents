@@ -55,15 +55,24 @@ export class BusquedaProducto extends HTMLElement {
         this.$busquedaID = this.querySelector('#busquedaID');
         this.$busquedaDescripcion = this.querySelector('#busquedaDescripcion');
         this.$resultadosDescripcion = this.querySelector("#resultadosDescripcion ul");
+
+        this.cliente= {};
     }
 
-    clientFoundHandler() {
+    clientFoundHandler(e) {
+        this.cliente = e.detail;
         this.$busquedaID.value = '';
         this.$busquedaID.focus();
     }
 
     async keyupHandler(e) {
         if (e.key === 'Enter') {
+            if (this.$busquedaID.value === '') return;
+
+            if(this.$busquedaID.value === 'ST'){
+                document.dispatchEvent(new CustomEvent('modalServicioTecnico', { bubbles: true, detail: this.cliente }));
+                return;
+            }
             let res = await buscarProducto(this.$busquedaID.value);
             if (res === false) {
                 document.dispatchEvent(new CustomEvent('saveProduct', { bubbles: true, detail: this.$busquedaID.value }));
@@ -194,7 +203,7 @@ export class BusquedaProducto extends HTMLElement {
             });
             return;
         }
-        
+
         this.$busquedaID.value = '';
         this.$busquedaDescripcion.value = '';
         this.$busquedaID.focus();
