@@ -290,10 +290,9 @@ export let obtenerDataWhere = async (collectionName, field, operator, value) => 
   
   const querySnapshot = await getDocs(query(collection(db, collectionName), where(field, operator, value)));
   let docs = [];
-  let isAdmin = false;
-  isAdmin = await Admin(estadoSesion.uid);
+  
   querySnapshot.forEach((doc) => {
-    if(doc.data().vendedor == estadoSesion.email || isAdmin){
+    if(doc.data().vendedor == estadoSesion.email || window.isAdmin){
       docs.push({ id: doc.id, ...doc.data() });
     }
   });

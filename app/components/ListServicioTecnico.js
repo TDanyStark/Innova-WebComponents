@@ -42,6 +42,8 @@ export class listServicioTecnico extends HTMLElement {
         this.fechaStart;
         this.fechaEnd;
 
+        this.isfilter = false;
+
     }
 
     async llenarTabla(data) {
@@ -134,19 +136,30 @@ export class listServicioTecnico extends HTMLElement {
             // pintar la tabla con los datos filtrados
             let data = await obtenerServiciosTecnicosDateStarttoEnd(dateInicio, dateFin);
             this.llenarTabla(data);
+            this.isfilter = true;
         }
         if (e.target == this.$btnlimpiar) {
-            let date = new Date();
-            date.setDate(1); // Establece el día en el primer día del mes
-            date.setHours(0, 0, 0, 0); // Establece la hora en 00:00:00.000
-            let firstDayOfMonth = date.getTime(); // Obtiene el número de milisegundos desde el epoch
-            console.log(firstDayOfMonth);
+            if(this.isfilter == true){
+                let date = new Date();
+                date.setDate(1); // Establece el día en el primer día del mes
+                date.setHours(0, 0, 0, 0); // Establece la hora en 00:00:00.000
+                let firstDayOfMonth = date.getTime(); // Obtiene el número de milisegundos desde el epoch
+                console.log(firstDayOfMonth);
 
 
-            let data = await obtenerDataWhere('servicioTecnico', 'id', '>=', firstDayOfMonth);
-            // limpiar la datatable
-            $('#tablaServicioTecnico').DataTable().destroy();
-            this.llenarTabla(data);
+                let data = await obtenerDataWhere('servicioTecnico', 'id', '>=', firstDayOfMonth);
+                // limpiar la datatable
+                $('#tablaServicioTecnico').DataTable().destroy();
+                this.llenarTabla(data);
+                this.isfilter = false;
+            }else{
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Oops...',
+                    text: 'No hay filtro para limpiar',
+                });
+            }
+            
         }
     }
 
