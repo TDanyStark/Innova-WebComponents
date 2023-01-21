@@ -19,6 +19,8 @@ import {
   deleteDoc,
   Timestamp,
   setDoc,
+  query,
+  where,
 } from "https://www.gstatic.com/firebasejs/9.15.0/firebase-firestore.js";
 
 // Your web app's Firebase configuration
@@ -285,11 +287,17 @@ export let editDocMerge = async (collectionName, id, data) => {
   }
 }
 export let obtenerDataWhere = async (collectionName, field, operator, value) => {
+  
   const querySnapshot = await getDocs(query(collection(db, collectionName), where(field, operator, value)));
   let docs = [];
+  let isAdmin = false;
+  isAdmin = await Admin(estadoSesion.uid);
   querySnapshot.forEach((doc) => {
-    docs.push({ id: doc.id, ...doc.data() });
+    if(doc.data().vendedor == estadoSesion.email || isAdmin){
+      docs.push({ id: doc.id, ...doc.data() });
+    }
   });
+  console.log(docs);
   return docs;
 }
 
@@ -298,7 +306,7 @@ export let guardarServicioTecnico = async (data) => {
   let {recibo, cliente, celular, equipo, marca, cargador, fallaReportada, observaciones, abono, total, estado,fechaSalida, PagadoATecnico, vendedor } = data;
   let id = String(new Date().getTime());
   const docData = {
-    id,
+    id : parseInt(id),
     fecha: Timestamp.fromDate(new Date()),
     cliente,
     celular,
@@ -327,6 +335,17 @@ export let guardarServicioTecnico = async (data) => {
     return false;
   }
 };
+
+// obtener los servicios tecnicos en un rango de fechas
+export let obtenerServiciosTecnicosDateStarttoEnd = async (fechaInicio, fechaFin) => {
+  const querySnapshot = await getDocs(query(collection(db, "servicioTecnico"), where("id", ">=", fechaInicio), where("id", "<=", fechaFin)));
+  let docs = [];
+  querySnapshot.forEach((doc) => {
+    docs.push({ id: doc.id, ...doc.data() });
+  });
+  return docs;
+};
+
 
 
 
