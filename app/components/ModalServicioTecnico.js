@@ -1,4 +1,4 @@
-import { estadoSesion, guardarProducto, guardarServicioTecnico } from "../helpers/firebase.js";
+import { estadoSesion, guardarServicioTecnico, obtenerData} from "../helpers/firebase.js";
 
 export class ModalServicioTecnico extends HTMLElement {
     constructor() {
@@ -75,10 +75,19 @@ export class ModalServicioTecnico extends HTMLElement {
                                     </div>
                                 </div>
                                 <div class="row">
-                                    <div class="col-md-12">
+                                    ${window.isAdmin ? /*html*/`
+                                        <div class="col-md-6">
+                                            <label for="selectTec" class="form-label">Asignar a un tecnico?: </label>
+                                            <select name="tecnicos" class="form-control" id="selectTec">
+                                                <option selected>No asignar</option>
+                                            </select>
+                                        </div>
+                                    `: ''}
+                                    <div class="col-md-6">
                                         <p>Despues de 2 meses de recibido el producto no se responde...</p>
                                     </div>
                                 </div>
+                                    
                             </div>
                         </div>
                         <div class="modal-footer">
@@ -107,6 +116,8 @@ export class ModalServicioTecnico extends HTMLElement {
 
             this.$Nrecibo = this.querySelector('#Nrecibo');
 
+            this.$selectTec = this.querySelector('#selectTec');
+
     }
 
     clickHandler = async (e) => {
@@ -118,7 +129,12 @@ export class ModalServicioTecnico extends HTMLElement {
                     text: 'Todos los campos con * son obligatorios!',
                 });
             } else {
-                let vendedor = estadoSesion.email;
+                let vendedor;
+                if (this.$selectTec.value === 'No asignar') {
+                    vendedor = estadoSesion.email;
+                }else{
+                    vendedor = this.$selectTec.value;
+                }
                 let observaciones = this.observaciones.value === '' ? 'Sin Observaciones' : this.observaciones.value;
                 let abono = this.abono.value === '' ? 0 : parseInt(this.abono.value);
                 let total = this.total.value === '' ? 0 : parseInt(this.total.value);
@@ -184,10 +200,19 @@ export class ModalServicioTecnico extends HTMLElement {
         }
     }
 
-    ModalServicioTecnicoHandler = (e) => {
+    ModalServicioTecnicoHandler = async (e) => {
         this.cliente.value = e.detail.nombre;
         this.telefono.value = e.detail.celular;
         this.$Nrecibo.textContent = e.detail.recibo.Nrecibo;
+        if(window.isAdmin){
+            let tecnicos = await obtenerData('tecnicos');
+            tecnicos.forEach(tec => {
+                let option = document.createElement('option');
+                option.value = tec.email;
+                option.textContent = tec.email;
+                this.$selectTec.appendChild(option);
+            });
+        }
 
         this.ventanaModal.show();
     };
