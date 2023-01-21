@@ -232,6 +232,19 @@ export let guardarVenta = async (data) => {
   }
 };
 
+export let obtenerDataforId = async (collectionName, id) => {
+  const docRef = doc(db, collectionName, id);
+  const docSnap = await getDoc(docRef);
+  return new Promise((resolve, reject) => {
+    if (docSnap.exists()) {
+      //retorne el documento
+      resolve(docSnap.data());
+    } else {
+      resolve(false);
+    }
+  });
+};
+
 export let obtenerData = async (collectionName) => {
   const querySnapshot = await getDocs(collection(db, collectionName));
   let docs = [];
@@ -282,7 +295,7 @@ export let obtenerDataWhere = async (collectionName, field, operator, value) => 
 
 /// Agregar datos a la coleccion servicioTecnico
 export let guardarServicioTecnico = async (data) => {
-  let { cliente, celular, equipo, marca, cargador, fallaReportada, observaciones, abono, total, vendedor } = data;
+  let {recibo, cliente, celular, equipo, marca, cargador, fallaReportada, observaciones, abono, total, estado,fechaSalida, PagadoATecnico, vendedor } = data;
   let id = String(new Date().getTime());
   const docData = {
     id,
@@ -296,8 +309,15 @@ export let guardarServicioTecnico = async (data) => {
     observaciones,
     abono,
     total,
+    estado,
+    fechaSalida,
+    PagadoATecnico,
+    recibo,
     vendedor,
   };
+  // sumar el recibo +1 en la base de datos
+  await editDocMerge("data", "recibo", {Nrecibo: parseInt(recibo) + 1});
+
   console.log(docData);
   try {
     await setDoc(doc(db, "servicioTecnico", id), docData);
@@ -307,6 +327,7 @@ export let guardarServicioTecnico = async (data) => {
     return false;
   }
 };
+
 
 
 // const citiesRef = collection(db, "productos");

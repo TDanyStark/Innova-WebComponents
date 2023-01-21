@@ -4,6 +4,7 @@ import {
     guardarProducto,
     guardarVenta,
     estadoSesion,
+    obtenerDataforId,
 } from "../helpers/firebase.js";
 
 export class BusquedaProducto extends HTMLElement {
@@ -71,6 +72,8 @@ export class BusquedaProducto extends HTMLElement {
             if (this.$busquedaID.value === '') return;
 
             if(this.$busquedaID.value === 'ST'){
+                let recibo = await obtenerDataforId('data', 'recibo');
+                this.cliente = {...this.cliente, recibo: recibo};
                 document.dispatchEvent(new CustomEvent('modalServicioTecnico', { bubbles: true, detail: this.cliente }));
                 return;
             }

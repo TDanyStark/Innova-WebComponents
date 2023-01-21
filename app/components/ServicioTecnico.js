@@ -1,4 +1,4 @@
-
+import { listServicioTecnico } from "./ListServicioTecnico.js";
 export class ServicioTecnico extends HTMLElement {
     constructor() {
         super();
@@ -12,9 +12,8 @@ export class ServicioTecnico extends HTMLElement {
                     <div class="col-12">
                         <h1 class="text-center" style="cursor:pointer; color:#fff;">Servicio Tecnico</h1>
                     </div>
-                    <div id="clienteElement" class="col-12 col-md-4">
-                    </div>
-                    <div id="ventaProductoElement" class="col-12 col-md-8">
+                    <div id="listServicioTecnico" class="col-12">
+                        <list-servicio-tecnico-element></list-servicio-tecnico-element>
                     </div>
                 </div>
             </div>

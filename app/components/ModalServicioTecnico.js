@@ -12,7 +12,7 @@ export class ModalServicioTecnico extends HTMLElement {
                 <div class="modal-dialog modal-lg">
                     <div class="modal-content bg-dark text-white">
                         <div class="modal-header">
-                            <h1 class="modal-title fs-5" id="staticBackdropLabel">Generar Servicio Tecnico</h1>
+                            <h1 class="modal-title fs-5" id="staticBackdropLabel">Generar Servicio Tecnico - N° Recibo: <span id="Nrecibo"></span></h1>
                             <button type="button" tabIndex="-1" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                         </div>
                         <div class="modal-body">
@@ -105,6 +105,8 @@ export class ModalServicioTecnico extends HTMLElement {
             this.abono = this.querySelector('#inputAbono');
             this.total = this.querySelector('#inputTotal');
 
+            this.$Nrecibo = this.querySelector('#Nrecibo');
+
     }
 
     clickHandler = async (e) => {
@@ -118,10 +120,11 @@ export class ModalServicioTecnico extends HTMLElement {
             } else {
                 let vendedor = estadoSesion.email;
                 let observaciones = this.observaciones.value === '' ? 'Sin Observaciones' : this.observaciones.value;
-                let abono = this.abono.value === '' ? 0 : this.abono.value;
-                let total = this.total.value === '' ? 0 : this.total.value;
+                let abono = this.abono.value === '' ? 0 : parseInt(this.abono.value);
+                let total = this.total.value === '' ? 0 : parseInt(this.total.value);
 
                 const data = {
+                    recibo: this.$Nrecibo.textContent,
                     cliente: this.cliente.value,
                     celular: this.telefono.value,
                     equipo: this.equipo.value,
@@ -131,6 +134,9 @@ export class ModalServicioTecnico extends HTMLElement {
                     observaciones: observaciones,
                     abono: abono,
                     total: total,
+                    estado: 'Ingresado',
+                    PagadoATecnico: false,
+                    fechaSalida: "sin fecha",
                     vendedor: vendedor,
                 };
                 let res= await guardarServicioTecnico(data);
@@ -181,6 +187,7 @@ export class ModalServicioTecnico extends HTMLElement {
     ModalServicioTecnicoHandler = (e) => {
         this.cliente.value = e.detail.nombre;
         this.telefono.value = e.detail.celular;
+        this.$Nrecibo.textContent = e.detail.recibo.Nrecibo;
 
         this.ventanaModal.show();
     };

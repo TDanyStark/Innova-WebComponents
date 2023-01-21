@@ -59,9 +59,11 @@ export async function Router(){
         }
         $root.innerHTML = "";
         $root.innerHTML = '<inventario-element></inventario-element>';
+        
     } else if(hash === '#/stecnico'){
         $root.innerHTML = "";
         $root.innerHTML = '<servicio-tecnico-element></servicio-tecnico-element>';
+
     } else if(hash.includes('#/cliente/')){
         const idCliente = hash.split('/')[2];
         const nombreCliente = hash.split('/')[3];
