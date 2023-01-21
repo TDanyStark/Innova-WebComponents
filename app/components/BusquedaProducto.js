@@ -15,6 +15,7 @@ export class BusquedaProducto extends HTMLElement {
         this.clickulHandler = this.clickulHandler.bind(this);
         this.clientFoundHandler = this.clientFoundHandler.bind(this);
         this.clickResultadosHandler = this.clickResultadosHandler.bind(this);
+        this.servicioTecnicoRegistradoHandler = this.servicioTecnicoRegistradoHandler.bind(this);
 
         const container = document.createElement('div');
         container.id = 'busquedaProducto-container';
@@ -218,12 +219,19 @@ export class BusquedaProducto extends HTMLElement {
         this.$resultadosDescripcion.classList.add("d-none");
     }
 
+    servicioTecnicoRegistradoHandler(e) {
+        this.$busquedaID.value = '';
+        this.$busquedaDescripcion.value = '';
+        this.$busquedaID.focus();
+    }
+
     connectedCallback() {
         document.addEventListener('clienteFound', this.clientFoundHandler);
         this.$busquedaID.addEventListener('keyup', this.keyupHandler);
         this.addEventListener('input', this.inputHandler);
         this.$resultadosDescripcion.addEventListener('click', this.clickulHandler);
         this.addEventListener('click', this.clickResultadosHandler);
+        document.addEventListener('servicioTecnicoRegistrado', this.servicioTecnicoRegistradoHandler);
     }
 
     disconnectedCallback() {
@@ -232,6 +240,7 @@ export class BusquedaProducto extends HTMLElement {
         this.removeEventListener('input', this.inputHandler);
         this.$resultadosDescripcion.removeEventListener('click', this.clickulHandler);
         this.removeEventListener('click', this.clickResultadosHandler);
+        document.removeEventListener('servicioTecnicoRegistrado', this.servicioTecnicoRegistradoHandler);
     }
 }
 customElements.define('busqueda-producto-element', BusquedaProducto);

@@ -280,6 +280,35 @@ export let obtenerDataWhere = async (collectionName, field, operator, value) => 
   return docs;
 }
 
+/// Agregar datos a la coleccion servicioTecnico
+export let guardarServicioTecnico = async (data) => {
+  let { cliente, celular, equipo, marca, cargador, fallaReportada, observaciones, abono, total, vendedor } = data;
+  let id = String(new Date().getTime());
+  const docData = {
+    id,
+    fecha: Timestamp.fromDate(new Date()),
+    cliente,
+    celular,
+    equipo,
+    marca,
+    cargador,
+    fallaReportada,
+    observaciones,
+    abono,
+    total,
+    vendedor,
+  };
+  console.log(docData);
+  try {
+    await setDoc(doc(db, "servicioTecnico", id), docData);
+    return true;
+  } catch (e) {
+    console.log(e);
+    return false;
+  }
+};
+
+
 // const citiesRef = collection(db, "productos");
 
 // await setDoc(doc(citiesRef, "SF"), {

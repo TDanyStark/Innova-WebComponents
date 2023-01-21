@@ -7,12 +7,13 @@ export class Cliente extends HTMLElement {
         this.keyupHandler = this.keyupHandler.bind(this);
         //bind ventaRealizadaHandler
         this.ventaRealizadaHandler = this.ventaRealizadaHandler.bind(this);
+        this.clickHandler = this.clickHandler.bind(this);
 
         const container = document.createElement('div');
         container.id = 'cliente-container';
         container.innerHTML = /*html*/`
             <form class="needs-validation formCliente bg-dark p-2 rounded" novalidate>
-                <h2 class="text-white">Cliente</h2>
+                <h2 id="titleCliente" style="cursor:pointer;" class="text-white">Cliente</h2>
                 <div class="container">
                     <div class="form-group">
                         <label for="validationCustom05" class="form-label text-white">Celular</label>
@@ -38,6 +39,8 @@ export class Cliente extends HTMLElement {
         this.$celular = this.querySelector('#validationCustom05');
         this.$nombre = this.querySelector('#validationCustom01');
         this.$btnGuardar = this.querySelector('#btnGuardarCliente');
+
+        this.titulo = this.querySelector('#titleCliente');
 
     }
 
@@ -177,10 +180,31 @@ export class Cliente extends HTMLElement {
         form.classList.add('was-validated');
     }
 
+    clickHandler(e) {
+        this.$celular.value = '';
+        this.$nombre.value = '';
+
+        this.$celular.classList.remove('is-valid');
+        this.$nombre.classList.remove('is-valid');
+
+        //eliminar la clase was-validated}
+        this.querySelector('.formCliente').classList.remove('was-validated');
+
+        //habilitar el boton guardar
+        this.$celular.disabled = false;
+        this.$nombre.disabled = false;
+        this.$btnGuardar.disabled = false;
+
+        this.$celular.focus();
+
+        document.dispatchEvent(new CustomEvent('resetCliente'));
+    }
+
     connectedCallback() {
         this.$celular.addEventListener("keyup", this.keyupHandler);
         this.$celular.addEventListener('input', this.inputHandler);
         this.$nombre.addEventListener("keyup", this.keyupNombreHandler)
+        this.titulo.addEventListener("click", this.clickHandler);
         // Validar formulario
         form = this.querySelector('.formCliente');
         form.addEventListener('submit', this.submitFormHandler, false);
@@ -191,6 +215,7 @@ export class Cliente extends HTMLElement {
         this.$celular.removeEventListener("keyup", this.keyupHandler);
         this.$celular.removeEventListener('input', this.inputHandler);
         this.$nombre.removeEventListener("keyup", this.keyupNombreHandler)
+        this.titulo.removeEventListener("click", this.clickHandler);
         // Validar formulario
         form = this.querySelector('.formCliente');
         form.removeEventListener('submit', this.submitFormHandler, false);

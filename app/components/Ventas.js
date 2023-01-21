@@ -56,6 +56,7 @@ export class Ventas extends HTMLElement {
         }
     }
 
+
     connectedCallback() {
         this.addEventListener('click', this.clickHandler);
         document.addEventListener('clienteFound', this.clienteFoundHandler);

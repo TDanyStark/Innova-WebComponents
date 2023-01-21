@@ -18,6 +18,7 @@ export class VentaProducto extends HTMLElement {
         this.clickHandler = this.clickHandler.bind(this);
         this.changeHandler = this.changeHandler.bind(this);
         this.inputHandler = this.inputHandler.bind(this);
+        this.resetClienteHandler = this.resetClienteHandler.bind(this);
 
         const container = document.createElement('div');
         container.id = 'ventaProducto-container';
@@ -406,7 +407,16 @@ export class VentaProducto extends HTMLElement {
             sumarTotal();
             return;
         }
-}
+    }
+
+    resetClienteHandler(e) {
+        // agregarle d-none a this
+        this.classList.add("d-none");
+        // limpiar el nombre del cliente
+        this.$clienteName.textContent = "";
+        this.$clienteId.textContent = "";
+
+    }
 
     connectedCallback() {
         console.log("conectado")
@@ -422,6 +432,8 @@ export class VentaProducto extends HTMLElement {
         this.addEventListener('change', this.changeHandler);
 
         this.addEventListener('input', this.inputHandler);
+
+        document.addEventListener('resetCliente', this.resetClienteHandler);
     }
 
     disconnectedCallback() {
@@ -438,6 +450,8 @@ export class VentaProducto extends HTMLElement {
         this.removeEventListener('change', this.changeHandler);
 
         this.removeEventListener('input', this.inputHandler);
+
+        document.removeEventListener('resetCliente', this.resetClienteHandler);
     }
 }
 
