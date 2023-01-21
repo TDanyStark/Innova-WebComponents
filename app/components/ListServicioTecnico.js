@@ -1,4 +1,4 @@
-import { estadoSesion, obtenerDataWhere, obtenerServiciosTecnicosDateStarttoEnd} from "../helpers/firebase.js";
+import { editDocMerge, estadoSesion, obtenerDataWhere, obtenerServiciosTecnicosDateStarttoEnd} from "../helpers/firebase.js";
 
 export class listServicioTecnico extends HTMLElement {
     constructor() {
@@ -44,6 +44,8 @@ export class listServicioTecnico extends HTMLElement {
 
         this.isfilter = false;
 
+        this.estadoActivo = false;
+
     }
 
     async llenarTabla(data) {
@@ -58,12 +60,12 @@ export class listServicioTecnico extends HTMLElement {
                     <td>${element.equipo}</td>
                     <td>${element.marca}</td>
                     <td>${element.total}</td>
-                    <td>${element.estado}</td>
+                    <td class="estadoST" data-id="${element.id}" style="width:10%;">${element.estado}</td>
                     ${window.isAdmin ? `<td> ${element.vendedor.split("@")[0]}</td>` : ''}
                     <td>${element.PagadoATecnico == false ? "No" : "Si"}</td>
                     <td>
-                        <button ${element.PagadoATecnico ? "disabled" : ""} class="btn btn-primary" id="btn-edit" data-pagadotec="${element.PagadoATecnico}" data-id="${element.id}"><i data-pagadotec="${element.PagadoATecnico}" data-id="${element.id}" class="fa fa-eye"></i></button>
-                        <button ${element.PagadoATecnico ? "disabled" : ""} class="btn btn-danger" id="btn-delete" data-pagadotec="${element.PagadoATecnico}" data-id="${element.id}"><i data-pagadotec="${element.PagadoATecnico}" data-id="${element.id}"  class="fa fa-trash"></i></button>
+                        <button ${element.PagadoATecnico ? "disabled" : ""} class="btn btn-primary" id="btn-ver" data-pagadotec="${element.PagadoATecnico}" data-id="${element.id}"><i data-pagadotec="${element.PagadoATecnico}" data-id="${element.id}" class="fa fa-eye"></i></button>
+                        <button ${element.PagadoATecnico ? "disabled" : ""} class="btn btn-success" id="btn-editar" data-pagadotec="${element.PagadoATecnico}" data-id="${element.id}"><i data-pagadotec="${element.PagadoATecnico}" data-id="${element.id}" class="fa-solid fa-check"></i></button>
                     </td>
                 </tr>
             `;
@@ -114,6 +116,35 @@ export class listServicioTecnico extends HTMLElement {
 
     }
 
+    async keyupHandler(e) {
+        if(e.target.id === "selectEstadoST"){
+            if(e.key === "Escape"){
+                this.estadoActivo = false;
+
+                //quitar el select de la tabla
+                let select = this.querySelector('#selectEstadoST');
+                select.parentNode.innerHTML = "Ingresado";
+                let estado = "Ingresado";
+                let id = select.dataset.id;
+
+                let res = await editDocMerge('servicioTecnico', id, {estado: estado});
+                if(res){
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Estado actualizado',
+                        text: 'El estado del servicio tecnico se actualizo correctamente',
+                    });
+                }else{
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Oops...',
+                        text: 'No se pudo actualizar el estado del servicio tecnico',
+                    });
+                }
+            }
+        }
+    }
+
     async clickHandler(e) {
         if (e.target === this.$btnfiltrar) {
             let dateInicio = new Date(this.fechaStart.value+" 00:00:00").getTime();
@@ -161,6 +192,91 @@ export class listServicioTecnico extends HTMLElement {
             }
             
         }
+        if(e.target.id === "btn-ver"){  
+
+        }
+        //comprobar si el e.target tiene la clase estadoST
+        if(e.target.classList.contains('estadoST')){ 
+            if(this.estadoActivo)return;
+            this.estadoActivo = true;
+            // insertar un select con 5 opciones de estados de servicio tecnico
+            let select = document.createElement('select');
+            select.classList.add('form-select');
+            select.classList.add('form-select-sm');
+            select.id = "selectEstadoST";
+            select.style.width = "60%";
+            select.dataset.id = e.target.dataset.id;
+
+
+            let option0 = document.createElement('option');
+            option0.value = "...";
+            option0.text = "...";
+            option0.selected = true;
+            select.appendChild(option0);
+
+
+            let option1 = document.createElement('option');
+            option1.value = "En Revision";
+            option1.text = "En Revision";
+            select.appendChild(option1);
+
+            let option2 = document.createElement('option');
+            option2.value = "Solucionado";
+            option2.text = "Solucionado";
+            select.appendChild(option2);
+
+
+            let option4 = document.createElement('option');
+            option4.value = "sin solucion";
+            option4.text = "sin solucion";
+            select.appendChild(option4); 
+
+            let option5 = document.createElement('option');
+            option5.value = "pendiente de arreglo";
+            option5.text = "pendiente de arreglo";
+            select.appendChild(option5);
+
+            // insertar el select en el td
+            e.target.innerHTML = "";
+            e.target.appendChild(select);
+
+            
+        }
+    }
+
+    async changeHandler(e) {
+        if(e.target.id === "selectEstadoST"){
+            if(e.target.value === "...")return;
+            let id = e.target.dataset.id;
+            let estado = e.target.value;
+            
+            let res = await editDocMerge('servicioTecnico', id, {estado: estado});
+            // quitar el select y poner el estado en el td
+            if (res){
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Exito',
+                    text: 'Se ha actualizado el estado del servicio tecnico',
+                    timer: 1500,
+                    showConfirmButton: false
+                });
+                e.target.parentNode.innerHTML = estado;
+    
+                this.estadoActivo = false;
+                // obtener el numero desde epoch hasta el primer dia del mes
+                let date = new Date();
+                date.setDate(1); // Establece el día en el primer día del mes
+                date.setHours(0, 0, 0, 0); // Establece la hora en 00:00:00.000
+                let firstDayOfMonth = date.getTime(); // Obtiene el número de milisegundos desde el epoch
+                console.log(firstDayOfMonth);
+
+
+                let data = await obtenerDataWhere('servicioTecnico', 'id', '>=', firstDayOfMonth);
+                // limpiar la datatable
+                $('#tablaServicioTecnico').DataTable().destroy();
+                this.llenarTabla(data);
+            }
+        }
     }
 
     async connectedCallback() {
@@ -175,10 +291,14 @@ export class listServicioTecnico extends HTMLElement {
         let data = await obtenerDataWhere('servicioTecnico', 'id', '>=', firstDayOfMonth);
         this.llenarTabla(data);
         this.addEventListener('click', this.clickHandler);
+        this.addEventListener('change', this.changeHandler);
+        this.addEventListener('keyup', this.keyupHandler);
     }
 
     disconnectedCallback() {
         this.removeEventListener('click', this.clickHandler);
+        this.removeEventListener('change', this.changeHandler);
+        this.removeEventListener('keyup', this.keyupHandler);
     }   
 }
 
