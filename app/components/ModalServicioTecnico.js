@@ -65,14 +65,25 @@ export class ModalServicioTecnico extends HTMLElement {
                                     </div>
                                 </div>
                                 <div class="row">
-                                    <div class="col-md-6">
+                                    <div class="col-md-12">
+                                        <label for="inputPedido" class="form-label">Pedidos: </label>
+                                        <input type="text" id="inputPedido" class="form-control" placeholder="Teclado Lenovo s145, memoria Ram o link ML o virtualTronic etc" />
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-4">
+                                        <label for="inputTotalPedido" class="form-label">Total Pedido: </label>
+                                        <input type="number" class="form-control" id="inputTotalPedido">
+                                    </div>
+                                    <div class="col-md-4">
                                         <label for="inputAbono" class="form-label">Abono: </label>
                                         <input type="number" class="form-control" id="inputAbono">
                                     </div>
-                                    <div class="col-md-6">
+                                    <div class="col-md-4">
                                         <label for="inputTotal" class="form-label">Total: </label>
                                         <input type="number" class="form-control" id="inputTotal">
                                     </div>
+
                                 </div>
                                 <div class="row">
                                     ${window.isAdmin ? /*html*/`
@@ -113,6 +124,8 @@ export class ModalServicioTecnico extends HTMLElement {
             this.observaciones = this.querySelector('#textObservaciones');
             this.abono = this.querySelector('#inputAbono');
             this.total = this.querySelector('#inputTotal');
+            this.pedido = this.querySelector('#inputPedido');
+            this.totalPedido = this.querySelector('#inputTotalPedido');
 
             this.$Nrecibo = this.querySelector('#Nrecibo');
 
@@ -139,6 +152,14 @@ export class ModalServicioTecnico extends HTMLElement {
                 let abono = this.abono.value === '' ? 0 : parseInt(this.abono.value);
                 let total = this.total.value === '' ? 0 : parseInt(this.total.value);
 
+
+                let pedido = this.pedido.value === '' ? 'Sin Pedido' : this.pedido.value;
+                let totalPedido = this.totalPedido.value === '' ? 0 : parseInt(this.totalPedido.value);
+
+                if (totalPedido != 0){
+                    total = totalPedido + total;
+                }
+
                 const data = {
                     recibo: this.$Nrecibo.textContent,
                     cliente: this.cliente.value,
@@ -154,6 +175,8 @@ export class ModalServicioTecnico extends HTMLElement {
                     PagadoATecnico: false,
                     fechaSalida: "sin fecha",
                     vendedor: vendedor,
+                    totalPedido: totalPedido,
+                    pedido: pedido
                 };
                 let res= await guardarServicioTecnico(data);
 

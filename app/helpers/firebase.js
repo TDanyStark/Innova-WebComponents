@@ -302,7 +302,7 @@ export let obtenerDataWhere = async (collectionName, field, operator, value) => 
 
 /// Agregar datos a la coleccion servicioTecnico
 export let guardarServicioTecnico = async (data) => {
-  let {recibo, cliente, celular, equipo, marca, cargador, fallaReportada, observaciones, abono, total, estado,fechaSalida, PagadoATecnico, vendedor } = data;
+  let {recibo, cliente, celular, equipo, marca, cargador, fallaReportada, observaciones, abono, total, estado,fechaSalida, totalPedido, pedido, PagadoATecnico, vendedor } = data;
   let id = String(new Date().getTime());
   const docData = {
     id : parseInt(id),
@@ -320,6 +320,8 @@ export let guardarServicioTecnico = async (data) => {
     fechaSalida,
     PagadoATecnico,
     recibo,
+    pedido,
+    totalPedido: parseInt(totalPedido),
     vendedor,
   };
   // sumar el recibo +1 en la base de datos
