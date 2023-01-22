@@ -46,6 +46,8 @@ export class listServicioTecnico extends HTMLElement {
 
         this.estadoActivo = false;
 
+        this.STActivo = {};
+
     }
 
     async llenarTabla(data) {
@@ -64,12 +66,29 @@ export class listServicioTecnico extends HTMLElement {
                     ${window.isAdmin ? `<td> ${element.vendedor.split("@")[0]}</td>` : ''}
                     <td>${element.PagadoATecnico == false ? "No" : "Si"}</td>
                     <td>
-                        <button ${element.PagadoATecnico ? "disabled" : ""} class="btn btn-primary" id="btn-ver" data-pagadotec="${element.PagadoATecnico}" data-id="${element.id}"><i data-pagadotec="${element.PagadoATecnico}" data-id="${element.id}" class="fa fa-eye"></i></button>
-                        <button ${element.PagadoATecnico ? "disabled" : ""} class="btn btn-success" id="btn-editar" data-pagadotec="${element.PagadoATecnico}" data-id="${element.id}"><i data-pagadotec="${element.PagadoATecnico}" data-id="${element.id}" class="fa-solid fa-check"></i></button>
+                        <input type="hidden" id="inputId" data-info="${element.id}" />
+                        <input type="hidden" id="inputRecibo" data-info="${element.recibo}" />
+                        <input type="hidden" id="inputCliente" data-info="${element.cliente}" />
+                        <input type="hidden" id="inputCelular" data-info="${element.celular}" />
+                        <input type="hidden" id="inputEquipo" data-info="${element.equipo}" />
+                        <input type="hidden" id="inputMarca" data-info="${element.marca}" />
+                        <input type="hidden" id="inputCargador" data-info="${element.cargador}" />
+                        <input type="hidden" id="inputfallaReportada" data-info="${element.fallaReportada}" />
+                        <input type="hidden" id="inputObservaciones" data-info="${element.observaciones}" />
+                        <input type="hidden" id="inputAbono" data-info="${element.abono}" />
+                        <input type="hidden" id="inputTotal" data-info="${element.total}" />
+                        <input type="hidden" id="inputEstado" data-info="${element.estado}" />
+                        <input type="hidden" id="inputPagadoATecnico" data-info="${element.PagadoATecnico}" />
+                        <input type="hidden" id="inputFechaSalida" data-info="${element.fechaSalida}" />
+                        <input type="hidden" id="inputFecha" data-info="${element.fecha.toDate().getTime()}" />
+                        <input type="hidden" id="inputVendedor" data-info="${element.vendedor}" />
+                        <button ${element.PagadoATecnico ? "disabled" : ""} class="btn btn-primary" id="btn-ver" data-pagadotec="${element.PagadoATecnico}" data-id="${element.id}"><i data-pagadotec="${element.PagadoATecnico}" data-id="${element.id}" id="btn-ver" class="fa fa-eye"></i></button>
+                        <button ${element.PagadoATecnico ? "disabled" : ""} class="btn btn-success" id="btn-retirar" data-pagadotec="${element.PagadoATecnico}" data-id="${element.id}"><i data-pagadotec="${element.PagadoATecnico}" data-id="${element.id}" id="btn-retirar" class="fa-solid fa-check"></i></button>
                     </td>
                 </tr>
             `;
         });
+
         $('#tablaServicioTecnico').DataTable({
             "order": [[ 0, "desc" ]],
             responsive: true,
@@ -193,7 +212,27 @@ export class listServicioTecnico extends HTMLElement {
             
         }
         if(e.target.id === "btn-ver"){  
-
+            let td = e.target.closest('td');
+            let ST = {
+                id: td.querySelector('#inputId').dataset.info,
+                recibo: td.querySelector('#inputRecibo').dataset.info,
+                cliente: td.querySelector('#inputCliente').dataset.info,
+                celular: td.querySelector('#inputCelular').dataset.info,
+                equipo: td.querySelector('#inputEquipo').dataset.info,
+                marca: td.querySelector('#inputMarca').dataset.info,
+                cargador: td.querySelector('#inputCargador').dataset.info,
+                fallaReportada: td.querySelector('#inputfallaReportada').dataset.info,
+                observaciones: td.querySelector('#inputObservaciones').dataset.info,
+                abono: td.querySelector('#inputAbono').dataset.info,
+                total: td.querySelector('#inputTotal').dataset.info,
+                estado: td.querySelector('#inputEstado').dataset.info,
+                PagadoATecnico: td.querySelector('#inputPagadoATecnico').dataset.info,
+                fechaSalida: td.querySelector('#inputFechaSalida').dataset.info,
+                fecha: td.querySelector('#inputFecha').dataset.info,
+                vendedor: td.querySelector('#inputVendedor').dataset.info,
+            }
+            console.log(ST);
+            document.dispatchEvent(new CustomEvent('verST', {detail: ST}));
         }
         //comprobar si el e.target tiene la clase estadoST
         if(e.target.classList.contains('estadoST')){ 
@@ -241,6 +280,30 @@ export class listServicioTecnico extends HTMLElement {
             e.target.appendChild(select);
 
             
+        }
+        if(e.target.id === "btn-retirar"){
+            // obetner el td con closest
+            let td = e.target.closest('td');
+            let ST = {
+                id: td.querySelector('#inputId').dataset.info,
+                recibo: td.querySelector('#inputRecibo').dataset.info,
+                cliente: td.querySelector('#inputCliente').dataset.info,
+                celular: td.querySelector('#inputCelular').dataset.info,
+                equipo: td.querySelector('#inputEquipo').dataset.info,
+                marca: td.querySelector('#inputMarca').dataset.info,
+                cargador: td.querySelector('#inputCargador').dataset.info,
+                fallaReportada: td.querySelector('#inputfallaReportada').dataset.info,
+                observaciones: td.querySelector('#inputObservaciones').dataset.info,
+                abono: td.querySelector('#inputAbono').dataset.info,
+                total: td.querySelector('#inputTotal').dataset.info,
+                estado: td.querySelector('#inputEstado').dataset.info,
+                PagadoATecnico: td.querySelector('#inputPagadoATecnico').dataset.info,
+                fechaSalida: td.querySelector('#inputFechaSalida').dataset.info,
+                fecha: td.querySelector('#inputFecha').dataset.info,
+                vendedor: td.querySelector('#inputVendedor').dataset.info,
+            }
+            console.log(ST);
+            document.dispatchEvent(new CustomEvent('retirarST', {detail: ST}));
         }
     }
 
