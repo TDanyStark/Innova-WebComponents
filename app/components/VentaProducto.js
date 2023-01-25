@@ -416,6 +416,9 @@ export class VentaProducto extends HTMLElement {
         this.$clienteName.textContent = "";
         this.$clienteId.textContent = "";
 
+        // limpiar la tabla de venta
+        this.$tablaVenta.innerHTML = "";
+
     }
 
     connectedCallback() {

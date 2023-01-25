@@ -213,9 +213,8 @@ export let buscarProductoDescripcionLike = async (descripcion) => {
 export let guardarVenta = async (data) => {
   let { cliente, nombre, productos, abono, total, descuento, vendedor, StinVenta } = data;
   let id = new Date().getTime();
-  id = id.toString();
   const docData = {
-    id,
+    id: id,
     fecha: Timestamp.fromDate(new Date()),
     cliente,
     nombre,
@@ -226,6 +225,8 @@ export let guardarVenta = async (data) => {
     vendedor,
     StinVenta,
   };
+  id = id.toString();
+
   // console.log(docData);
   try {
     await setDoc(doc(db, "ventas", id), docData);
@@ -280,8 +281,8 @@ export let editarData = async (collectionName, id, data) => {
 
 export let editDocMerge = async (collectionName, id, data) => {
   try{
-    const cityRef = doc(db, collectionName, id);
-    await setDoc(cityRef, data, { merge: true });
+    const referencia = doc(db, collectionName, id);
+    await setDoc(referencia, data, { merge: true });
     return true;
   }catch(e){
     console.log(e);
@@ -302,9 +303,9 @@ export let obtenerDataWhere = async (collectionName, field, operator, value) => 
   return docs;
 }
 
-/// Agregar datos a la coleccion servicioTecnico
+/// NOTE:  Agregar datos a la coleccion servicioTecnico
 export let guardarServicioTecnico = async (data) => {
-  let {recibo, cliente, celular, equipo, marca, cargador, fallaReportada, observaciones, abono, total, estado,fechaSalida, totalPedido, pedido, PagadoATecnico, vendedor } = data;
+  let {recibo, cliente, celular, equipo, marca, cargador, fallaReportada, observaciones, abono, total, estado,fechaSalida, PagadoATecnico, vendedor } = data;
   let id = String(new Date().getTime());
   const docData = {
     id : parseInt(id),
@@ -322,8 +323,6 @@ export let guardarServicioTecnico = async (data) => {
     fechaSalida,
     PagadoATecnico,
     recibo,
-    pedido,
-    totalPedido: parseInt(totalPedido),
     vendedor,
   };
   // sumar el recibo +1 en la base de datos
@@ -350,30 +349,33 @@ export let obtenerServiciosTecnicosDateStarttoEnd = async (fechaInicio, fechaFin
 };
 
 
+// TITLE: Pedidos
+//guardar pedidos en la base de datos firestore
+export let guardarPedido = async (data) => {
+  let { cliente, nombre, productos, abono, total, descuento, vendedor, StinVenta } = data;
+  let id = new Date().getTime();
+  const docData = {
+    id: id,
+    cliente,
+    nombre,
+    productos,
+    abono,
+    total,
+    descuento,
+    vendedor,
+    StinVenta,
+  };
+  id = id.toString();
 
-
-// const citiesRef = collection(db, "productos");
-
-// await setDoc(doc(citiesRef, "SF"), {
-//   cantidad_inventario: 10, descripcion: "CAasdasdasd", id: "SF",
-//     precio: 20000, proveedor: "jyr" });
-
-// await setDoc(doc(citiesRef, "LA"), {
-//   cantidad_inventario: 10, descripcion: "CAasdasdasd", id: "LA",
-//     precio: 20000, proveedor: "jyr" });
-
-// await setDoc(doc(citiesRef, "DC"), {
-//   cantidad_inventario: 10, descripcion: "CAasdasdasd", id: "DC",
-//     precio: 20000, proveedor: "jyr" });
-
-// await setDoc(doc(citiesRef, "TOK"), {
-//   cantidad_inventario: 10, descripcion: "CAasdasdasd", id: "TOK",
-//     precio: 20000, proveedor: "jyr" });
-
-// await setDoc(doc(citiesRef, "BJ"), {
-//   cantidad_inventario: 10, descripcion: "CAasdasdasd", id: "BJ",
-//     precio: 20000, proveedor: "jyr" });
-
+  // console.log(docData);
+  try {
+    await setDoc(doc(db, "pedidos", id), docData);
+    return true;
+  } catch (e) {
+    console.log(e);
+    return false;
+  }
+};
 
 
 
