@@ -48,10 +48,13 @@ export class Header extends HTMLElement {
                     <li class="nav-item">
                         <a class="nav-link" data-url="#/prestamos" href="#/prestamos"><i class="fa-solid fa-book"></i> Prestamos</a>
                     </li>
-                    
-                    <li class="nav-item">
-                        <a class="nav-link" data-url="#/cuentas" href="#/cuentas"><i class="fa-solid fa-coins"></i> cuentas</a>
-                    </li>
+                    ${window.isAdmin ? /*html*/`
+                        <li class="nav-item">
+                            <a class="nav-link" data-url="#/cuentas" href="#/cuentas"><i class="fa-solid fa-coins"></i> cuentas</a>
+                        </li>
+                        `
+                        : ''
+                    }
                 </ul>
                 <ul class="navbar-nav">
                 <li class="nav-item dropdown">
