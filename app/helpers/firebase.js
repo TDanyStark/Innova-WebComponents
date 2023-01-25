@@ -157,7 +157,9 @@ export let guardarCliente = async (data) => {
 // guardar en la base datos firestore un producto
 export let guardarProducto = async (data) => {
   let { id, descripcion, precio_compra, precio, cantidad_inventario, proveedor, usuario } = data;
-  // console.log(data);
+  precio_compra = Number(precio_compra);
+  precio = Number(precio);
+  cantidad_inventario = Number(cantidad_inventario);
   let docData = {
     id,
     descripcion,

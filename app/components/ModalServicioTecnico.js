@@ -9,7 +9,7 @@ export class ModalServicioTecnico extends HTMLElement {
         this.innerHTML = /*html*/`
             <!-- Modal -->
             <div class="modal fade" id="modalServicioTecnico" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
-                <div class="modal-dialog modal-lg">
+                <div class="modal-dialog modal-dialog-scrollable modal-lg">
                     <div class="modal-content bg-dark text-white">
                         <div class="modal-header">
                             <h1 class="modal-title fs-5" id="staticBackdropLabel">Generar Servicio Tecnico - N° Recibo: <span id="Nrecibo"></span></h1>
@@ -64,22 +64,27 @@ export class ModalServicioTecnico extends HTMLElement {
                                         <textarea class="form-control" placeholder="Ejm: Tiene partida una tapa, esta mojado, etc" id="textObservaciones"></textarea>
                                     </div>
                                 </div>
-                                <div class="row">
-                                    <div class="col-md-12">
-                                        <label for="inputPedido" class="form-label">Pedidos: </label>
-                                        <input type="text" id="inputPedido" class="form-control" placeholder="Teclado Lenovo s145, memoria Ram o link ML o virtualTronic etc" />
+                                <div id="pedidos"> 
+                                    <div class="row" >
+                                        <div class="col">
+                                            <label for="inputPedido" class="form-label">Pedido: </label>
+                                            <input type="text" id="inputPedido" class="form-control" placeholder="Teclado Lenovo s145, memoria Ram o link ML o virtualTronic etc" />
+                                        </div>
+                                        <div class="col-md-3">
+                                            <label for="inputTotalPedido" class="form-label">Valor Pedido: </label>
+                                            <input type="number" class="form-control" id="inputTotalPedido">
+                                        </div>
+                                        <div class="col-md-2" id="accionesNewFila" style="margin-top:30px;">
+                                            <button class="btn btn-primary btnAgregarPedido" ><i class="fa-solid fa-plus"></i></button>
+                                        </div>
                                     </div>
                                 </div>
                                 <div class="row">
-                                    <div class="col-md-4">
-                                        <label for="inputTotalPedido" class="form-label">Total Pedido: </label>
-                                        <input type="number" class="form-control" id="inputTotalPedido">
-                                    </div>
-                                    <div class="col-md-4">
+                                    <div class="col">
                                         <label for="inputAbono" class="form-label">Abono: </label>
                                         <input type="number" class="form-control" id="inputAbono">
                                     </div>
-                                    <div class="col-md-4">
+                                    <div class="col">
                                         <label for="inputTotal" class="form-label">Total: </label>
                                         <input type="number" class="form-control" id="inputTotal">
                                     </div>
@@ -94,7 +99,7 @@ export class ModalServicioTecnico extends HTMLElement {
                                             </select>
                                         </div>
                                     `: ''}
-                                    <div class="col-md-6">
+                                    <div class="col">
                                         <p>Despues de 2 meses de recibido el producto no se responde...</p>
                                     </div>
                                 </div>
@@ -131,6 +136,8 @@ export class ModalServicioTecnico extends HTMLElement {
 
             this.$selectTec = this.querySelector('#selectTec');
 
+            this.$divPedidos = this.querySelector('#pedidos');
+
     }
 
     clickHandler = async (e) => {
@@ -152,14 +159,6 @@ export class ModalServicioTecnico extends HTMLElement {
                 let abono = this.abono.value === '' ? 0 : parseInt(this.abono.value);
                 let total = this.total.value === '' ? 0 : parseInt(this.total.value);
 
-
-                let pedido = this.pedido.value === '' ? 'Sin Pedido' : this.pedido.value;
-                let totalPedido = this.totalPedido.value === '' ? 0 : parseInt(this.totalPedido.value);
-
-                if (totalPedido != 0){
-                    total = totalPedido + total;
-                }
-
                 const data = {
                     recibo: this.$Nrecibo.textContent,
                     cliente: this.cliente.value,
@@ -175,9 +174,8 @@ export class ModalServicioTecnico extends HTMLElement {
                     PagadoATecnico: false,
                     fechaSalida: "sin fecha",
                     vendedor: vendedor,
-                    totalPedido: totalPedido,
-                    pedido: pedido
                 };
+                
                 let res= await guardarServicioTecnico(data);
 
                 if (res === true) {
@@ -221,6 +219,55 @@ export class ModalServicioTecnico extends HTMLElement {
             this.abono.value = '';
             this.total.value = '';
         }
+        if (e.target.classList.contains('btnAgregarPedido') || e.target.classList.contains('fa-plus')) {
+            //eliminar el boton de agregar pedido
+            const target = e.target.classList.contains('fa-plus') ? e.target.parentElement : e.target;
+            target.remove();
+            const newRow = document.createElement("div");
+            newRow.classList.add("row");
+            // Agrega el contenido del nuevo pedido dentro del nuevo elemento "div" creado
+            newRow.innerHTML = /*html*/ `
+                <div class="col">
+                    <label for="inputPedido" class="form-label">Pedido: </label>
+                    <input type="text" id="inputPedido" class="form-control" placeholder="Teclado Lenovo s145, memoria Ram o link ML o virtualTronic etc" />
+                </div>
+                <div class="col-md-3">
+                    <label for="inputTotalPedido" class="form-label">Valor Pedido: </label>
+                    <input type="number" class="form-control" id="inputTotalPedido">
+                </div>
+                <div class="col-md-2" id="accionesNewFila" style="margin-top:30px;">
+                    <button class="btn btn-primary btnAgregarPedido" ><i class="fa-solid fa-plus"></i></button>
+                    <button class="btn btn-danger btnEliminarPedido"><i class="fa-solid fa-trash"></i></button>
+                </div>
+            `;
+            // agregar como hijo al final del div pedidos
+            this.$divPedidos.appendChild(newRow);
+        }
+        if (e.target.classList.contains('btnEliminarPedido') || e.target.classList.contains('fa-trash')) {
+            const target = e.target.classList.contains('fa-trash') ? e.target.parentElement : e.target;
+            target.parentElement.parentElement.remove();
+            //agregar el boton de agregar pedido en el ultimo div
+            const divs = this.$divPedidos.querySelectorAll('div.row');
+            const ultimoDiv = divs[divs.length - 1];
+            const divAcciones = ultimoDiv.querySelector('#accionesNewFila');
+            divAcciones.innerHTML = "";
+            const btnAgregarPedido = document.createElement('button');
+            btnAgregarPedido.classList.add('btn', 'btn-primary', 'btnAgregarPedido');
+            btnAgregarPedido.innerHTML = '<i class="fa-solid fa-plus"></i>';
+            // agregar margin a los lados
+            btnAgregarPedido.style.marginRight = '4px';
+
+            const btnEliminarPedido = document.createElement('button');
+            btnEliminarPedido.classList.add('btn', 'btn-danger', 'btnEliminarPedido');
+            btnEliminarPedido.innerHTML = '<i class="fa-solid fa-trash"></i>';
+
+
+            divAcciones.appendChild(btnAgregarPedido);
+            if(divs.length > 1){
+                divAcciones.appendChild(btnEliminarPedido);
+            }
+        }
+
     }
 
     ModalServicioTecnicoHandler = async (e) => {
@@ -228,13 +275,15 @@ export class ModalServicioTecnico extends HTMLElement {
         this.telefono.value = e.detail.celular;
         this.$Nrecibo.textContent = e.detail.recibo.Nrecibo;
         if(window.isAdmin){
-            let tecnicos = await obtenerData('tecnicos');
-            tecnicos.forEach(tec => {
-                let option = document.createElement('option');
-                option.value = tec.email;
-                option.textContent = tec.email;
-                this.$selectTec.appendChild(option);
-            });
+            if (this.$selectTec.options.length <= 1) {
+                let tecnicos = await obtenerData('tecnicos');
+                tecnicos.forEach(tec => {
+                    let option = document.createElement('option');
+                    option.value = tec.email;
+                    option.textContent = tec.email;
+                    this.$selectTec.appendChild(option);
+                });
+            }
         }
 
         this.ventanaModal.show();

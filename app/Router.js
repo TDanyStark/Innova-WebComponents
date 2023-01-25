@@ -39,12 +39,15 @@ export async function Router(){
     if(hash === '#/home'){
         $root.innerHTML = "";
         $root.innerHTML = '<home-element></home-element>';
+
     } else if(hash === '#/login'){
         $root.innerHTML = "";
         $root.innerHTML = '<login-element></login-element>';
+
     } else if(hash.includes('#/ventas')){
         $root.innerHTML = "";
         $root.innerHTML = '<ventas-element></ventas-element>';
+
     } else if(hash === '#/clientes'){
         if(!window.isAdmin){
             $root.innerHTML = '<h1>Acceso denegado</h1>';
@@ -52,6 +55,7 @@ export async function Router(){
         }
         $root.innerHTML = "";
         $root.innerHTML = '<clientes-element></clientes-element>';
+
     } else if(hash === '#/inventario'){
         if(!window.isAdmin){
             $root.innerHTML = '<h1>Acceso denegado</h1>';
@@ -69,6 +73,7 @@ export async function Router(){
         const nombreCliente = hash.split('/')[3];
         $root.innerHTML = "";
         $root.innerHTML = `<vista-cliente-element idCliente=${idCliente} nombreCliente=${nombreCliente}></vista-cliente-element>`;
+        
     } else {
         $root.innerHTML = '<h1>Ruta no disponible</h1>';
     }
