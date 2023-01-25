@@ -150,67 +150,63 @@ export class ModalServicioTecnico extends HTMLElement {
                     title: 'Oops...',
                     text: 'Todos los campos con * son obligatorios!',
                 });
-            } else {
-                let vendedor;
-                if (this.$selectTec.value === 'No asignar') {
-                    vendedor = estadoSesion.email;
-                }else{
-                    vendedor = this.$selectTec.value;
-                }
-                let observaciones = this.observaciones.value === '' ? 'Sin Observaciones' : this.observaciones.value;
-                let abono = this.abono.value === '' ? 0 : parseInt(this.abono.value);
-                let total = this.total.value === '' ? 0 : parseInt(this.total.value);
+                return;
+            } 
+            let vendedor = this.$selectTec.value === 'No asignar' ? estadoSesion.email : this.$selectTec.value;
+            let observaciones = this.observaciones.value === '' ? 'Sin Observaciones' : this.observaciones.value;
+            let abono = this.abono.value === '' ? 0 : parseInt(this.abono.value);
+            let total = this.total.value === '' ? 0 : parseInt(this.total.value);
 
-                const data = {
-                    recibo: this.$Nrecibo.textContent,
-                    cliente: this.cliente.value,
-                    celular: this.telefono.value,
-                    equipo: this.equipo.value,
-                    marca: this.marca.value,
-                    cargador: this.cargador.value,
-                    fallaReportada: this.fallaReportada.value,
-                    observaciones: observaciones,
-                    abono: abono,
-                    total: total,
-                    estado: 'Ingresado',
-                    PagadoATecnico: false,
-                    fechaSalida: "sin fecha",
-                    vendedor: vendedor,
-                };
+            const data = {
+                recibo: this.$Nrecibo.textContent,
+                cliente: this.cliente.value,
+                celular: this.telefono.value,
+                equipo: this.equipo.value,
+                marca: this.marca.value,
+                cargador: this.cargador.value,
+                fallaReportada: this.fallaReportada.value,
+                observaciones: observaciones,
+                abono: abono,
+                total: total,
+                estado: 'Ingresado',
+                PagadoATecnico: false,
+                fechaSalida: "sin fecha",
+                vendedor: vendedor,
+            };
 
-                let res= await guardarServicioTecnico(data);
+            let res= await guardarServicioTecnico(data);
 
-                if (res === true) {
-                    Swal.fire({
-                        position: 'top-end',
-                        icon: 'success',
-                        title: 'Registro Exitoso',
-                        showConfirmButton: false,
-                        timer: 1500
-                    }).then(() => {
-                        document.dispatchEvent(new CustomEvent('servicioTecnicoRegistrado'));
-                    });
-                    
-                    //limpiar Datos
-                    this.cliente.value = '';
-                    this.telefono.value = '';
-                    this.equipo.value = 'Escoja una Opcion';
-                    this.marca.value = '';
-                    this.cargador.value = 'Escoja una Opcion';
-                    this.fallaReportada.value = '';
-                    this.observaciones.value = '';
-                    this.abono.value = '';
-                    this.total.value = '';
+            if (res === true) {
+                Swal.fire({
+                    position: 'top-end',
+                    icon: 'success',
+                    title: 'Registro Exitoso',
+                    showConfirmButton: false,
+                    timer: 1500
+                }).then(() => {
+                    document.dispatchEvent(new CustomEvent('servicioTecnicoRegistrado'));
+                });
+                
+                //limpiar Datos
+                this.cliente.value = '';
+                this.telefono.value = '';
+                this.equipo.value = 'Escoja una Opcion';
+                this.marca.value = '';
+                this.cargador.value = 'Escoja una Opcion';
+                this.fallaReportada.value = '';
+                this.observaciones.value = '';
+                this.abono.value = '';
+                this.total.value = '';
 
-                    this.ventanaModal.hide();
-                }else{
-                    Swal.fire({
-                        icon: 'error',
-                        title: 'Oops...',
-                        text: 'Ocurrio un error al registrar el servicio tecnico',
-                    });
-                }
+                this.ventanaModal.hide();
+            }else{
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Oops...',
+                    text: 'Ocurrio un error al registrar el servicio tecnico',
+                });
             }
+            
         }
         if (e.target === this.btnLimpiar) {
             this.equipo.value = 'Escoja una Opcion';

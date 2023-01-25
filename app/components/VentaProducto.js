@@ -417,7 +417,7 @@ export class VentaProducto extends HTMLElement {
         this.$clienteId.textContent = "";
 
         // limpiar la tabla de venta
-        this.$tablaVenta.innerHTML = "";
+        this.querySelector('#bodyTabla').innerHTML = "";
 
     }
 
