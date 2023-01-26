@@ -152,12 +152,45 @@ export class ModalServicioTecnico extends HTMLElement {
                 });
                 return;
             } 
+            let id = new Date().getTime();
+
+
+            //TITLE: Manejador del pedido
+            const divs = this.$divPedidos.querySelectorAll('div.row');
+            let pedidos = [];
+            divs.forEach(div => {
+                let pedido = div.querySelector('.col input').value;
+                let abono = parseInt(div.querySelector('input#inputAbonoPedido').value) === NaN ? 0 : parseInt(div.querySelector('input#inputAbonoPedido').value);
+                let total = parseInt(div.querySelector('input#inputTotalPedido').value) === NaN ? 0 : parseInt(div.querySelector('input#inputTotalPedido').value);
+
+                let obj = {
+                    inST: true,
+                    idST: id,
+                    pedido,
+                    abono,
+                    total,
+                }
+                pedidos.push(obj);
+            });
+
+            console.log(pedidos);
+
+            let objPedido = {
+                cliente: this.cliente.value,
+                celular: this.telefono.value,
+                pedidos: pedidos,
+            }
+
+
+
+
             let vendedor = this.$selectTec.value === 'No asignar' ? estadoSesion.email : this.$selectTec.value;
             let observaciones = this.observaciones.value === '' ? 'Sin Observaciones' : this.observaciones.value;
             let abono = this.abono.value === '' ? 0 : parseInt(this.abono.value);
             let total = this.total.value === '' ? 0 : parseInt(this.total.value);
 
             const data = {
+                id,
                 recibo: this.$Nrecibo.textContent,
                 cliente: this.cliente.value,
                 celular: this.telefono.value,

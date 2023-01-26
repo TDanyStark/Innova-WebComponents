@@ -305,8 +305,7 @@ export let obtenerDataWhere = async (collectionName, field, operator, value) => 
 
 /// NOTE:  Agregar datos a la coleccion servicioTecnico
 export let guardarServicioTecnico = async (data) => {
-  let {recibo, cliente, celular, equipo, marca, cargador, fallaReportada, observaciones, abono, total, estado,fechaSalida, PagadoATecnico, vendedor } = data;
-  let id = String(new Date().getTime());
+  let {id, recibo, cliente, celular, equipo, marca, cargador, fallaReportada, observaciones, abono, total, estado,fechaSalida, PagadoATecnico, vendedor } = data;
   const docData = {
     id : parseInt(id),
     fecha: Timestamp.fromDate(new Date()),
@@ -329,6 +328,7 @@ export let guardarServicioTecnico = async (data) => {
   await editDocMerge("data", "recibo", {Nrecibo: parseInt(recibo) + 1});
 
   console.log(docData);
+  id = id.toString();
   try {
     await setDoc(doc(db, "servicioTecnico", id), docData);
     return true;
@@ -352,13 +352,13 @@ export let obtenerServiciosTecnicosDateStarttoEnd = async (fechaInicio, fechaFin
 // TITLE: Pedidos
 //guardar pedidos en la base de datos firestore
 export let guardarPedido = async (data) => {
-  let { cliente, nombre, productos, abono, total, descuento, vendedor, StinVenta } = data;
+  let { cliente, nombre, pedidos, abono, total, descuento, vendedor, StinVenta } = data;
   let id = new Date().getTime();
   const docData = {
     id: id,
     cliente,
     nombre,
-    productos,
+    pedidos,
     abono,
     total,
     descuento,
