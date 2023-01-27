@@ -164,6 +164,9 @@ export class listServicioTecnico extends HTMLElement {
 
     async clickHandler(e) {
         if (e.target === this.$btnfiltrar) {
+            // si las fechas estan vacias no hacer nada
+            if(this.fechaStart.value === "" || this.fechaEnd.value === "")return;
+
             let dateInicio = new Date(this.fechaStart.value+" 00:00:00").getTime();
             let dateFin = new Date(this.fechaEnd.value+" 23:59:59").getTime();
 
