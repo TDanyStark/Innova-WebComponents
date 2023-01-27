@@ -152,6 +152,18 @@ export class ModalServicioTecnico extends HTMLElement {
                 });
                 return;
             } 
+            const divs = this.$divPedidos.querySelectorAll('div.row');
+            if (divs.length != 1) {
+                if (this.querySelector('.ultimoPedido').value === '') {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Oops...',
+                        text: 'No debe ir un pedido vacio, elimine y vuelve a intentarlo!',
+                    });
+                    return;
+                }
+            }
+            
             let id = new Date().getTime();
 
             let cliente = this.cliente.value;
@@ -161,13 +173,9 @@ export class ModalServicioTecnico extends HTMLElement {
             let existePedido = false;
 
             //TITLE: Manejador del pedido
-            const divs = this.$divPedidos.querySelectorAll('div.row');
-            if (!(divs.length === 0)) {
-                existePedido = true;
-            }
-
             divs.forEach(div => {
                 let pedido = div.querySelector('.col input').value;
+                if (pedido === '') return;
                 let abono = isNaN(parseInt(div.querySelector('input#inputAbonoPedido').value)) ? 0 : parseInt(div.querySelector('input#inputAbonoPedido').value);
                 let total = isNaN(parseInt(div.querySelector('input#inputTotalPedido').value)) ? 0 : parseInt(div.querySelector('input#inputTotalPedido').value);
                 console.log(cliente, celular, total);
@@ -181,9 +189,11 @@ export class ModalServicioTecnico extends HTMLElement {
                     total,
                 }
                 let res = guardarPedido(obj);
+                existePedido = true;
                 console.log(res);
             });
 
+            
             let vendedor = this.$selectTec.value === 'No asignar' ? estadoSesion.email : this.$selectTec.value;
             let observaciones = this.observaciones.value === '' ? 'Sin Observaciones' : this.observaciones.value;
             let abono = this.abono.value === '' ? 0 : parseInt(this.abono.value);

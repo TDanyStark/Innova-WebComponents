@@ -151,13 +151,7 @@ export class listServicioTecnico extends HTMLElement {
                 let id = select.dataset.id;
 
                 let res = await editDocMerge('servicioTecnico', id, {estado: estado});
-                if(res){
-                    Swal.fire({
-                        icon: 'success',
-                        title: 'Estado actualizado',
-                        text: 'El estado del servicio tecnico se actualizo correctamente',
-                    });
-                }else{
+                if(!res){
                     Swal.fire({
                         icon: 'error',
                         title: 'Oops...',
@@ -271,13 +265,13 @@ export class listServicioTecnico extends HTMLElement {
 
 
             let option4 = document.createElement('option');
-            option4.value = "sin solucion";
-            option4.text = "sin solucion";
+            option4.value = "Sin Solucion";
+            option4.text = "Sin Solucion";
             select.appendChild(option4); 
 
             let option5 = document.createElement('option');
-            option5.value = "pendiente de arreglo";
-            option5.text = "pendiente de arreglo";
+            option5.value = "En Espera, Pendiente de Arreglo";
+            option5.text = "En Espera, Pendiente de Arreglo";
             select.appendChild(option5);
 
             // insertar el select en el td
