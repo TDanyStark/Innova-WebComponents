@@ -50,14 +50,13 @@ export class VentaProducto extends HTMLElement {
                     </td>
                     <td style="text-align:right; padding-right: 40px;" colspan="2">Metodo de Pago: </td>
                     <td colspan="2">
-                        <select class="form-select" style="width: 84%;" aria-label="Default select example">
-                            <option selected>Cuentas</option>
-                            <option value="1">Davivienda - Daniel</option>
-                            <option value="2">Nequi - Daniel</option>
-                            <option value="3">Ahorro a la Mano - Daniel</option>
-                            <option value="4">Davivienda - Oscar</option>
-                            <option value="5">Daviplata - Oscar</option>
-
+                        <select id="paymentMethod" class="form-select" style="width: 84%;" aria-label="Default select example">
+                            <option selected value="Efectivo" data-value="Efectivo">Efectivo</option>
+                            <option value="Davivienda - Daniel" data-value="4884 0357 8609">Davivienda - Daniel</option>
+                            <option value="Nequi - Daniel" data-value="314 431 6062">Nequi - Daniel</option>
+                            <option value="Ahorro a la Mano - Daniel" data-value="0 314 431 6062">Ahorro a la Mano - Daniel</option>
+                            <option value="Davivienda - Oscar" data-value="5064 0007 0146">Davivienda - Oscar</option>
+                            <option value="Daviplata - Oscar" data-value="310 346 9101">Daviplata - Oscar</option>
                         </select>
                     </td>
                 </tr>
@@ -80,6 +79,8 @@ export class VentaProducto extends HTMLElement {
         this.cliente = {}
         this.$filaAbono = this.querySelector("#trAbono");
         this.$inputAbono = this.querySelector(".inputAbono");
+
+        this.paymentMethod = this.querySelector("#paymentMethod");
 
     }
 
@@ -255,6 +256,7 @@ export class VentaProducto extends HTMLElement {
                 total,
                 descuento,
                 vendedor: estadoSesion.email,
+                metodoPago: this.paymentMethod.value,
                 StinVenta,
             };
             let res = await guardarVenta(dataVenta);
@@ -321,17 +323,13 @@ export class VentaProducto extends HTMLElement {
                 totalVenta += valorFila;
             });
             $this.querySelector("#totalVenta").dataset.totalfordescuento = totalVenta;
-    
             // Restar el descuento
             totalVenta -= descuento;
-    
             // Mostrar el total de la venta en el elemento totalVenta
             $this.querySelector("#totalVenta").textContent = "$ " + totalVenta.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
             // agregarle un dataset al boton cobrar para poder enviar el total de la venta
             $this.querySelector("#totalVenta").dataset.total = totalVenta;
             $this.querySelector("#totalVenta").dataset.descuento = descuento;
-
-
             return;
         }
         //comprobar si el input es el de descuento
@@ -352,10 +350,23 @@ export class VentaProducto extends HTMLElement {
             $this.querySelector(".inputDescuento").value = "";
             return;
         }
-        //comprobar si el input es el de abono
-        if (e.target.matches('.inputAbono')) {
-            // establecer un dataAttribute para el input abono
+        
+        if(e.target === this.paymentMethod){
+            // console.log(e.target.options)
+            // console.log(e.target.selectedIndex);
+            // console.log(e.target.options[e.target.selectedIndex].getAttribute("data-value"));
+
+            let paymentMethod = e.target.options[e.target.selectedIndex].getAttribute("data-value");
+
+            Swal.fire({
+                position: 'top-end',
+                icon: 'info',
+                title: 'El metodo de pago es: \n' + paymentMethod,
+                color: 'red',
+                showConfirmButton: true,
+            })
         }
+
     }
 
     inputHandler(e) {

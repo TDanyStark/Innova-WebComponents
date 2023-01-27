@@ -131,9 +131,9 @@ export class ListInventario extends HTMLElement {
                 let data = {
                     id,
                     descripcion: td.parentNode.children[1].innerText,
-                    cantidad_inventario: td.parentNode.children[2].innerText,
-                    precio: td.parentNode.children[3].innerText,
-                    precio_compra: td.parentNode.children[4].innerText,
+                    cantidad_inventario: parseInt(td.parentNode.children[2].innerText),
+                    precio: parseInt(td.parentNode.children[3].innerText),
+                    precio_compra: parseInt(td.parentNode.children[4].innerText),
                     proveedor: td.parentNode.children[5].innerText
                 }
                 console.log(data);
