@@ -144,12 +144,14 @@ export class ModalServicioTecnico extends HTMLElement {
 
     clickHandler = async (e) => {
         if (e.target === this.btnRegistrar) {
+            e.target.disabled = true;
             if (this.cliente.value === '' || this.telefono.value === '' || this.equipo.value === 'Escoja una Opcion' || this.marca.value === '' || this.cargador.value === 'Escoja una Opcion' || this.fallaReportada.value === '') {
                 Swal.fire({
                     icon: 'error',
                     title: 'Oops...',
                     text: 'Todos los campos con * son obligatorios!',
                 });
+                e.target.disabled = false;
                 return;
             } 
             const divs = this.$divPedidos.querySelectorAll('div.row');
@@ -160,6 +162,7 @@ export class ModalServicioTecnico extends HTMLElement {
                         title: 'Oops...',
                         text: 'No debe ir un pedido vacio, elimine y vuelve a intentarlo!',
                     });
+                    e.target.disabled = false;
                     return;
                 }
             }
@@ -250,7 +253,7 @@ export class ModalServicioTecnico extends HTMLElement {
                     text: 'Ocurrio un error al registrar el servicio tecnico',
                 });
             }
-            
+            e.target.disabled = false;
         }
         if (e.target === this.btnLimpiar) {
             this.equipo.value = 'Escoja una Opcion';
