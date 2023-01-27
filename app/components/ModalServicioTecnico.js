@@ -158,8 +158,14 @@ export class ModalServicioTecnico extends HTMLElement {
             let celular = this.telefono.value;
 
 
+            let existePedido = false;
+
             //TITLE: Manejador del pedido
             const divs = this.$divPedidos.querySelectorAll('div.row');
+            if (!(divs.length === 0)) {
+                existePedido = true;
+            }
+
             divs.forEach(div => {
                 let pedido = div.querySelector('.col input').value;
                 let abono = isNaN(parseInt(div.querySelector('input#inputAbonoPedido').value)) ? 0 : parseInt(div.querySelector('input#inputAbonoPedido').value);
@@ -182,7 +188,7 @@ export class ModalServicioTecnico extends HTMLElement {
             let observaciones = this.observaciones.value === '' ? 'Sin Observaciones' : this.observaciones.value;
             let abono = this.abono.value === '' ? 0 : parseInt(this.abono.value);
             let total = this.total.value === '' ? 0 : parseInt(this.total.value);
-
+            
             const data = {
                 id,
                 recibo: this.$Nrecibo.textContent,
@@ -199,6 +205,7 @@ export class ModalServicioTecnico extends HTMLElement {
                 PagadoATecnico: false,
                 fechaSalida: "sin fecha",
                 vendedor: vendedor,
+                existePedido: existePedido,
             };
 
             let res= await guardarServicioTecnico(data);

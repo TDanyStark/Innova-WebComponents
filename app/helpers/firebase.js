@@ -305,7 +305,7 @@ export let obtenerDataWhere = async (collectionName, field, operator, value) => 
 
 /// NOTE:  Agregar datos a la coleccion servicioTecnico
 export let guardarServicioTecnico = async (data) => {
-  let {id, recibo, cliente, celular, equipo, marca, cargador, fallaReportada, observaciones, abono, total, estado,fechaSalida, PagadoATecnico, vendedor } = data;
+  let {id, recibo, cliente, celular, equipo, marca, cargador, existePedido, fallaReportada, observaciones, abono, total, estado,fechaSalida, PagadoATecnico, vendedor } = data;
   const docData = {
     id : parseInt(id),
     fecha: Timestamp.fromDate(new Date()),
@@ -323,6 +323,7 @@ export let guardarServicioTecnico = async (data) => {
     PagadoATecnico,
     recibo,
     vendedor,
+    existePedido,
   };
   // sumar el recibo +1 en la base de datos
   await editDocMerge("data", "recibo", {Nrecibo: parseInt(recibo) + 1});

@@ -51,13 +51,15 @@ export class listServicioTecnico extends HTMLElement {
     }
 
     async llenarTabla(data) {
-        
         this.$tbody.innerHTML = '';
         data.forEach(element => {
+            let theFecha = new Date(element.id);
+            // para quitarle los segundos a la fecha se usa la expresion regular y se reemplaza por nada
+            theFecha = theFecha.toLocaleString().replace(/:\d{2}/, "");
             this.$tbody.innerHTML += /*html*/`
                 <tr >
                     <td>${element.recibo}</td>
-                    <td>${element.fecha.toDate().toLocaleString()}</td>
+                    <td>${theFecha}</td>
                     <td>${element.cliente}</td>
                     <td>${element.equipo}</td>
                     <td>${element.marca}</td>
@@ -82,6 +84,8 @@ export class listServicioTecnico extends HTMLElement {
                         <input type="hidden" id="inputFechaSalida" data-info="${element.fechaSalida}" />
                         <input type="hidden" id="inputFecha" data-info="${element.fecha.toDate().getTime()}" />
                         <input type="hidden" id="inputVendedor" data-info="${element.vendedor}" />
+                        <input type="hidden" id="inputExistePedido" data-info="${element.existePedido}" />
+
                         <button ${element.PagadoATecnico ? "disabled" : ""} class="btn btn-primary" id="btn-ver" data-pagadotec="${element.PagadoATecnico}" data-id="${element.id}"><i data-pagadotec="${element.PagadoATecnico}" data-id="${element.id}" id="btn-ver" class="fa fa-eye"></i></button>
                         <button ${element.PagadoATecnico ? "disabled" : ""} class="btn btn-success" id="btn-retirar" data-pagadotec="${element.PagadoATecnico}" data-id="${element.id}"><i data-pagadotec="${element.PagadoATecnico}" data-id="${element.id}" id="btn-retirar" class="fa-solid fa-check"></i></button>
                     </td>
@@ -230,6 +234,7 @@ export class listServicioTecnico extends HTMLElement {
                 fechaSalida: td.querySelector('#inputFechaSalida').dataset.info,
                 fecha: td.querySelector('#inputFecha').dataset.info,
                 vendedor: td.querySelector('#inputVendedor').dataset.info,
+                existePedido: td.querySelector('#inputExistePedido').dataset.info,
             }
             console.log(ST);
             document.dispatchEvent(new CustomEvent('verST', {detail: ST}));
@@ -301,6 +306,8 @@ export class listServicioTecnico extends HTMLElement {
                 fechaSalida: td.querySelector('#inputFechaSalida').dataset.info,
                 fecha: td.querySelector('#inputFecha').dataset.info,
                 vendedor: td.querySelector('#inputVendedor').dataset.info,
+                existePedido: td.querySelector('#inputExistePedido').dataset.info,
+
             }
             console.log(ST);
             document.dispatchEvent(new CustomEvent('retirarST', {detail: ST}));
