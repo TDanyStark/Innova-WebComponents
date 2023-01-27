@@ -38,14 +38,28 @@ export class VentaProducto extends HTMLElement {
                         <th scope="col" style="width: 5%; max-width: 10%;">Cantidad</th>
                         <th scope="col" style="width: 15%;">V. Unitario</th>
                         <th scope="col" style="width: 15%; min-width: 15%;">V. Total</th>
-                        <th scope="col">Accion</th>
+                        <th scope="col" style="width: 15%;">Accion</th>
                     </tr>
                 </thead>
             <tbody id="bodyTabla"></tbody>
             <tfoot>
                 <tr id="trAbono">
-                    <td class="tfootAbono bg-dark" colspan="3" style="text-align:right;">Abono: </td>
-                    <td id="filaAbono" colspan="3"><input class="inputAbono" type="number" pattern="[0-9]*" oninput="this.value = this.value.replace(/[^0-9]/g, '');" /></td>
+                    <td class="tfootAbono bg-dark" >Abono: </td>
+                    <td id="filaAbono" >
+                        <input class="inputAbono" type="number" pattern="[0-9]*" oninput="this.value = this.value.replace(/[^0-9]/g, '');" />
+                    </td>
+                    <td style="text-align:right; padding-right: 40px;" colspan="2">Metodo de Pago: </td>
+                    <td colspan="2">
+                        <select class="form-select" style="width: 84%;" aria-label="Default select example">
+                            <option selected>Cuentas</option>
+                            <option value="1">Davivienda - Daniel</option>
+                            <option value="2">Nequi - Daniel</option>
+                            <option value="3">Ahorro a la Mano - Daniel</option>
+                            <option value="4">Davivienda - Oscar</option>
+                            <option value="5">Daviplata - Oscar</option>
+
+                        </select>
+                    </td>
                 </tr>
                 <tr>
                     <td class="tfootDescuento bg-dark">Descuento</td>
