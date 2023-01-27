@@ -352,22 +352,21 @@ export let obtenerServiciosTecnicosDateStarttoEnd = async (fechaInicio, fechaFin
 // TITLE: Pedidos
 //guardar pedidos en la base de datos firestore
 export let guardarPedido = async (data) => {
-  let { cliente, nombre, pedidos, abono, total, descuento, vendedor, StinVenta } = data;
+  let { inST, idST, cliente, pedido, abono, total } = data;
   let id = new Date().getTime();
   const docData = {
     id: id,
+    inST,
+    idST,
     cliente,
-    nombre,
-    pedidos,
+    pedido,
     abono,
     total,
-    descuento,
-    vendedor,
-    StinVenta,
+    vendedor: estadoSesion.email,
   };
   id = id.toString();
 
-  // console.log(docData);
+  console.log(docData);
   try {
     await setDoc(doc(db, "pedidos", id), docData);
     return true;

@@ -43,7 +43,7 @@ export class VentaProducto extends HTMLElement {
                 </thead>
             <tbody id="bodyTabla"></tbody>
             <tfoot>
-                <tr id="trAbono" class="d-none">
+                <tr id="trAbono">
                     <td class="tfootAbono bg-dark" colspan="3" style="text-align:right;">Abono: </td>
                     <td id="filaAbono" colspan="3"><input class="inputAbono" type="number" pattern="[0-9]*" oninput="this.value = this.value.replace(/[^0-9]/g, '');" /></td>
                 </tr>
@@ -132,7 +132,6 @@ export class VentaProducto extends HTMLElement {
             sumarTotal();
         }
         agregarProducto(e.detail);
-        this.$filaAbono.classList.remove("d-none");
     }
 
     async clickHandler(e) {
@@ -276,7 +275,6 @@ export class VentaProducto extends HTMLElement {
                     timerProgressBar: true,
                     showConfirmButton: false,
                 }).then(() => {
-                    this.$filaAbono.classList.add("d-none");
                     this.classList.add('d-none');
                     this.$inputAbono.value = "";
                     document.dispatchEvent(new CustomEvent('ventaRealizada'));

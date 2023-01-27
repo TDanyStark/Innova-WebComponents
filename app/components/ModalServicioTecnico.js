@@ -1,4 +1,4 @@
-import { estadoSesion, guardarServicioTecnico, obtenerData} from "../helpers/firebase.js";
+import { estadoSesion, guardarServicioTecnico, obtenerData, guardarPedido} from "../helpers/firebase.js";
 
 export class ModalServicioTecnico extends HTMLElement {
     constructor() {
@@ -154,35 +154,29 @@ export class ModalServicioTecnico extends HTMLElement {
             } 
             let id = new Date().getTime();
 
+            let cliente = this.cliente.value;
+            let celular = this.telefono.value;
+
 
             //TITLE: Manejador del pedido
             const divs = this.$divPedidos.querySelectorAll('div.row');
-            let pedidos = [];
             divs.forEach(div => {
                 let pedido = div.querySelector('.col input').value;
-                let abono = parseInt(div.querySelector('input#inputAbonoPedido').value) === NaN ? 0 : parseInt(div.querySelector('input#inputAbonoPedido').value);
-                let total = parseInt(div.querySelector('input#inputTotalPedido').value) === NaN ? 0 : parseInt(div.querySelector('input#inputTotalPedido').value);
-
+                let abono = isNaN(parseInt(div.querySelector('input#inputAbonoPedido').value)) ? 0 : parseInt(div.querySelector('input#inputAbonoPedido').value);
+                let total = isNaN(parseInt(div.querySelector('input#inputTotalPedido').value)) ? 0 : parseInt(div.querySelector('input#inputTotalPedido').value);
+                console.log(cliente, celular, total);
                 let obj = {
                     inST: true,
                     idST: id,
+                    cliente,
+                    celular,
                     pedido,
                     abono,
                     total,
                 }
-                pedidos.push(obj);
+                let res = guardarPedido(obj);
+                console.log(res);
             });
-
-            console.log(pedidos);
-
-            let objPedido = {
-                cliente: this.cliente.value,
-                celular: this.telefono.value,
-                pedidos: pedidos,
-            }
-
-
-
 
             let vendedor = this.$selectTec.value === 'No asignar' ? estadoSesion.email : this.$selectTec.value;
             let observaciones = this.observaciones.value === '' ? 'Sin Observaciones' : this.observaciones.value;
@@ -192,8 +186,8 @@ export class ModalServicioTecnico extends HTMLElement {
             const data = {
                 id,
                 recibo: this.$Nrecibo.textContent,
-                cliente: this.cliente.value,
-                celular: this.telefono.value,
+                cliente,
+                celular,
                 equipo: this.equipo.value,
                 marca: this.marca.value,
                 cargador: this.cargador.value,

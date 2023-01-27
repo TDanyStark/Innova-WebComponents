@@ -23,10 +23,14 @@ export class Header extends HTMLElement {
                         <a class="nav-link" data-url="#/ventas" href="#/ventas"><i class="fa-solid fa-money-bill"></i> Ventas</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" data-url="#/pagos" href="#/pagos"><i class="fa-solid fa-cash-register"></i> Pagos</a>
+                        <a class="nav-link" data-url="#/stecnico" href="#/stecnico"><i class="fa-solid fa-screwdriver-wrench"></i> Servicio Tecnico</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" data-url="#/stecnico" href="#/stecnico"><i class="fa-solid fa-screwdriver-wrench"></i> Servicio Tecnico</a>
+                        <a class="nav-link" data-url="#/pedidos" href="#/pedidos"><i class="fa-solid fa-handshake"></i> Pedidos</a>
+                    </li>
+
+                    <li class="nav-item">
+                        <a class="nav-link" data-url="#/pagos" href="#/pagos"><i class="fa-solid fa-cash-register"></i> Pagos</a>
                     </li>
 
                     ${window.isAdmin ? /*html*/`
@@ -49,27 +53,34 @@ export class Header extends HTMLElement {
                         <a class="nav-link" data-url="#/prestamos" href="#/prestamos"><i class="fa-solid fa-book"></i> Prestamos</a>
                     </li>
                     ${window.isAdmin ? /*html*/`
-                        <li class="nav-item">
-                            <a class="nav-link" data-url="#/cuentas" href="#/cuentas"><i class="fa-solid fa-coins"></i> cuentas</a>
-                        </li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            <i class="fa-solid fa-calendar-days"></i> Cuentas
+                        </a>
+                        <ul class="dropdown-menu dropdown-menu-end">
+                            <li><a class="dropdown-item text-white" href="#/ventasrealizadas">lista Ventas</a></li>
+                            <li><a class="dropdown-item text-white" href="#/pagoserviciotecnico">Pago ST</a></li>
+                            <li><hr class="dropdown-divider"></li>
+                        </ul>
+                    </li>
                         `
                         : ''
                     }
                 </ul>
                 <ul class="navbar-nav">
-                <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                        <i class="fa-solid fa-user-tie"></i> ${estadoSesion.email.split('@')[0].toUpperCase()}
-                    </a>
-                    <ul class="dropdown-menu dropdown-menu-end">
-                    ${window.isAdmin ? /*html*/`
-                        <li><a class="dropdown-item" href="#/usuarios">Usuarios</a></li>
-                        ` : ''
-                    }
-                        <li><a class="dropdown-item" href="#/configuracion">Configuracion</a></li>
-                        <li><hr class="dropdown-divider"></li>
-                        <li><btn-cerrar-sesion></btn-cerrar-sesion></li>
-                    </ul>
+                    <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            <i class="fa-solid fa-user-tie"></i> ${estadoSesion.email.split('@')[0].toUpperCase()}
+                        </a>
+                        <ul class="dropdown-menu dropdown-menu-end">
+                        ${window.isAdmin ? /*html*/`
+                            <li><a class="dropdown-item" href="#/usuarios">Usuarios</a></li>
+                            ` : ''
+                        }
+                            <li><a class="dropdown-item" href="#/configuracion">Configuracion</a></li>
+                            <li><hr class="dropdown-divider"></li>
+                            <li><btn-cerrar-sesion></btn-cerrar-sesion></li>
+                        </ul>
                     </li>
                 </ul>
                 </div>
@@ -83,6 +94,7 @@ export class Header extends HTMLElement {
         const navLinks = document.querySelectorAll('.nav-link');
 
         navLinks.forEach((navLink) => {
+
             const url = navLink.getAttribute('data-url');
             if (window.location.hash === url) {
                 navLink.classList.add('active');
