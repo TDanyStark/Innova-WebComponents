@@ -214,8 +214,7 @@ export let guardarVenta = async (data) => {
   let { cliente, nombre, productos, metodoPago, abono, total, descuento, vendedor, StinVenta } = data;
   let id = new Date().getTime();
   const docData = {
-    id: id,
-    fecha: Timestamp.fromDate(new Date()),
+    id,
     cliente,
     nombre,
     productos,
@@ -309,7 +308,6 @@ export let guardarServicioTecnico = async (data) => {
   let {id, recibo, cliente, celular, equipo, marca, cargador, existePedido, fallaReportada, observaciones, abono, total, estado,fechaSalida, PagadoATecnico, vendedor } = data;
   const docData = {
     id : parseInt(id),
-    fecha: Timestamp.fromDate(new Date()),
     cliente,
     celular,
     equipo,

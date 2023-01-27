@@ -111,9 +111,9 @@ export class ModalServicioTecnico extends HTMLElement {
                             </div>
                         </div>
                         <div class="modal-footer">
-                        <button id="btnRegistrar" tabIndex="0" type="button" class="btn btn-primary">Registrar</button>
-                        <button id="btnLimpiar" tabIndex="-1" type="button" class="btn btn-warning">Limpiar</button>
-                            </div>
+                            <button id="btnRegistrar" tabIndex="0" type="button" class="btn btn-primary">Registrar</button>
+                            <button id="btnLimpiar" tabIndex="-1" type="button" class="btn btn-warning">Limpiar</button>
+                        </div>
                     </div>
                 </div>
             </div>

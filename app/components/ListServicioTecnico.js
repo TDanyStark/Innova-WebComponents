@@ -1,4 +1,5 @@
 import { editDocMerge, estadoSesion, obtenerDataWhere, obtenerServiciosTecnicosDateStarttoEnd} from "../helpers/firebase.js";
+import { ModalViewST } from "./ModalViewST.js";
 
 export class listServicioTecnico extends HTMLElement {
     constructor() {
@@ -32,6 +33,7 @@ export class listServicioTecnico extends HTMLElement {
                 </div>
             </div>
         </div>
+        <modal-view-st></modal-view-st>
         `;
 
         this.$btnfiltrar;
@@ -82,7 +84,6 @@ export class listServicioTecnico extends HTMLElement {
                         <input type="hidden" id="inputEstado" data-info="${element.estado}" />
                         <input type="hidden" id="inputPagadoATecnico" data-info="${element.PagadoATecnico}" />
                         <input type="hidden" id="inputFechaSalida" data-info="${element.fechaSalida}" />
-                        <input type="hidden" id="inputFecha" data-info="${element.fecha.toDate().getTime()}" />
                         <input type="hidden" id="inputVendedor" data-info="${element.vendedor}" />
                         <input type="hidden" id="inputExistePedido" data-info="${element.existePedido}" />
 
@@ -229,11 +230,9 @@ export class listServicioTecnico extends HTMLElement {
                 estado: td.querySelector('#inputEstado').dataset.info,
                 PagadoATecnico: td.querySelector('#inputPagadoATecnico').dataset.info,
                 fechaSalida: td.querySelector('#inputFechaSalida').dataset.info,
-                fecha: td.querySelector('#inputFecha').dataset.info,
                 vendedor: td.querySelector('#inputVendedor').dataset.info,
                 existePedido: td.querySelector('#inputExistePedido').dataset.info,
             }
-            console.log(ST);
             document.dispatchEvent(new CustomEvent('verST', {detail: ST}));
         }
         //comprobar si el e.target tiene la clase estadoST
@@ -301,12 +300,10 @@ export class listServicioTecnico extends HTMLElement {
                 estado: td.querySelector('#inputEstado').dataset.info,
                 PagadoATecnico: td.querySelector('#inputPagadoATecnico').dataset.info,
                 fechaSalida: td.querySelector('#inputFechaSalida').dataset.info,
-                fecha: td.querySelector('#inputFecha').dataset.info,
                 vendedor: td.querySelector('#inputVendedor').dataset.info,
                 existePedido: td.querySelector('#inputExistePedido').dataset.info,
 
             }
-            console.log(ST);
             document.dispatchEvent(new CustomEvent('retirarST', {detail: ST}));
         }
     }
