@@ -7,6 +7,7 @@ export class listServicioTecnico extends HTMLElement {
         // bind 
         this.llenarTabla = this.llenarTabla.bind(this);
         this.clickHandler = this.clickHandler.bind(this);
+        this.ActualizarTablaSTHandler = this.ActualizarTablaSTHandler.bind(this);
         this.innerHTML = /*html*/`
         <div class="container bg-dark text-white">
             <div class="row">
@@ -342,6 +343,22 @@ export class listServicioTecnico extends HTMLElement {
             }
         }
     }
+    async ActualizarTablaSTHandler(e){
+        // obtener el numero desde epoch hasta el primer dia del mes
+        let date = new Date();
+        date.setDate(1); // Establece el día en el primer día del mes
+        date.setHours(0, 0, 0, 0); // Establece la hora en 00:00:00.000
+        let firstDayOfMonth = date.getTime(); // Obtiene el número de milisegundos desde el epoch
+        console.log(firstDayOfMonth);
+
+
+        let data = await obtenerDataWhere('servicioTecnico', 'id', '>=', firstDayOfMonth);
+        // limpiar la datatable
+        $('#tablaServicioTecnico').DataTable().destroy();
+        // llenar la tabla
+        this.llenarTabla(data);
+    }
+
 
     async connectedCallback() {
         // obtener el numero desde epoch hasta el primer dia del mes
@@ -357,12 +374,14 @@ export class listServicioTecnico extends HTMLElement {
         this.addEventListener('click', this.clickHandler);
         this.addEventListener('change', this.changeHandler);
         this.addEventListener('keyup', this.keyupHandler);
+        document.addEventListener('ActualizarTablaST', this.ActualizarTablaSTHandler);
     }
 
     disconnectedCallback() {
         this.removeEventListener('click', this.clickHandler);
         this.removeEventListener('change', this.changeHandler);
         this.removeEventListener('keyup', this.keyupHandler);
+        document.removeEventListener('ActualizarTablaST', this.ActualizarTablaSTHandler);
     }   
 }
 

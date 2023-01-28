@@ -5,6 +5,7 @@ export class ModalViewST extends HTMLElement {
         super();
 
         this.verSTHandler = this.verSTHandler.bind(this);
+        this.clickHandler = this.clickHandler.bind(this);
 
         this.innerHTML = /*html*/`
             <div class="modal fade " id="modalViewST" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -12,7 +13,7 @@ export class ModalViewST extends HTMLElement {
                     <div class="modal-content bg-dark text-white">
                         <div class="modal-header">
                             <h5 class="modal-title" id="exampleModalLabel">Detalle de Servicio Tecnico - N° Recibo: <span id="Nrecibo"></span></h5>
-                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            <button type="button" id="btnCerrar" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                         </div>
                         <div class="modal-body">
                             <div class="container-fluid">
@@ -89,8 +90,7 @@ export class ModalViewST extends HTMLElement {
                             </div>
                         </div>
                         <div class="modal-footer">
-                            <button id="btnGuardar" tabIndex="0" type="button" class="btn btn-primary">Guardar</button>
-                            <button id="btnLimpiar" tabIndex="-1" type="button" class="btn btn-warning">Limpiar</button>
+                            <button type="button" id="btnCerrarTwo" class="btn btn-danger" data-bs-dismiss="modal">Cerrar</button>
                         </div>
                     </div>
                 </div>
@@ -114,6 +114,10 @@ export class ModalViewST extends HTMLElement {
 
         this.Nrecibo = this.querySelector('#Nrecibo');
 
+        this.btnCerrar2 = this.querySelector('#btnCerrarTwo');
+        this.btnCerrar = this.querySelector('#btnCerrar');
+
+        this.isSaved = false;
         this.ID;
 
     }
@@ -178,6 +182,7 @@ export class ModalViewST extends HTMLElement {
         let res = await editDocMerge('servicioTecnico', id, data);
         console.log(res);
         if(res){
+            this.isSaved = true;
             Swal.fire({
                 position: 'top-end',
                 icon: 'success',
@@ -185,7 +190,25 @@ export class ModalViewST extends HTMLElement {
                 timer: 1000,
                 showConfirmButton: false
             })
-            document.dispatchEvent(new CustomEvent('ActualizarTablaST'));
+        }
+    }
+
+    clickHandler = async (e) => {
+        if( e.target === this.btnCerrar || e.target === this.btnCerrar2){
+            
+            this.ventanaModal.hide();
+            let $this = this;
+            function waitToSaved(){
+                console.log($this.isSaved, 'isSaved'	);
+                if($this.isSaved){
+                    document.dispatchEvent(new CustomEvent('ActualizarTablaST'));
+                    $this.isSaved = false;
+                }else{
+                    setTimeout(waitToSaved, 600);
+                }
+                return;
+            }
+            waitToSaved();
         }
     }
 
@@ -193,6 +216,12 @@ export class ModalViewST extends HTMLElement {
         
         document.addEventListener('verST', this.verSTHandler);
         this.addEventListener('change', this.changeHandler);
+        this.addEventListener('click', this.clickHandler);
+    }
+
+    disconnectedCallback() {
+        document.removeEventListener('verST', this.verSTHandler);
+        this.removeEventListener('change', this.changeHandler);
     }
 
     
