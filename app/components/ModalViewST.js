@@ -195,7 +195,11 @@ export class ModalViewST extends HTMLElement {
         this.fechaIngreso.value = fecha;
         this.fechaSalida.value = fechaSalida;
         this.estado.value = st.estado;
-        this.vendedor.value = st.vendedor;
+        
+        console.log(window.isAdmin);
+        if(window.isAdmin){
+            this.vendedor.value = st.vendedor;
+        }
 
         // establecer los data atribute para los campos 
         this.cliente.dataset.dbkey = "cliente";
@@ -211,10 +215,11 @@ export class ModalViewST extends HTMLElement {
         this.fechaIngreso.dataset.dbkey = "fecha";
         this.fechaSalida.dataset.dbkey = "fechaEntrega";
         this.estado.dataset.dbkey = "estado";
-        this.vendedor.dataset.dbkey = "vendedor";
+        if(window.isAdmin){
+            this.vendedor.dataset.dbkey = "vendedor";
+            this.$selectTec.value = st.vendedor;
+        }
 
-
-        this.$selectTec.value = st.vendedor;
 
         this.ventanaModal.show();
     }

@@ -75,8 +75,8 @@ export class listServicioTecnico extends HTMLElement {
                     <td>${element.cliente}</td>
                     <td>${element.equipo}</td>
                     <td>${element.marca}</td>
-                    <td>${this.milesFunc(element.total)}</td>
-                    <td style="${saldo > 0 ? "border: 1px solid red" : "border: 1px solid green"}">${saldo}</td>
+                    <td style="${saldo > 0 ? "border-right: 5px solid red" : "border-right: 5px solid green"}">${this.milesFunc(element.total)}</td>
+                    <td style="${saldo > 0 ? "border-right: 5px solid red" : "border-right: 5px solid green"}">${saldo}</td>
                     <td class="estadoST" data-id="${element.id}" style="width:10%;">${element.estado}</td>
                     ${window.isAdmin ? `<td> ${element.vendedor.split("@")[0]}</td>` : ''}
                     <td>${element.PagadoATecnico == false ? "No" : "Si"}</td>

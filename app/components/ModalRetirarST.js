@@ -124,17 +124,14 @@ export class ModalRetirarST extends HTMLElement{
             let abono = parseInt(this.$abono.dataset.abono);
             let total = parseInt(this.$total.dataset.total);
             let pago = isNaN(parseInt(this.$inputPago.value)) ? 0 : parseInt(this.$inputPago.value);
-            let saldo = total - abono - pago;
 
             abono += pago;
 
             let id = this.ID
-            console.log(id, abono, total, pago, saldo);
 
             let data = {
                 abono,
                 total,
-                saldo,
                 fechaSalida: new Date().getTime(),
                 estado: 'Entregado'
             }
