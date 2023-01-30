@@ -32,11 +32,11 @@ export class ModalServicioTecnico extends HTMLElement {
                                         <label for="selectEquipo" class="form-label">* Equipo</label>
                                         <select id="selectEquipo" class="form-select" aria-label="Default select example">
                                             <option selected >Escoja una Opcion</option>
-                                            <option value="portatil" >Portatil</option>
+                                            <option value="Portatil" >Portatil</option>
                                             <option value="AIO">Todo en Uno</option>
-                                            <option value="escritorio">Escritorio</option>
-                                            <option value="impresora">Impresora</option>
-                                            <option value="otro">Otro</option>
+                                            <option value="Escritorio">Escritorio</option>
+                                            <option value="Impresora">Impresora</option>
+                                            <option value="Otro">Otro</option>
                                         </select>
                                     </div>
                                     <div class="col-md-4">

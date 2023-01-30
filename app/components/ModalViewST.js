@@ -32,11 +32,11 @@ export class ModalViewST extends HTMLElement {
                                         <label for="selectEquipo" class="form-label">* Equipo</label>
                                         <select id="selectEquipo" class="form-select" aria-label="Default select example">
                                             <option selected >Escoja una Opcion</option>
-                                            <option value="portatil" >Portatil</option>
+                                            <option value="Portatil" >Portatil</option>
                                             <option value="AIO">Todo en Uno</option>
-                                            <option value="escritorio">Escritorio</option>
-                                            <option value="impresora">Impresora</option>
-                                            <option value="otro">Otro</option>
+                                            <option value="Escritorio">Escritorio</option>
+                                            <option value="Impresora">Impresora</option>
+                                            <option value="Otro">Otro</option>
                                         </select>
                                     </div>
                                     <div class="col-md-4">
@@ -65,11 +65,15 @@ export class ModalViewST extends HTMLElement {
                                     </div>
                                 </div>
                                 <div class="row">
-                                    <div class="col">
+                                    <div class="col-5">
                                         <label for="inputAbono" class="form-label">Abono: </label>
                                         <input type="number" class="form-control" id="inputAbono">
                                     </div>
                                     <div class="col">
+                                        <p class="form-label">Total Abono</p>
+                                        <p class="form-label" id="totalAbono"></p>
+                                    </div>
+                                    <div class="col-5">
                                         <label for="inputTotal" class="form-label">Total: </label>
                                         <input type="number" class="form-control" id="inputTotal">
                                     </div>
@@ -130,6 +134,7 @@ export class ModalViewST extends HTMLElement {
         this.fallaReportada = this.querySelector('#textFallaReportada');
         this.observaciones = this.querySelector('#textObservaciones');
         this.abono = this.querySelector('#inputAbono');
+        this.totalAbono = this.querySelector('#totalAbono');
         this.total = this.querySelector('#inputTotal');
         this.fechaIngreso = this.querySelector('#inputFechaIngreso');
         this.fechaEntrega = this.querySelector('#inputFechaEntrega');
@@ -146,6 +151,10 @@ export class ModalViewST extends HTMLElement {
         this.isclicked = false;
         this.ID;
 
+    }
+
+    milesFuncion(precio){
+        return "$ " + precio.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
     }
 
     verSTHandler = async (e) => {
@@ -166,7 +175,7 @@ export class ModalViewST extends HTMLElement {
 
         let st = e.detail;
         let fecha = new Date(parseInt(st.id)).toISOString().split("T")[0];
-        console.log(fecha);
+        let totalAbono = this.milesFuncion(st.abono);
         this.cliente.value = st.cliente;
         this.celular.value = st.celular;
         this.equipo.value = st.equipo;
@@ -174,7 +183,9 @@ export class ModalViewST extends HTMLElement {
         this.cargador.value = st.cargador;
         this.fallaReportada.value = st.fallaReportada;
         this.observaciones.value = st.observaciones;
-        this.abono.value = st.abono;
+        this.abono.value = "";
+        this.totalAbono.textContent = totalAbono;
+        this.totalAbono.dataset.abono = st.abono;
         this.total.value = st.total;
         this.Nrecibo.textContent = st.recibo;
         this.fechaIngreso.value = fecha;
@@ -190,6 +201,7 @@ export class ModalViewST extends HTMLElement {
         this.fallaReportada.dataset.dbkey = "fallaReportada";
         this.observaciones.dataset.dbkey = "observaciones";
         this.abono.dataset.dbkey = "abono";
+        this.totalAbono.dataset.dbkey = "abono";
         this.total.dataset.dbkey = "total";
         this.fechaIngreso.dataset.dbkey = "fecha";
         this.fechaEntrega.dataset.dbkey = "fechaEntrega";
@@ -202,6 +214,36 @@ export class ModalViewST extends HTMLElement {
     }
 
     changeHandler = async (e) => {
+        if(e.target == this.abono){
+            if(e.target.value == "") return;
+            let abono = parseInt(e.target.value);
+            let totalAbono = parseInt(this.totalAbono.dataset.abono);
+            let total = parseInt(this.total.value);
+
+
+            if(abono + totalAbono > total){
+                this.abono.value = "";
+                
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Oops...',
+                    text: 'El abono no puede ser mayor al total',
+                }).then(() => {
+                    setTimeout(() => {
+                        this.abono.focus();
+                    }, 500);
+                })
+                return;
+            }
+            this.totalAbono.textContent = this.milesFuncion(abono + totalAbono);
+            this.totalAbono.dataset.abono = abono + totalAbono;
+            e.target.value = "";
+            e.target.focus();
+
+            let data = {
+                abono: this.totalAbono.dataset.abono
+            }
+        }
         let id = this.ID;
         let newValue = e.target.value;
         let key = e.target.getAttribute("data-dbkey");
@@ -209,9 +251,14 @@ export class ModalViewST extends HTMLElement {
         // si el valor es un numero, convertirlo a entero si no dejarlo como string
         newValue = isNaN(parseInt(newValue)) ? newValue : parseInt(newValue);
 
+
         // creo la data que le pasa a la funcion de firebase y creo la key dinamicamente
         let data = {};
         data[key] = newValue;
+
+        if (key === "abono") {
+            data[key] = parseInt(this.totalAbono.dataset.abono);
+        }
 
         let res = await editDocMerge('servicioTecnico', id, data);
         console.log(res);
