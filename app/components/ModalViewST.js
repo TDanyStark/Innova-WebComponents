@@ -109,7 +109,7 @@ export class ModalViewST extends HTMLElement {
                                             <option value="Sin Solucion">Sin Solucion</option>
                                             <option value="En Espera, Pendiente de Arreglo">En Espera, Pendiente de Arreglo</option>
                                             <option value="Entregado, Sin Solucion">Entregado, Sin Solucion</option>
-                                            <option value="Entregado">Entregado</option>
+                                            <option value="Entregado" disabled>Entregado</option>
                                         </select>
                                     </div>
                                 </div>
@@ -313,6 +313,7 @@ export class ModalViewST extends HTMLElement {
     disconnectedCallback() {
         document.removeEventListener('verST', this.verSTHandler);
         this.removeEventListener('change', this.changeHandler);
+        this.removeEventListener('click', this.clickHandler);
     }
 
     

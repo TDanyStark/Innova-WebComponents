@@ -1,5 +1,6 @@
 import { editDocMerge, estadoSesion, obtenerDataWhere, obtenerServiciosTecnicosDateStarttoEnd} from "../helpers/firebase.js";
-import { ModalViewST } from "./ModalViewST.js";
+import { ModalViewST  } from "./ModalViewST.js";
+import { ModalRetirarST } from "./ModalRetirarST.js";
 
 export class listServicioTecnico extends HTMLElement {
     constructor() {
@@ -35,6 +36,7 @@ export class listServicioTecnico extends HTMLElement {
             </div>
         </div>
         <modal-view-st></modal-view-st>
+        <modal-retirar-st></modal-retirar-st>
         `;
 
         this.$btnfiltrar;
@@ -259,17 +261,7 @@ export class listServicioTecnico extends HTMLElement {
                 existePedido: td.querySelector('#inputExistePedido').dataset.info,
 
             }
-            Swal.fire({
-                title: '¿Desea retirar el servicio tecnico?',
-                text: "No podra revertir esta accion",
-                icon: 'warning',
-                showCancelButton: true,
-                confirmButtonColor: '#3085d6',
-                cancelButtonColor: '#d33',
-                confirmButtonText: 'Si, retirar!'
-            }).then(async (result) => {
-                console.log(result);
-            })
+            document.dispatchEvent(new CustomEvent('retirarST', {detail: ST}));
         }
     }
 
