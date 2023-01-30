@@ -103,8 +103,8 @@ export class ModalServicioTecnico extends HTMLElement {
                                             </select>
                                         </div>
                                     `: ''}
-                                    <div class="col">
-                                        <p>Despues de 2 meses de recibido el producto no se responde...</p>
+                                    <div class="col" style="margin-top: 25px">
+                                        <p style="margin: 0;">Despues de 2 meses de recibido el producto no se responde...</p>
                                     </div>
                                 </div>
                                     

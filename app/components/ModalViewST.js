@@ -65,15 +65,15 @@ export class ModalViewST extends HTMLElement {
                                     </div>
                                 </div>
                                 <div class="row">
-                                    <div class="col-5">
+                                    <div class="col">
                                         <label for="inputAbono" class="form-label">Abono: </label>
                                         <input type="number" class="form-control" id="inputAbono">
                                     </div>
-                                    <div class="col">
+                                    <div class="col-3">
                                         <p class="form-label">Total Abono</p>
-                                        <p class="form-label" id="totalAbono"></p>
+                                        <p class="form-label" id="totalAbono" style="font-size: 1.5rem;"></p>
                                     </div>
-                                    <div class="col-5">
+                                    <div class="col">
                                         <label for="inputTotal" class="form-label">Total: </label>
                                         <input type="number" class="form-control" id="inputTotal">
                                     </div>
@@ -87,8 +87,8 @@ export class ModalViewST extends HTMLElement {
                                             </select>
                                         </div>
                                     `: ''}
-                                    <div class="col" style="margin-top: 20px">
-                                        <p>Despues de 2 meses de recibido el producto no se responde...</p>
+                                    <div class="col" style="margin-top: 25px">
+                                        <p style="margin: 0;">Despues de 2 meses de recibido el producto no se responde...</p>
                                     </div>
                                 </div>
                                 <div class="row">
