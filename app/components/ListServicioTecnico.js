@@ -236,53 +236,7 @@ export class listServicioTecnico extends HTMLElement {
             }
             document.dispatchEvent(new CustomEvent('verST', {detail: ST}));
         }
-        //comprobar si el e.target tiene la clase estadoST
-        if(e.target.classList.contains('estadoST')){ 
-            if(this.estadoActivo)return;
-            this.estadoActivo = true;
-            // insertar un select con 5 opciones de estados de servicio tecnico
-            let select = document.createElement('select');
-            select.classList.add('form-select');
-            select.classList.add('form-select-sm');
-            select.id = "selectEstadoST";
-            select.style.width = "60%";
-            select.dataset.id = e.target.dataset.id;
 
-
-            let option0 = document.createElement('option');
-            option0.value = "...";
-            option0.text = "...";
-            option0.selected = true;
-            select.appendChild(option0);
-
-
-            let option1 = document.createElement('option');
-            option1.value = "En Revision";
-            option1.text = "En Revision";
-            select.appendChild(option1);
-
-            let option2 = document.createElement('option');
-            option2.value = "Solucionado";
-            option2.text = "Solucionado";
-            select.appendChild(option2);
-
-
-            let option4 = document.createElement('option');
-            option4.value = "Sin Solucion";
-            option4.text = "Sin Solucion";
-            select.appendChild(option4); 
-
-            let option5 = document.createElement('option');
-            option5.value = "En Espera, Pendiente de Arreglo";
-            option5.text = "En Espera, Pendiente de Arreglo";
-            select.appendChild(option5);
-
-            // insertar el select en el td
-            e.target.innerHTML = "";
-            e.target.appendChild(select);
-
-            
-        }
         if(e.target.id === "btn-retirar"){
             // obetner el td con closest
             let td = e.target.closest('td');
@@ -319,40 +273,7 @@ export class listServicioTecnico extends HTMLElement {
         }
     }
 
-    async changeHandler(e) {
-        if(e.target.id === "selectEstadoST"){
-            if(e.target.value === "...")return;
-            let id = e.target.dataset.id;
-            let estado = e.target.value;
-            
-            let res = await editDocMerge('servicioTecnico', id, {estado: estado});
-            // quitar el select y poner el estado en el td
-            if (res){
-                Swal.fire({
-                    icon: 'success',
-                    title: 'Exito',
-                    text: 'Se ha actualizado el estado del servicio tecnico',
-                    timer: 1500,
-                    showConfirmButton: false
-                });
-                e.target.parentNode.innerHTML = estado;
-    
-                this.estadoActivo = false;
-                // obtener el numero desde epoch hasta el primer dia del mes
-                let date = new Date();
-                date.setDate(1); // Establece el día en el primer día del mes
-                date.setHours(0, 0, 0, 0); // Establece la hora en 00:00:00.000
-                let firstDayOfMonth = date.getTime(); // Obtiene el número de milisegundos desde el epoch
-                console.log(firstDayOfMonth);
 
-
-                let data = await obtenerDataWhere('servicioTecnico', 'id', '>=', firstDayOfMonth);
-                // limpiar la datatable
-                $('#tablaServicioTecnico').DataTable().destroy();
-                this.llenarTabla(data);
-            }
-        }
-    }
     async ActualizarTablaSTHandler(e){
         // obtener el numero desde epoch hasta el primer dia del mes
         let date = new Date();
@@ -382,14 +303,12 @@ export class listServicioTecnico extends HTMLElement {
         let data = await obtenerDataWhere('servicioTecnico', 'id', '>=', firstDayOfMonth);
         this.llenarTabla(data);
         this.addEventListener('click', this.clickHandler);
-        this.addEventListener('change', this.changeHandler);
         this.addEventListener('keyup', this.keyupHandler);
         document.addEventListener('ActualizarTablaST', this.ActualizarTablaSTHandler);
     }
 
     disconnectedCallback() {
         this.removeEventListener('click', this.clickHandler);
-        this.removeEventListener('change', this.changeHandler);
         this.removeEventListener('keyup', this.keyupHandler);
         document.removeEventListener('ActualizarTablaST', this.ActualizarTablaSTHandler);
     }   
