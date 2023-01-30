@@ -87,6 +87,28 @@ export class ModalViewST extends HTMLElement {
                                         <p>Despues de 2 meses de recibido el producto no se responde...</p>
                                     </div>
                                 </div>
+                                <div class="row">
+                                    <div class="col-md">
+                                        <label for="inputFechaIngreso" class="form-label">Fecha de Ingreso: </label>
+                                        <input type="date" class="form-control" id="inputFechaIngreso" disabled>
+                                    </div>
+                                    <div class="col-md">
+                                        <label for="inputFechaEntrega" class="form-label">Fecha de Entrega: </label>
+                                        <input type="date" class="form-control" id="inputFechaEntrega" disabled>
+                                    </div>
+                                    <div class="col-md">
+                                        <label for="inputEstado" class="form-label">Estado: </label>
+                                        <select id="inputEstado" class="form-select" aria-label="Default select example">
+                                            <option value="Ingresado">Ingresado</option>
+                                            <option value="En Revision">En Revision</option>
+                                            <option value="Solucionado">Solucionado</option>
+                                            <option value="Sin Solucion">Sin Solucion</option>
+                                            <option value="En Espera, Pendiente de Arreglo">En Espera, Pendiente de Arreglo</option>
+                                            <option value="Entregado, Sin Solucion">Entregado, Sin Solucion</option>
+                                            <option value="Entregado">Entregado</option>
+                                        </select>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                         <div class="modal-footer">
@@ -109,6 +131,9 @@ export class ModalViewST extends HTMLElement {
         this.observaciones = this.querySelector('#textObservaciones');
         this.abono = this.querySelector('#inputAbono');
         this.total = this.querySelector('#inputTotal');
+        this.fechaIngreso = this.querySelector('#inputFechaIngreso');
+        this.fechaEntrega = this.querySelector('#inputFechaEntrega');
+        this.estado = this.querySelector('#inputEstado');
 
         this.$selectTec = this.querySelector('#selectTec');
 
@@ -118,6 +143,7 @@ export class ModalViewST extends HTMLElement {
         this.btnCerrar = this.querySelector('#btnCerrar');
 
         this.isSaved = false;
+        this.isclicked = false;
         this.ID;
 
     }
@@ -139,6 +165,8 @@ export class ModalViewST extends HTMLElement {
         this.ID = e.detail.id;
 
         let st = e.detail;
+        let fecha = new Date(parseInt(st.id)).toISOString().split("T")[0];
+        console.log(fecha);
         this.cliente.value = st.cliente;
         this.celular.value = st.celular;
         this.equipo.value = st.equipo;
@@ -149,6 +177,9 @@ export class ModalViewST extends HTMLElement {
         this.abono.value = st.abono;
         this.total.value = st.total;
         this.Nrecibo.textContent = st.recibo;
+        this.fechaIngreso.value = fecha;
+        this.fechaEntrega.value = st.fechaEntrega;
+        this.estado.value = st.estado;
 
         // establecer los data atribute para los campos 
         this.cliente.dataset.dbkey = "cliente";
@@ -160,6 +191,9 @@ export class ModalViewST extends HTMLElement {
         this.observaciones.dataset.dbkey = "observaciones";
         this.abono.dataset.dbkey = "abono";
         this.total.dataset.dbkey = "total";
+        this.fechaIngreso.dataset.dbkey = "fecha";
+        this.fechaEntrega.dataset.dbkey = "fechaEntrega";
+        this.estado.dataset.dbkey = "estado";
 
 
         this.$selectTec.value = st.vendedor;
@@ -194,21 +228,31 @@ export class ModalViewST extends HTMLElement {
     }
 
     clickHandler = async (e) => {
+        // comprobar si el e.target es un input
+        if(e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA' || e.target.tagName === 'SELECT'){
+            this.isclicked = true;
+        }
         if( e.target === this.btnCerrar || e.target === this.btnCerrar2){
-            
-            this.ventanaModal.hide();
             let $this = this;
-            function waitToSaved(){
-                console.log($this.isSaved, 'isSaved'	);
-                if($this.isSaved){
-                    document.dispatchEvent(new CustomEvent('ActualizarTablaST'));
-                    $this.isSaved = false;
-                }else{
-                    setTimeout(waitToSaved, 600);
+
+            if(this.isclicked){
+                let contador = 0;
+                function waitToSaved(){
+                    console.log($this.isSaved, 'isSaved'	);
+                    if(contador >= 10) return;
+                    if($this.isSaved){
+                        document.dispatchEvent(new CustomEvent('ActualizarTablaST'));
+                        $this.isSaved = false;
+                    }else{
+                        setTimeout(waitToSaved, 600);
+                    }
+                    contador++;
+                    return;
                 }
-                return;
+                waitToSaved();
             }
-            waitToSaved();
+            this.ventanaModal.hide();
+            
         }
     }
 

@@ -305,7 +305,17 @@ export class listServicioTecnico extends HTMLElement {
                 existePedido: td.querySelector('#inputExistePedido').dataset.info,
 
             }
-            document.dispatchEvent(new CustomEvent('retirarST', {detail: ST}));
+            Swal.fire({
+                title: '¿Desea retirar el servicio tecnico?',
+                text: "No podra revertir esta accion",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Si, retirar!'
+            }).then(async (result) => {
+                console.log(result);
+            })
         }
     }
 
