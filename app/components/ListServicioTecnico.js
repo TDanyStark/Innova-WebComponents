@@ -22,6 +22,7 @@ export class listServicioTecnico extends HTMLElement {
                                 <th scope="col">Equipo</th>
                                 <th scope="col">Marca</th>
                                 <th scope="col">Total</th>
+                                <th scope="col">Saldo</th>
                                 <th scope="col">Estado</th>
                                 ${window.isAdmin ? '<th scope="col">User</th>' : ''}
                                 <th scope="col">ST C</th>
@@ -55,12 +56,18 @@ export class listServicioTecnico extends HTMLElement {
 
     }
 
+    milesFunc = (num) => {
+        return num.toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1,')
+    }
     async llenarTabla(data) {
+
         this.$tbody.innerHTML = '';
         data.forEach(element => {
             let theFecha = new Date(element.id);
             // para quitarle los segundos a la fecha se usa la expresion regular y se reemplaza por nada
             theFecha = theFecha.toLocaleString().replace(/:\d{2}/, "");
+
+            let saldo = element.total - element.abono;
             this.$tbody.innerHTML += /*html*/`
                 <tr >
                     <td>${element.recibo}</td>
@@ -68,7 +75,8 @@ export class listServicioTecnico extends HTMLElement {
                     <td>${element.cliente}</td>
                     <td>${element.equipo}</td>
                     <td>${element.marca}</td>
-                    <td>${element.total}</td>
+                    <td>${this.milesFunc(element.total)}</td>
+                    <td style="${saldo > 0 ? "border: 1px solid red" : "border: 1px solid green"}">${saldo}</td>
                     <td class="estadoST" data-id="${element.id}" style="width:10%;">${element.estado}</td>
                     ${window.isAdmin ? `<td> ${element.vendedor.split("@")[0]}</td>` : ''}
                     <td>${element.PagadoATecnico == false ? "No" : "Si"}</td>

@@ -1,3 +1,5 @@
+import {editDocMerge} from '../helpers/firebase.js';
+
 export class ModalRetirarST extends HTMLElement{
     constructor(){
         super();
@@ -77,8 +79,8 @@ export class ModalRetirarST extends HTMLElement{
         this.$inputPago = this.querySelector('#inputPago');
 
         this.$btnRetirar = this.querySelector('button.btn-primary');
+        this.ID = '';
 
-        this.validacion = false;
     }
 
     milesFuncion(precio){
@@ -89,16 +91,17 @@ export class ModalRetirarST extends HTMLElement{
         let saldo = parseInt(this.$saldo.textContent.replace(/\./g, ''));
         if (saldo != 0) {
             this.$saldo.parentElement.style.color = 'red';
-            this.validacion = false;
         }else{
             this.$saldo.parentElement.style.color = 'green';
-            this.validacion = true;
         }
     }
 
     retirarSTHandler(e){
         this.ventanaModal.show();
         console.log(e.detail);
+        this.ID = e.detail.id;
+
+
         this.$nombre.value = e.detail.cliente;
         this.$celular.value = e.detail.celular;
         this.$equipo.textContent = e.detail.equipo;
@@ -116,11 +119,40 @@ export class ModalRetirarST extends HTMLElement{
         this.validacionSaldo();
     }
 
-    clickHandler(e){
+    async clickHandler(e){
         if(e.target == this.$btnRetirar){
-            if(!this.validacion) return;
-            console.log('Retirar ST');
+            let abono = parseInt(this.$abono.dataset.abono);
+            let total = parseInt(this.$total.dataset.total);
+            let pago = isNaN(parseInt(this.$inputPago.value)) ? 0 : parseInt(this.$inputPago.value);
+            let saldo = total - abono - pago;
+
+            abono += pago;
+
+            let id = this.ID
+            console.log(id, abono, total, pago, saldo);
+
+            let data = {
+                abono,
+                total,
+                saldo,
+                fechaSalida: new Date().getTime(),
+                estado: 'Entregado'
+            }
+
+
+            let res = await editDocMerge('servicioTecnico', id, data);
+            console.log(res);
+            if (res) {
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Salida de ST',
+                    text: 'Salida de ST exitosa',
+                }).then(() => {
+                    document.dispatchEvent(new CustomEvent('ActualizarTablaST'));
+                    this.ventanaModal.hide();
+                });
         }
+    }
     }
 
     inputHandler(e){
@@ -134,6 +166,18 @@ export class ModalRetirarST extends HTMLElement{
             let total = parseInt(this.$total.dataset.total);
             let pago = parseInt(e.target.value);
             let saldo = total - abono - pago;
+            
+            if (saldo < 0) {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Oops...',
+                    text: 'El pago mas los abonos no pueden ser mayor al total',
+                });
+                e.target.value = '';
+                this.$saldo.textContent = this.milesFuncion(this.$saldo.dataset.saldo);
+                this.validacionSaldo();
+                return;
+            }
 
             this.$saldo.textContent = this.milesFuncion(saldo);
             this.validacionSaldo();

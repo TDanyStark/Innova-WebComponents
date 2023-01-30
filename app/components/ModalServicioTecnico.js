@@ -196,7 +196,7 @@ export class ModalServicioTecnico extends HTMLElement {
                 console.log(res);
             });
 
-            
+            // TITLE: Manejador del servicio tecnico
             let vendedor = this.$selectTec.value === 'No asignar' ? estadoSesion.email : this.$selectTec.value;
             let observaciones = this.observaciones.value === '' ? 'Sin Observaciones' : this.observaciones.value;
             let abono = this.abono.value === '' ? 0 : parseInt(this.abono.value);
@@ -214,6 +214,7 @@ export class ModalServicioTecnico extends HTMLElement {
                 observaciones: observaciones,
                 abono: abono,
                 total: total,
+                saldo: total - abono,
                 estado: 'Ingresado',
                 PagadoATecnico: false,
                 fechaSalida: "sin fecha",

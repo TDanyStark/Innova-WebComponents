@@ -137,8 +137,9 @@ export class ModalViewST extends HTMLElement {
         this.totalAbono = this.querySelector('#totalAbono');
         this.total = this.querySelector('#inputTotal');
         this.fechaIngreso = this.querySelector('#inputFechaIngreso');
-        this.fechaEntrega = this.querySelector('#inputFechaEntrega');
+        this.fechaSalida = this.querySelector('#inputFechaEntrega');
         this.estado = this.querySelector('#inputEstado');
+        this.vendedor = this.querySelector('#selectTec');
 
         this.$selectTec = this.querySelector('#selectTec');
 
@@ -175,6 +176,9 @@ export class ModalViewST extends HTMLElement {
 
         let st = e.detail;
         let fecha = new Date(parseInt(st.id)).toISOString().split("T")[0];
+        console.log(st.fechaSalida);
+        let fechaSalida = st.fechaSalida == 'sin fecha' ? "" : new Date(parseInt(st.fechaSalida)).toISOString().split("T")[0];
+        console.log(fechaSalida);
         let totalAbono = this.milesFuncion(st.abono);
         this.cliente.value = st.cliente;
         this.celular.value = st.celular;
@@ -189,8 +193,9 @@ export class ModalViewST extends HTMLElement {
         this.total.value = st.total;
         this.Nrecibo.textContent = st.recibo;
         this.fechaIngreso.value = fecha;
-        this.fechaEntrega.value = st.fechaEntrega;
+        this.fechaSalida.value = fechaSalida;
         this.estado.value = st.estado;
+        this.vendedor.value = st.vendedor;
 
         // establecer los data atribute para los campos 
         this.cliente.dataset.dbkey = "cliente";
@@ -204,8 +209,9 @@ export class ModalViewST extends HTMLElement {
         this.totalAbono.dataset.dbkey = "abono";
         this.total.dataset.dbkey = "total";
         this.fechaIngreso.dataset.dbkey = "fecha";
-        this.fechaEntrega.dataset.dbkey = "fechaEntrega";
+        this.fechaSalida.dataset.dbkey = "fechaEntrega";
         this.estado.dataset.dbkey = "estado";
+        this.vendedor.dataset.dbkey = "vendedor";
 
 
         this.$selectTec.value = st.vendedor;
