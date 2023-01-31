@@ -34,10 +34,7 @@ export class ListInventario extends HTMLElement {
             `;
         this.appendChild(container);
 
-        this.$inputSearchProducto = this.querySelector('#input-search-producto');
         this.$dataTableBody = this.querySelector('#data-table-body');
-
-
         this.editIsActive = false;
 
     }

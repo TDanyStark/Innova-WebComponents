@@ -289,7 +289,6 @@ export let editDocMerge = async (collectionName, id, data) => {
   }
 }
 export let obtenerDataWhere = async (collectionName, field, operator, value) => {
-  
   const querySnapshot = await getDocs(query(collection(db, collectionName), where(field, operator, value)));
   let docs = [];
   
@@ -298,7 +297,7 @@ export let obtenerDataWhere = async (collectionName, field, operator, value) => 
       docs.push({ id: doc.id, ...doc.data() });
     }
   });
-  console.log(docs);
+  console.log('firebase ',docs);
   return docs;
 }
 
@@ -351,7 +350,7 @@ export let obtenerServiciosTecnicosDateStarttoEnd = async (fechaInicio, fechaFin
 // TITLE: Pedidos
 //guardar pedidos en la base de datos firestore
 export let guardarPedido = async (data) => {
-  let { inST, idST, cliente, pedido, abono, total,recibo } = data;
+  let { inST, idST, cliente, celular, pedido, estado, abono, total,recibo } = data;
   let id = new Date().getTime();
   const docData = {
     id: id,
@@ -359,6 +358,8 @@ export let guardarPedido = async (data) => {
     idST,
     recibo,
     cliente,
+    celular,
+    estado,
     pedido,
     abono,
     total,
