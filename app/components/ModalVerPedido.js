@@ -103,6 +103,8 @@ export class ModalVerPedido extends HTMLElement{
 
     }
 
+    //TODO: Añadir un precio de compra y un precio de venta
+
     milesFuncion = (precio) => precio.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
 
     modalVerPedidoHandler = (e) => {
