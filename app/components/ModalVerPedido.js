@@ -31,6 +31,10 @@ export class ModalVerPedido extends HTMLElement{
                                     <label for="inputPedido" class="form-label">Pedido</label>
                                     <input type="text" class="form-control" id="inputPedido" />
                                 </div>
+                                <div class="col">
+                                    <label for="inputProveedor" class="form-label">Proveedor</label>
+                                    <input type="text" class="form-control" id="inputProveedor" />
+                                </div>
                             </div>
                             <div class="row">
                                 <div class="col">
@@ -83,6 +87,7 @@ export class ModalVerPedido extends HTMLElement{
         this.cliente = this.querySelector('#inputCliente');
         this.celular = this.querySelector('#inputCelular');
         this.pedido = this.querySelector('#inputPedido');
+        this.proveedor = this.querySelector('#inputProveedor');
 
         this.inputAbono = this.querySelector('#inputAbono');
         this.totalAbono = this.querySelector('#totalAbono');
@@ -114,6 +119,7 @@ export class ModalVerPedido extends HTMLElement{
         this.cliente.value = e.detail.cliente;
         this.celular.value = e.detail.celular;
         this.pedido.value = e.detail.pedido;
+        this.proveedor.value = e.detail.proveedor;
 
         this.totalAbono.textContent = this.milesFuncion(e.detail.abono);
         this.totalAbono.dataset.abono = e.detail.abono;
@@ -165,21 +171,27 @@ export class ModalVerPedido extends HTMLElement{
             let total = parseInt(this.inputTotal.value);
             let estado = this.inputEstado.value;
             let pedido = this.pedido.value;
+            let proveedor = this.proveedor.value;
 
             let pedidoObj = {
-                abono: abono,
-                total: total,
-                estado: estado,
-                pedido: pedido
+                abono,
+                total,
+                estado,
+                pedido,
+                proveedor,
             }
 
             console.log(pedido);
             this.ventanaModal.hide();
             let res = await editDocMerge('pedidos', id, pedidoObj);
             console.log('pedido editado', res);
+
             if (res) {
-                //TODO: actualizar la tabla de pedidos y validar si la tabla estaba filtrada por cliente o por fecha
-                document.dispatchEvent(new CustomEvent('actualizarPedidos'));
+                let obj = {
+                    cliente : this.cliente.value,
+                    celular : this.celular.value,
+                }
+                document.dispatchEvent(new CustomEvent('actualizarPedidos', {detail: obj}));
             }
         }
     };

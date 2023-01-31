@@ -1,3 +1,5 @@
+import {obtenerDataWhere} from '../helpers/firebase.js';
+
 export class ListPedidos extends HTMLElement{
     constructor(){
         super();
@@ -5,6 +7,7 @@ export class ListPedidos extends HTMLElement{
         this.pintarPedidos = this.pintarPedidos.bind(this);
         this.verlistPedidosHandler = this.verlistPedidosHandler.bind(this);
         this.clickHandler = this.clickHandler.bind(this);
+        this.actualizarPedidosHandler = this.actualizarPedidosHandler.bind(this);
 
         this.innerHTML = /*html*/`
             <table id="tablaPedidos" class="table table-hover table-dark">
@@ -32,6 +35,7 @@ export class ListPedidos extends HTMLElement{
 
             this.$inputSearch;
             this.$wrapper;
+            
     }
 
     validarUndefined = (value) => {
@@ -161,15 +165,23 @@ export class ListPedidos extends HTMLElement{
         }
     };
 
+    actualizarPedidosHandler = async (e) => {
+        let pedidos = await obtenerDataWhere('pedidos', 'celular', '==', e.detail.celular)
+        $('#tablaPedidos').DataTable().destroy();
+        this.pintarPedidos(pedidos);
+    };
+
     connectedCallback(){
         document.addEventListener('listPedidos', this.listPedidosHandler);
         document.addEventListener('seeAllListPedidos', this.verlistPedidosHandler);
+        document.addEventListener('actualizarPedidos', this.actualizarPedidosHandler)
         this.addEventListener('click', this.clickHandler);
     }
 
     disconnectedCallback(){
         document.removeEventListener('listPedidos', this.listPedidosHandler);
         document.removeEventListener('seeAllListPedidos', this.verlistPedidosHandler);
+        document.removeEventListener('actualizarPedidos', this.actualizarPedidosHandler)
         this.removeEventListener('click', this.clickHandler);
     }
 

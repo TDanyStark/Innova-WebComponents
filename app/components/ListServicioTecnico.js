@@ -59,6 +59,8 @@ export class listServicioTecnico extends HTMLElement {
     milesFunc = (num) => {
         return "$ "+num.toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1,')
     }
+
+    //TODO: si el estado es Entregado, sin Solucion o Retirado, el color es amarillo
     async llenarTabla(data) {
 
         this.$tbody.innerHTML = '';
@@ -66,6 +68,30 @@ export class listServicioTecnico extends HTMLElement {
             let theFecha = new Date(element.id);
             // para quitarle los segundos a la fecha se usa la expresion regular y se reemplaza por nada
             theFecha = theFecha.toLocaleString().replace(/:\d{2}/, "");
+
+            function styleEstado (saldo, estado) {
+                if (saldo > 0) {
+                    if (estado != "Entregado") {
+                        if (estado == "Sin Solucion" || estado == "Retirado"){
+                            return "border-right: 5px solid yellow";
+                        }else{
+                            return "border-right: 5px solid blue";
+                        }
+                    } else {
+                        return "border-right: 5px solid red";
+                    }
+                } else {
+                    if (estado != "Entregado") {
+                        if (estado == "Sin Solucion" || estado == "Retirado"){
+                            return "border-right: 5px solid yellow";
+                        }else{
+                            return "border-right: 5px solid blue";
+                        }
+                    } else {
+                        return "border-right: 5px solid green";
+                    }
+                }
+            }
 
             let saldo = element.total - element.abono;
             this.$tbody.innerHTML += /*html*/`
@@ -75,16 +101,10 @@ export class listServicioTecnico extends HTMLElement {
                     <td>${element.cliente}</td>
                     <td>${element.equipo}</td>
                     <td>${element.marca}</td>
-                    <td style="${saldo > 0 ? 
-                            element.estado != "Entregado" ? "border-right: 5px solid blue" : "border-right: 5px solid red" :
-                            element.estado != "Entregado" ? "border-right: 5px solid blue" : "border-right: 5px solid green"
-                        }">
+                    <td style="${styleEstado(saldo, element.estado)} ">
                         ${this.milesFunc(element.total)}
                     </td>
-                    <td style="${saldo > 0 ? 
-                            element.estado != "Entregado" ? "border-right: 5px solid blue" : "border-right: 5px solid red" :
-                            element.estado != "Entregado" ? "border-right: 5px solid blue" : "border-right: 5px solid green"
-                        }">
+                    <td style="${styleEstado(saldo, element.estado)}">
                         ${this.milesFunc(saldo)}
                     </td>
                     <td>${element.estado}</td>

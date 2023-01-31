@@ -108,7 +108,7 @@ export class ModalViewST extends HTMLElement {
                                             <option value="Solucionado">Solucionado</option>
                                             <option value="Sin Solucion">Sin Solucion</option>
                                             <option value="En Espera, Pendiente de Arreglo">En Espera, Pendiente de Arreglo</option>
-                                            <option value="Entregado, Sin Solucion">Entregado, Sin Solucion</option>
+                                            <option value="Retirado">Retirado</option>
                                             <option value="Garantia">Garantia</option>
                                             <option value="Entregado" disabled>Entregado</option>
                                         </select>
@@ -123,6 +123,8 @@ export class ModalViewST extends HTMLElement {
                 </div>
             </div>
         `;
+
+        //TODO: que cuando el estado cambie a sin solucion el total se ponga en 0
 
         this.modal = this.querySelector('#modalViewST');
         this.ventanaModal = new bootstrap.Modal(this.modal);
