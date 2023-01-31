@@ -207,8 +207,6 @@ export class VentaProducto extends HTMLElement {
             // verificar que usuario esta realizando la venta
             console.log(estadoSesion.email);
               // obtener los productos de la venta
-            let StinVenta = false;
-
             let productosVenta = [];
             let cantidadyInventario = [];
             let $filasTabla = $this.querySelectorAll("#bodyTabla tr");
@@ -232,9 +230,6 @@ export class VentaProducto extends HTMLElement {
                     inventario: parseInt(fila.children[2].children[0].getAttribute("data-inventario")),
                 });
 
-                if (fila.children[1].textContent.includes("Servicio Tecnico")) {
-                    StinVenta = true;
-                }
             });
             console.log(cantidadyInventario);
               // obtener el total de la venta en numero
@@ -260,7 +255,6 @@ export class VentaProducto extends HTMLElement {
                 descuento,
                 vendedor: estadoSesion.email,
                 metodoPago: this.paymentMethod.value,
-                StinVenta,
             };
             let res = await guardarVenta(dataVenta);
             // editar el stock de los productos
