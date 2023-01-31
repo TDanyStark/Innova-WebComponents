@@ -377,6 +377,17 @@ export let guardarPedido = async (data) => {
   }
 };
 
+// obtener los pedidos en un rango de fechas
+export let obtenerPedidosDateStarttoEnd = async (fechaInicio, fechaFin) => {
+  const querySnapshot = await getDocs(query(collection(db, "pedidos"), where("id", ">=", fechaInicio), where("id", "<=", fechaFin)));
+  let docs = [];
+  querySnapshot.forEach((doc) => {
+    docs.push({ id: doc.id, ...doc.data() });
+  });
+  return docs;
+};
+
+
 
 
 

@@ -64,6 +64,16 @@ export class ModalServicioTecnico extends HTMLElement {
                                         <textarea class="form-control" placeholder="Ejm: Tiene partida una tapa, esta mojado, etc" id="textObservaciones"></textarea>
                                     </div>
                                 </div>
+                                <div class="row">
+                                    <div class="col">
+                                        <label for="inputAbono" class="form-label">Abono: </label>
+                                        <input type="number" class="form-control" id="inputAbono">
+                                    </div>
+                                    <div class="col">
+                                        <label for="inputTotal" class="form-label">Total: </label>
+                                        <input type="number" class="form-control" id="inputTotal">
+                                    </div>
+                                </div>
                                 <div id="pedidos"> 
                                     <div class="row" >
                                         <div class="col">
@@ -82,17 +92,6 @@ export class ModalServicioTecnico extends HTMLElement {
                                             <button class="btn btn-primary btnAgregarPedido" ><i class="fa-solid fa-plus"></i></button>
                                         </div>
                                     </div>
-                                </div>
-                                <div class="row">
-                                    <div class="col">
-                                        <label for="inputAbono" class="form-label">Abono: </label>
-                                        <input type="number" class="form-control" id="inputAbono">
-                                    </div>
-                                    <div class="col">
-                                        <label for="inputTotal" class="form-label">Total: </label>
-                                        <input type="number" class="form-control" id="inputTotal">
-                                    </div>
-
                                 </div>
                                 <div class="row">
                                     ${window.isAdmin ? /*html*/`

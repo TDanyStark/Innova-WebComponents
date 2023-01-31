@@ -3,11 +3,12 @@ export class ListPedidos extends HTMLElement{
         super();
         this.listPedidosHandler = this.listPedidosHandler.bind(this);
         this.pintarPedidos = this.pintarPedidos.bind(this);
+        this.verlistPedidosHandler = this.verlistPedidosHandler.bind(this);
+
         this.innerHTML = /*html*/`
             <table id="tablaPedidos" class="table table-hover table-dark">
                 <thead>
                     <tr>
-                        <th scope="col" class="col-sm-3 col-md-3 col-lg-2">ID</th>
                         <th scope="col" class="col-sm-3 col-md-3 col-lg-2">Recibo ST</th>
                         <th scope="col" class="col-sm-3 col-md-3 col-lg-2">Cliente</th>
                         <th scope="col" class="col-sm-3 col-md-3 col-lg-2">Pedido</th>
@@ -27,6 +28,9 @@ export class ListPedidos extends HTMLElement{
             `;
 
             this.$dataTableBody = this.querySelector('#data-table-body');
+
+            this.$inputSearch;
+            this.$wrapper;
     }
 
     validarUndefined = (value) => {
@@ -46,8 +50,7 @@ export class ListPedidos extends HTMLElement{
             console.log(pedido);
             this.$dataTableBody.innerHTML += /*html*/`
                 <tr>
-                    <td>${pedido.id}</td>
-                    <td data-idst="${pedido.idST}">${pedido.recibo}</td>
+                    <td data-id="${pedido.id}" data-idst="${pedido.idST}">${pedido.recibo}</td>
                     <td>${pedido.cliente}</td>
                     <td>${pedido.pedido}</td>
                     <td>${this.funcMiles(pedido.abono)}</td>
@@ -62,18 +65,59 @@ export class ListPedidos extends HTMLElement{
                 </tr>
             `;
         });
+
+        $('#tablaPedidos').DataTable({
+            "order": [[ 0, "desc" ]],
+            responsive: true,
+            autoWidth: false,
+            "language": {
+                "lengthMenu": "",
+                "zeroRecords": "No se encontraron resultados en su busqueda",
+                "searchPlaceholder": "Buscar registros",
+                "info": "Mostrando de _START_ al _END_ de un total de _TOTAL_ registros",
+                "infoEmpty": "No existen registros",
+                "infoFiltered": "(filtrado de un total de _MAX_ registros)",
+                "search": "Buscar:",
+                "paginate": {
+                    "first": "Primero",
+                    "last": "Último",
+                    "next": "Siguiente",
+                    "previous": "Anterior"
+                },
+            },
+            pageLength: 10,
+            pagingType: "simple_numbers",
+        });
+        this.$inputSearch = this.querySelector('#tablaPedidos_filter input');
+        this.$inputSearch.classList.add('text-white');
+        this.$inputSearch.classList.add('bg-dark');
+
+        this.$wrapper = this.querySelector('#tablaPedidos_wrapper');
+        this.$wrapper.classList.add('bg-dark');
+        this.$wrapper.classList.add('text-white');
+
     }
 
     listPedidosHandler(e){
+        //destruir la tabla
+        $('#tablaPedidos').DataTable().destroy();
+        this.pintarPedidos(e.detail);
+    }
+
+    verlistPedidosHandler(e){
+        console.log(e.detail)
+        $('#tablaPedidos').DataTable().destroy();
         this.pintarPedidos(e.detail);
     }
 
     connectedCallback(){
         document.addEventListener('listPedidos', this.listPedidosHandler);
+        document.addEventListener('seeAllListPedidos', this.verlistPedidosHandler)
     }
 
     disconnectedCallback(){
         document.removeEventListener('listPedidos', this.listPedidosHandler);
+        document.removeEventListener('seeAllListPedidos', this.verlistPedidosHandler)
     }
 
 }

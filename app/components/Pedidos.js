@@ -1,4 +1,4 @@
-import { obtenerDataWhere } from '../helpers/firebase.js';
+import { obtenerData, obtenerDataWhere, obtenerPedidosDateStarttoEnd } from '../helpers/firebase.js';
 import { Cliente } from './Cliente.js';
 import { ListPedidos } from './ListPedidos.js';
 
@@ -27,15 +27,26 @@ export class Pedidos extends HTMLElement{
                         <div id="Funciones" class="col">
                             <div class="row row-cols-auto">
                                 <div class="col">
+                                    <label class="form-label text-white" for="start">Fecha inicio:</label>
+                                    <input class="form-control-sm" type="date" id="start" name="trip-start">
+                                </div>
+                                <div class="col">
+                                    <label class="form-label text-white" for="end">Fecha fin:</label>
+                                    <input class="form-control-sm" type="date" id="end" name="trip-end">
+                                </div>
+                                <div class="col">
                                     <button class="btn btn-primary" id="verPedidos">Ver Pedidos</button>
                                 </div>
                                 <div class="col">
                                     <button class="btn btn-primary d-none" id="nuevoPedido">Crear Nuevo Pedido</button>
                                 </div>
+                                
                             </div>
+                            <div class="row">
+                                    <p class="text-white">Para ver todos los pedidos Resetee el cliente</p>
+                                </div>
                         </div>
                     </div>
-                    <hr />
                     <div class="row">
                         <div id="smsError" class="col d-none">
                             <div class="alert alert-danger" role="alert">
@@ -59,6 +70,9 @@ export class Pedidos extends HTMLElement{
         this.$btnVerPedidos = this.querySelector('#verPedidos');
         this.$btnNuevoPedido = this.querySelector('#nuevoPedido');
 
+        this.fechaStart = this.querySelector('#start');
+        this.fechaEnd = this.querySelector('#end');
+
         this.cliente = {};
     }
 
@@ -73,10 +87,12 @@ export class Pedidos extends HTMLElement{
             this.$divListPedidos.classList.remove('d-none');
             this.$divSmsError.classList.add('d-none');
             this.$btnNuevoPedido.classList.remove('d-none');
+            this.$btnVerPedidos.disabled = true;
         }else{
             this.$divListPedidos.classList.add('d-none');
             this.$divSmsError.classList.remove('d-none');
             this.$btnNuevoPedido.classList.remove('d-none');
+            this.$btnVerPedidos.disabled = false;
         }
     }
 
@@ -84,11 +100,45 @@ export class Pedidos extends HTMLElement{
         this.$divListPedidos.classList.add('d-none');
         this.$divSmsError.classList.add('d-none');
         this.$btnNuevoPedido.classList.add('d-none');
+        this.$btnVerPedidos.disabled = false;
+
+        this.fechaStart.value = '';
+        this.fechaEnd.value = '';
     }
 
-    clickHandler = (e) => {
+    clickHandler = async (e) => {
         if (e.target.id === 'verPedidos') {
+            let fechaStart = new Date(this.fechaStart.value+" 00:00:00").getTime();
+            let fechaEnd = new Date(this.fechaEnd.value+" 23:59:59").getTime();
+
+
+            if (fechaStart > fechaEnd) {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Oops...',
+                    text: 'La fecha de inicio no puede ser mayor a la fecha de fin',
+                });
+                this.fechaStart.value = '';
+                this.fechaEnd.value = '';
+                return;
+            }
+
+            if (isNaN(fechaStart) || isNaN(fechaEnd)) {
+                let today = new Date();
+                let mesAgo = new Date(today.getTime() - 30 * 24 * 60 * 60 * 1000); // 30 dias atras
+                mesAgo = mesAgo.getTime();
+
+                fechaStart = mesAgo;
+                fechaEnd = today.getTime();
+
+            }
+
             // disparar evento para que se llame a listPedidos con todos los pedidos
+            let pedidos = await obtenerPedidosDateStarttoEnd(fechaStart, fechaEnd);
+            document.dispatchEvent(new CustomEvent('seeAllListPedidos', {detail: pedidos}));
+            this.$divListPedidos.classList.remove('d-none');
+            this.$divSmsError.classList.add('d-none');
+            this.$btnVerPedidos.disabled = true;
             return;
         }
         
