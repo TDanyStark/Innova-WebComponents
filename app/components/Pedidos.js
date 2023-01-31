@@ -1,6 +1,7 @@
 import { obtenerData, obtenerDataWhere, obtenerPedidosDateStarttoEnd } from '../helpers/firebase.js';
 import { Cliente } from './Cliente.js';
 import { ListPedidos } from './ListPedidos.js';
+import { ModalVerPedido } from './ModalVerPedido.js';
 
 export class Pedidos extends HTMLElement{
     constructor(){
@@ -62,6 +63,7 @@ export class Pedidos extends HTMLElement{
                     </div>
                 </div>
             </div>
+            <modal-ver-pedido></modal-ver-pedido>
         </div>
         `;
 
@@ -158,6 +160,7 @@ export class Pedidos extends HTMLElement{
     disconnectedCallback() {
         document.removeEventListener('clienteFound', this.clienteFoundHandler);
         document.removeEventListener('resetCliente', this.resetClienteHandler);
+        this.removeEventListener('click', this.clickHandler);
     }
 }
 

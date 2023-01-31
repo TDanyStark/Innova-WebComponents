@@ -252,9 +252,6 @@ export class ModalViewST extends HTMLElement {
             e.target.value = "";
             e.target.focus();
 
-            let data = {
-                abono: this.totalAbono.dataset.abono
-            }
         }
         let id = this.ID;
         let newValue = e.target.value;

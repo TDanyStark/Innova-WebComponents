@@ -4,6 +4,7 @@ export class ListPedidos extends HTMLElement{
         this.listPedidosHandler = this.listPedidosHandler.bind(this);
         this.pintarPedidos = this.pintarPedidos.bind(this);
         this.verlistPedidosHandler = this.verlistPedidosHandler.bind(this);
+        this.clickHandler = this.clickHandler.bind(this);
 
         this.innerHTML = /*html*/`
             <table id="tablaPedidos" class="table table-hover table-dark">
@@ -59,8 +60,22 @@ export class ListPedidos extends HTMLElement{
                     <td>${this.validarUndefined(pedido.proveedor)}</td>
                     <td>${pedido.vendedor.split('@')[0]}</td>
                     <td>
+                        <input type="hidden" id="hiddenId" value="${pedido.id}">
+                        <input type="hidden" id="hiddenIdST" value="${pedido.idST}">
+                        <input type="hidden" id="hiddenRecibo" value="${pedido.recibo}">
+                        <input type="hidden" id="hiddenCliente" value="${pedido.cliente}">
+                        <input type="hidden" id="hiddenCelular" value="${pedido.celular}">
+                        <input type="hidden" id="hiddenPedido" value="${pedido.pedido}">
+                        <input type="hidden" id="hiddenAbono" value="${pedido.abono}">
+                        <input type="hidden" id="hiddenTotal" value="${pedido.total}">
+                        <input type="hidden" id="hiddenEstado" value="${pedido.estado}">
+                        <input type="hidden" id="hiddenProveedor" value="${pedido.proveedor}">
+                        <input type="hidden" id="hiddenVendedor" value="${pedido.vendedor}">
+                        <input type="hidden" id="hiddenFechaEntrega" value="${pedido.fechaEntrega}">
+                        
+
                         <button class="btn btn-primary"><i class="fa fa-eye"></i></button>
-                        <button class="btn btn-success"><i class="fa-solid fa-check"></i></button>
+                        <button class="btn btn-success" ${pedido.estado == "Entregado" ? "disabled" : ""}><i class="fa-solid fa-check"></i></button>
                     </td>
                 </tr>
             `;
@@ -110,14 +125,52 @@ export class ListPedidos extends HTMLElement{
         this.pintarPedidos(e.detail);
     }
 
+    clickHandler = (e) => {
+        if(e.target.matches('.btn-primary') || e.target.matches('.btn-primary *')){
+            let target = e.target.classList.contains('btn-primary') ? e.target : e.target.parentElement;
+            
+            let id = target.parentElement.querySelector('#hiddenId').value;
+            let idST = target.parentElement.querySelector('#hiddenIdST').value;
+            let recibo = target.parentElement.querySelector('#hiddenRecibo').value;
+            let cliente = target.parentElement.querySelector('#hiddenCliente').value;
+            let celular = target.parentElement.querySelector('#hiddenCelular').value;
+            let pedido = target.parentElement.querySelector('#hiddenPedido').value;
+            let abono = target.parentElement.querySelector('#hiddenAbono').value;
+            let total = target.parentElement.querySelector('#hiddenTotal').value;
+            let estado = target.parentElement.querySelector('#hiddenEstado').value;
+            let proveedor = target.parentElement.querySelector('#hiddenProveedor').value;
+            let vendedor = target.parentElement.querySelector('#hiddenVendedor').value;
+            let fechaEntrega = target.parentElement.querySelector('#hiddenFechaEntrega').value;
+
+            let pedidoObj = {
+                id,
+                idST,
+                recibo,
+                cliente,
+                celular,
+                pedido,
+                abono,
+                total,
+                estado,
+                proveedor,
+                vendedor,
+                fechaEntrega
+            }
+
+            document.dispatchEvent(new CustomEvent('modalVerPedido', {detail: pedidoObj}));
+        }
+    };
+
     connectedCallback(){
         document.addEventListener('listPedidos', this.listPedidosHandler);
-        document.addEventListener('seeAllListPedidos', this.verlistPedidosHandler)
+        document.addEventListener('seeAllListPedidos', this.verlistPedidosHandler);
+        this.addEventListener('click', this.clickHandler);
     }
 
     disconnectedCallback(){
         document.removeEventListener('listPedidos', this.listPedidosHandler);
-        document.removeEventListener('seeAllListPedidos', this.verlistPedidosHandler)
+        document.removeEventListener('seeAllListPedidos', this.verlistPedidosHandler);
+        this.removeEventListener('click', this.clickHandler);
     }
 
 }
