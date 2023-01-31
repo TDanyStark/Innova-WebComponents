@@ -215,13 +215,16 @@ export class VentaProducto extends HTMLElement {
             $filasTabla.forEach((fila) => {
                 let cantidad = parseInt(fila.children[2].children[0].value)
                 let precio = parseInt(fila.children[3].getAttribute("data-price"))
+                let precio_compra = parseInt(fila.children[3].getAttribute("data-pricesale"))
                 let producto = {
                     id: fila.children[0].textContent,
                     descripcion: fila.children[1].textContent,
                     cantidad: cantidad,
+                    precio_compra,
                     precio: precio,
                     total: cantidad * precio,
                 };
+                productosVenta.push(producto);
 
                 cantidadyInventario.push({
                     id: fila.children[0].textContent,
@@ -229,7 +232,6 @@ export class VentaProducto extends HTMLElement {
                     inventario: parseInt(fila.children[2].children[0].getAttribute("data-inventario")),
                 });
 
-                productosVenta.push(producto);
                 if (fila.children[1].textContent.includes("Servicio Tecnico")) {
                     StinVenta = true;
                 }
