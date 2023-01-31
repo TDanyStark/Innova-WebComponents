@@ -100,6 +100,7 @@ export class ModalRetirarST extends HTMLElement{
         this.ventanaModal.show();
         console.log(e.detail);
         this.ID = e.detail.id;
+        this.$inputPago.value = '';
 
 
         this.$nombre.value = e.detail.cliente;

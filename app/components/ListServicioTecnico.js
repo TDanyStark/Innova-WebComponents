@@ -57,7 +57,7 @@ export class listServicioTecnico extends HTMLElement {
     }
 
     milesFunc = (num) => {
-        return num.toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1,')
+        return "$ "+num.toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1,')
     }
     async llenarTabla(data) {
 
@@ -75,9 +75,19 @@ export class listServicioTecnico extends HTMLElement {
                     <td>${element.cliente}</td>
                     <td>${element.equipo}</td>
                     <td>${element.marca}</td>
-                    <td style="${saldo > 0 ? "border-right: 5px solid red" : "border-right: 5px solid green"}">${this.milesFunc(element.total)}</td>
-                    <td style="${saldo > 0 ? "border-right: 5px solid red" : "border-right: 5px solid green"}">${saldo}</td>
-                    <td class="estadoST" data-id="${element.id}" style="width:10%;">${element.estado}</td>
+                    <td style="${saldo > 0 ? 
+                            element.estado != "Entregado" ? "border-right: 5px solid blue" : "border-right: 5px solid red" :
+                            element.estado != "Entregado" ? "border-right: 5px solid blue" : "border-right: 5px solid green"
+                        }">
+                        ${this.milesFunc(element.total)}
+                    </td>
+                    <td style="${saldo > 0 ? 
+                            element.estado != "Entregado" ? "border-right: 5px solid blue" : "border-right: 5px solid red" :
+                            element.estado != "Entregado" ? "border-right: 5px solid blue" : "border-right: 5px solid green"
+                        }">
+                        ${this.milesFunc(saldo)}
+                    </td>
+                    <td>${element.estado}</td>
                     ${window.isAdmin ? `<td> ${element.vendedor.split("@")[0]}</td>` : ''}
                     <td>${element.PagadoATecnico == false ? "No" : "Si"}</td>
                     <td>
@@ -99,7 +109,7 @@ export class listServicioTecnico extends HTMLElement {
                         <input type="hidden" id="inputExistePedido" data-info="${element.existePedido}" />
 
                         <button ${element.PagadoATecnico ? "disabled" : ""} class="btn btn-primary" id="btn-ver" data-pagadotec="${element.PagadoATecnico}" data-id="${element.id}"><i data-pagadotec="${element.PagadoATecnico}" data-id="${element.id}" id="btn-ver" class="fa fa-eye"></i></button>
-                        <button ${element.PagadoATecnico ? "disabled" : ""} class="btn btn-success" id="btn-retirar" data-pagadotec="${element.PagadoATecnico}" data-id="${element.id}"><i data-pagadotec="${element.PagadoATecnico}" data-id="${element.id}" id="btn-retirar" class="fa-solid fa-check"></i></button>
+                        <button ${element.PagadoATecnico || element.estado == "Entregado" ? "disabled" : ""} class="btn btn-success" id="btn-retirar" data-pagadotec="${element.PagadoATecnico}" data-id="${element.id}"><i data-pagadotec="${element.PagadoATecnico}" data-id="${element.id}" id="btn-retirar" class="fa-solid fa-check"></i></button>
                     </td>
                 </tr>
             `;
@@ -124,7 +134,7 @@ export class listServicioTecnico extends HTMLElement {
                     "previous": "Anterior"
                 },
             },
-            pageLength: 8,
+            pageLength: 10,
             pagingType: "simple_numbers",
         });
         this.$inputSearch = this.querySelector('#tablaServicioTecnico_filter input');
@@ -149,29 +159,6 @@ export class listServicioTecnico extends HTMLElement {
         this.$btnfiltrar = this.querySelector('#filtrar');
         this.$btnlimpiar = this.querySelector('#limpiar');
 
-    }
-
-    async keyupHandler(e) {
-        if(e.target.id === "selectEstadoST"){
-            if(e.key === "Escape"){
-                this.estadoActivo = false;
-
-                //quitar el select de la tabla
-                let select = this.querySelector('#selectEstadoST');
-                select.parentNode.innerHTML = "Ingresado";
-                let estado = "Ingresado";
-                let id = select.dataset.id;
-
-                let res = await editDocMerge('servicioTecnico', id, {estado: estado});
-                if(!res){
-                    Swal.fire({
-                        icon: 'error',
-                        title: 'Oops...',
-                        text: 'No se pudo actualizar el estado del servicio tecnico',
-                    });
-                }
-            }
-        }
     }
 
     async clickHandler(e) {
@@ -203,17 +190,7 @@ export class listServicioTecnico extends HTMLElement {
         }
         if (e.target == this.$btnlimpiar) {
             if(this.isfilter == true){
-                let date = new Date();
-                date.setDate(1); // Establece el día en el primer día del mes
-                date.setHours(0, 0, 0, 0); // Establece la hora en 00:00:00.000
-                let firstDayOfMonth = date.getTime(); // Obtiene el número de milisegundos desde el epoch
-                console.log(firstDayOfMonth);
-
-
-                let data = await obtenerDataWhere('servicioTecnico', 'id', '>=', firstDayOfMonth);
-                // limpiar la datatable
-                $('#tablaServicioTecnico').DataTable().destroy();
-                this.llenarTabla(data);
+                this.ActualizarTablaSTHandler();
                 this.isfilter = false;
             }else{
                 Swal.fire({
@@ -276,14 +253,12 @@ export class listServicioTecnico extends HTMLElement {
 
     async ActualizarTablaSTHandler(e){
         // obtener el numero desde epoch hasta el primer dia del mes
-        let date = new Date();
-        date.setDate(1); // Establece el día en el primer día del mes
-        date.setHours(0, 0, 0, 0); // Establece la hora en 00:00:00.000
-        let firstDayOfMonth = date.getTime(); // Obtiene el número de milisegundos desde el epoch
-        console.log(firstDayOfMonth);
+        let today = new Date();
+        let quinceAgo = new Date(today.getTime() - 15 * 24 * 60 * 60 * 1000); // 15 días atrás
+        quinceAgo = quinceAgo.getTime();
 
 
-        let data = await obtenerDataWhere('servicioTecnico', 'id', '>=', firstDayOfMonth);
+        let data = await obtenerDataWhere('servicioTecnico', 'id', '>=', quinceAgo);
         // limpiar la datatable
         $('#tablaServicioTecnico').DataTable().destroy();
         // llenar la tabla
@@ -292,24 +267,19 @@ export class listServicioTecnico extends HTMLElement {
 
 
     async connectedCallback() {
-        // obtener el numero desde epoch hasta el primer dia del mes
-        let date = new Date();
-        date.setDate(1); // Establece el día en el primer día del mes
-        date.setHours(0, 0, 0, 0); // Establece la hora en 00:00:00.000
-        let firstDayOfMonth = date.getTime(); // Obtiene el número de milisegundos desde el epoch
-        console.log(firstDayOfMonth);
+        let today = new Date();
+        let quinceAgo = new Date(today.getTime() - 15 * 24 * 60 * 60 * 1000); // 15 días atrás
+        quinceAgo = quinceAgo.getTime();
 
 
-        let data = await obtenerDataWhere('servicioTecnico', 'id', '>=', firstDayOfMonth);
+        let data = await obtenerDataWhere('servicioTecnico', 'id', '>=', quinceAgo);
         this.llenarTabla(data);
         this.addEventListener('click', this.clickHandler);
-        this.addEventListener('keyup', this.keyupHandler);
         document.addEventListener('ActualizarTablaST', this.ActualizarTablaSTHandler);
     }
 
     disconnectedCallback() {
         this.removeEventListener('click', this.clickHandler);
-        this.removeEventListener('keyup', this.keyupHandler);
         document.removeEventListener('ActualizarTablaST', this.ActualizarTablaSTHandler);
     }   
 }

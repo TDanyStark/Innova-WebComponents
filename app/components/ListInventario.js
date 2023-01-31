@@ -42,6 +42,7 @@ export class ListInventario extends HTMLElement {
 
     }
 
+
     async pintarProductos() {
         let productos = await obtenerData('productos');
         console.log(productos)
@@ -51,11 +52,11 @@ export class ListInventario extends HTMLElement {
                 <tr>
                     <td data-id="true">${producto.id}</td>
                     <td class="form-control-sm">${producto.descripcion}</td>
-                    <td>${producto.cantidad_inventario}</td>
-                    <td>${producto.precio_compra}</td>
-                    <td>${producto.precio}</td>
-                    <td class="form-control-sm">${producto.proveedor}</td>
-                    <td>${producto.usuario}</td>
+                    <td class="text-center">${producto.cantidad_inventario}</td>
+                    <td data-info="${producto.precio_compra}">${producto.precio_compra}</td>
+                    <td data-info="${producto.precio}">${producto.precio}</td>
+                    <td class="form-control-sm text-center">${producto.proveedor}</td>
+                    <td class="text-center">${producto.usuario}</td>
                     <td>
                         <button class="btn btn-danger" id="btn-delete" data-id="${producto.id}"><i data-id="${producto.id}"  class="fa fa-trash"></i></button>
                     </td>
@@ -132,8 +133,8 @@ export class ListInventario extends HTMLElement {
                     id,
                     descripcion: td.parentNode.children[1].innerText,
                     cantidad_inventario: parseInt(td.parentNode.children[2].innerText),
-                    precio: parseInt(td.parentNode.children[3].innerText),
-                    precio_compra: parseInt(td.parentNode.children[4].innerText),
+                    precio_compra: parseInt(td.parentNode.children[3].innerText),
+                    precio: parseInt(td.parentNode.children[4].innerText),
                     proveedor: td.parentNode.children[5].innerText
                 }
                 console.log(data);

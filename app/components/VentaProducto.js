@@ -81,6 +81,7 @@ export class VentaProducto extends HTMLElement {
         this.$inputAbono = this.querySelector(".inputAbono");
 
         this.paymentMethod = this.querySelector("#paymentMethod");
+        this.inputDescuento = this.querySelector(".inputDescuento");
 
     }
 
@@ -281,6 +282,10 @@ export class VentaProducto extends HTMLElement {
                 $this.$clienteName.textContent = "Cliente";
                 $this.$clienteId.textContent = "Celular";
 
+                // limpiar pago
+                this.paymentMethod.value = "Efectivo";
+
+
                 sumarTotal();
                 Swal.fire({
                     position: 'top-end',
@@ -334,6 +339,20 @@ export class VentaProducto extends HTMLElement {
         }
         //comprobar si el input es el de descuento
         if (e.target.matches('.inputDescuento')) {
+            // si el descuento es mayor al total de la venta, mostrar un mensaje de error
+            console.log(parseInt($this.querySelector("#totalVenta").dataset.totalfordescuento));
+            console.log(parseInt(e.target.value));
+            if (parseInt($this.querySelector("#totalVenta").dataset.totalfordescuento) < parseInt(e.target.value)) {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Oops...',
+                    text: 'El descuento no puede ser mayor al total de la venta',
+                });
+                //limpiar el input descuesto
+                $this.querySelector(".inputDescuento").value = "";
+                return;
+            }
+
             //si es el input de descuento, sumar el total
             //si el total de la venta esta en 0 no hacer nada
             if (parseInt($this.querySelector("#totalVenta").dataset.total) > 0) {
@@ -341,12 +360,13 @@ export class VentaProducto extends HTMLElement {
                 return;
             }
 
+
             Swal.fire({
                 icon: 'error',
                 title: 'Oops...',
                 text: 'No hay productos en la venta',
             })
-            //limpiar el input descuesto
+            //limpiar el input descuento
             $this.querySelector(".inputDescuento").value = "";
             return;
         }

@@ -109,6 +109,7 @@ export class ModalViewST extends HTMLElement {
                                             <option value="Sin Solucion">Sin Solucion</option>
                                             <option value="En Espera, Pendiente de Arreglo">En Espera, Pendiente de Arreglo</option>
                                             <option value="Entregado, Sin Solucion">Entregado, Sin Solucion</option>
+                                            <option value="Garantia">Garantia</option>
                                             <option value="Entregado" disabled>Entregado</option>
                                         </select>
                                     </div>
