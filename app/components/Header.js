@@ -97,9 +97,9 @@ export class Header extends HTMLElement {
 
             const url = navLink.getAttribute('data-url');
             if (window.location.hash === url) {
-                navLink.classList.add('active');
+                navLink.classList.add('activePerso');
             } else {
-                navLink.classList.remove('active');
+                navLink.classList.remove('activePerso');
             }
         });
 
