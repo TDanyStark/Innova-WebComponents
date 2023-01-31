@@ -182,6 +182,7 @@ export class ModalServicioTecnico extends HTMLElement {
                 let abono = isNaN(parseInt(div.querySelector('input#inputAbonoPedido').value)) ? 0 : parseInt(div.querySelector('input#inputAbonoPedido').value);
                 let total = isNaN(parseInt(div.querySelector('input#inputTotalPedido').value)) ? 0 : parseInt(div.querySelector('input#inputTotalPedido').value);
                 let recibo = this.$Nrecibo.textContent;
+                let estado = 'Pendiente';
                 
                 console.log(recibo);
                 let obj = {
@@ -190,6 +191,7 @@ export class ModalServicioTecnico extends HTMLElement {
                     recibo,
                     cliente,
                     celular,
+                    estado,
                     pedido,
                     abono,
                     total,
