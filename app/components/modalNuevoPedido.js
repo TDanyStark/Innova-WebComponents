@@ -1,3 +1,5 @@
+
+import { estadoSesion, guardarData } from '../helpers/firebase.js';
 export class ModalNuevoPedido extends HTMLElement{
     constructor(){
         super();
@@ -61,6 +63,11 @@ export class ModalNuevoPedido extends HTMLElement{
         this.cliente = this.querySelector('#inputCliente');
         this.celular = this.querySelector('#inputCelular');
 
+        this.pedido = this.querySelector('#inputPedido');
+        this.precioCompra = this.querySelector('#inputPrecioCompra');
+        this.abonoPedido = this.querySelector('#inputAbonoPedido');
+        this.totalPedido = this.querySelector('#inputTotalPedido');
+
         this.$btnGuardar = this.querySelector('#btnGuardar');
     }
 
@@ -70,9 +77,37 @@ export class ModalNuevoPedido extends HTMLElement{
         this.celular.value = e.detail.celular;
     }
 
-    clickHandler = (e) => {
+    clickHandler = async (e) => {
         if(e.target.id === 'btnGuardar'){
-            this.ventanaModal.hide();
+            let id = new Date().getTime();
+            let estado = 'Pendiente';
+            let proveedor = 'Por definir'
+            let vendedor = estadoSesion.email
+            let recibo = 'SR'
+            let data = {
+                id,
+                recibo,
+                cliente: this.cliente.value,
+                celular: this.celular.value,
+                pedido: this.pedido.value,
+                precioCompra: parseInt(this.precioCompra.value),
+                abono: parseInt(this.abonoPedido.value),
+                total: parseInt(this.totalPedido.value),
+                estado,
+                proveedor,
+                vendedor,
+            }
+            let res = await guardarData('pedidos',data);
+            if (res){
+                await Swal.fire({
+                    icon: 'success',
+                    title: 'Pedido guardado',
+                    showConfirmButton: false,
+                    timer: 1500
+                })
+                document.dispatchEvent(new CustomEvent('actualizarPedidos', {detail: data}));
+                this.ventanaModal.hide();
+            }
         }
     }
 

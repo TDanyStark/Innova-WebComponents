@@ -387,6 +387,24 @@ export let obtenerPedidosDateStarttoEnd = async (fechaInicio, fechaFin) => {
   return docs;
 };
 
+//guardar data en la base de datos firestore
+export let guardarData = async (collectionName, data) => {
+  let { id, ...rest } = data;
+  const docData = {
+    id: parseInt(id),
+    ...rest,
+  };
+  id = id.toString();
+  try {
+    await setDoc(doc(db, collectionName, id), docData);
+    return true;
+  } catch (e) {
+    console.log(e);
+    return false;
+  }
+};
+
+
 
 
 
