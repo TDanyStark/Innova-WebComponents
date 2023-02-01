@@ -1,4 +1,4 @@
-import { estadoSesion} from "./helpers/firebase.js";
+import { estadoSesion } from "./helpers/firebase.js";
 import { Router } from "./Router.js";
 
 

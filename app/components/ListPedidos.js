@@ -167,7 +167,6 @@ export class ListPedidos extends HTMLElement{
         }
 
         if(e.target.matches('.btn-success') || e.target.matches('.btn-success *')){
-            //TODO: manejar cuando se vaya a retirar el pedido\
             let target = e.target.classList.contains('btn-success') ? e.target : e.target.parentElement;
             
             let id = target.parentElement.querySelector('#hiddenId').value;

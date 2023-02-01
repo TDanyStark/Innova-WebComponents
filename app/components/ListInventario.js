@@ -9,6 +9,7 @@ export class ListInventario extends HTMLElement {
         this.pintarProductos = this.pintarProductos.bind(this);
         this.keyupHandler = this.keyupHandler.bind(this);
         this.productoFoundHandler = this.productoFoundHandler.bind(this);
+        this.verInventarioHandler = this.verInventarioHandler.bind(this);
 
         const container = document.createElement('div');
         container.id = 'list-inventario-container';
@@ -40,9 +41,7 @@ export class ListInventario extends HTMLElement {
     }
 
 
-    async pintarProductos() {
-        let productos = await obtenerData('productos');
-        console.log(productos)
+    async pintarProductos(productos) {
         this.$dataTableBody.innerHTML = '';
         productos.forEach((producto) => {
             this.$dataTableBody.innerHTML += /*html*/`
@@ -87,15 +86,24 @@ export class ListInventario extends HTMLElement {
         // console.log(e.target)
         // comprobar si el elemento que se hizo click tiene el id btn-delete o en el i
         if (e.target.matches('#btn-delete') || e.target.matches('#btn-delete i')) {
+            let target = e.target.matches('#btn-delete') ? e.target : e.target.parentElement;
+            let res = await Swal.fire({
+                title: '¿Estas seguro?',
+                text: "No podras revertir esta accion!",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Si, eliminar!'
+            })
+
+            if (res.isDismissed) return;
             // obtener el id del producto
-            const id = e.target.dataset.id;
+            const id = target.dataset.id;
             await eliminarData('productos', id);
-            // destuir la tabla para que se vuelva a pintar
-            $('#tablaProductos').DataTable().destroy();
-            this.pintarProductos();
-        }
-        if (e.target.matches('#btn-Edit')) {
-            const id = e.target.dataset.id;
+            
+            // eliminar del DOM el producto
+            target.parentElement.parentElement.remove();
         }
         if(e.target.tagName == 'TD'){
             if(this.editIsActive) return;
@@ -141,24 +149,33 @@ export class ListInventario extends HTMLElement {
         }
     }
 
-        productoFoundHandler(e) {
-        console.log(e.detail);
-        //eliminar la tabla
+    productoFoundHandler(e) {
+    let dataArray = [];
+    dataArray.push(e.detail);
+
+    //eliminar la tabla
+    $('#tablaProductos').DataTable().destroy();
+    this.pintarProductos(dataArray);
+    }
+
+    verInventarioHandler = async () => {
+        let productos = await obtenerData('productos');
         $('#tablaProductos').DataTable().destroy();
-        this.pintarProductos();
-        }
+        this.pintarProductos(productos);
+    }
 
     connectedCallback() {
-        this.pintarProductos();
         this.addEventListener('click', this.clickHandler);
         this.addEventListener('keyup', this.keyupHandler);
         document.addEventListener('productoFound', this.productoFoundHandler);
+        document.addEventListener('verInventario', this.verInventarioHandler)
     }
 
     disconnectedCallback() {
         this.removeEventListener('click', this.clickHandler);
         this.removeEventListener('keyup', this.keyupHandler);
         document.removeEventListener('productoFound', this.productoFoundHandler);
+        document.removeEventListener('verInventario', this.verInventarioHandler)
     }
 }
 
