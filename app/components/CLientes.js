@@ -2,6 +2,8 @@ import { clienteFound, guardarCliente } from '../helpers/firebase.js';
 import { Cliente } from './Cliente.js';
 import { ListClientes } from './ListClientes.js';
 
+
+//TODO: Manejar clientes como pedidos, que no me traiga todos los clientes si no solo el que yo busque
 export class Clientes extends HTMLElement {
     constructor() {
         super();

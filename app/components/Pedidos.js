@@ -145,7 +145,7 @@ export class Pedidos extends HTMLElement{
         }
         
         if (e.target.id === 'nuevoPedido') {
-            // disparar evento para que se abra el modal de nuevo pedido
+            // TODO:disparar evento para que se abra el modal de nuevo pedido
             document.dispatchEvent(new CustomEvent('nuevoPedido', { detail: this.cliente }));
             return;
         }
