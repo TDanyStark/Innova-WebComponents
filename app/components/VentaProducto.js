@@ -43,14 +43,11 @@ export class VentaProducto extends HTMLElement {
                 </thead>
             <tbody id="bodyTabla"></tbody>
             <tfoot>
-                <tr id="trAbono">
-                    <td class="tfootAbono bg-dark" >Abono: </td>
-                    <td id="filaAbono" >
-                        <input class="inputAbono" type="number" pattern="[0-9]*" oninput="this.value = this.value.replace(/[^0-9]/g, '');" />
-                    </td>
-                    <td style="text-align:right; padding-right: 40px;" colspan="2">Metodo de Pago: </td>
-                    <td colspan="2">
-                        <select id="paymentMethod" class="form-select" style="width: 84%;" aria-label="Default select example">
+                <tr>
+                    
+                    <td style="text-align:right; padding-right: 40px;" colspan="3">Metodo de Pago: </td>
+                    <td colspan="3">
+                        <select id="paymentMethod" class="form-select" style="width: 95%;" aria-label="Default select example">
                             <option selected value="Efectivo" data-value="Efectivo">Efectivo</option>
                             <option value="Davivienda - Daniel" data-value="4884 0357 8609">Davivienda - Daniel</option>
                             <option value="Nequi - Daniel" data-value="314 431 6062">Nequi - Daniel</option>
@@ -77,12 +74,13 @@ export class VentaProducto extends HTMLElement {
         this.$clienteName = this.querySelector('#clienteName');
         this.$clienteId = this.querySelector('#clienteId');
         this.cliente = {}
-        this.$filaAbono = this.querySelector("#trAbono");
-        this.$inputAbono = this.querySelector(".inputAbono");
 
         this.paymentMethod = this.querySelector("#paymentMethod");
         this.inputDescuento = this.querySelector(".inputDescuento");
 
+    }
+    methodMiles(precio){
+        return "$ " + precio.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
     }
 
     manejadorCliente(e) {
@@ -195,17 +193,56 @@ export class VentaProducto extends HTMLElement {
                 });
                 return;
             }
-            // comprobar si el abono es mayor al total de la venta
-            let totalVenta = parseInt($this.querySelector("#totalVenta").dataset.total);
-            if (this.$inputAbono.value > totalVenta) {
-                this.$inputAbono.value = ""; 
-                Swal.fire({
-                    icon: "error",
-                    title: "Oops...",
-                    text: "El abono no puede ser mayor al total de la venta",
-                });
-                return;
+            let pago;
+
+            let resultado = await Swal.fire({
+                title: "Pago",
+                input: "number",
+                inputAttributes: {
+                    min: 0,
+                    max: 1000000000,
+                    step: 1,
+                },
+                showCancelButton: true,
+                confirmButtonText: "Aceptar",
+                cancelButtonText: "Cancelar",
+                showLoaderOnConfirm: true,
+                preConfirm: (abono) => {
+                    pago = abono;
+                    return abono;
+                },
+                allowOutsideClick: () => !Swal.isLoading(),
+            })
+            
+            pago = parseInt(pago);
+            let total = parseInt($this.querySelector("#totalVenta").getAttribute("data-total"));
+            if(resultado.isConfirmed){
+                // verificar que el abono no sea mayor al total de la venta
+                if (pago > total) {
+                    let res = await Swal.fire({
+                        icon: "info",
+                        title: "devolver",
+                        text: "Debes devolver: " + this.methodMiles(pago - total),
+                        showCancelButton: true,
+                        confirmButtonText: "Aceptar",
+                        cancelButtonText: "Cancelar",
+                    });
+                    if (res.isDismissed) return;
+                    
+                }else{
+                    let res = await Swal.fire({
+                        icon: "info",
+                        title: "abono",
+                        text: "Abono: " + this.methodMiles(pago) + " Deuda: " + this.methodMiles(total - pago),
+                        showCancelButton: true,
+                        confirmButtonText: "Aceptar",
+                        cancelButtonText: "Cancelar",
+                    });
+                    if (res.isDismissed) return;
+                }
             }
+            if (resultado.isDismissed) return;
+
             // verificar que usuario esta realizando la venta
             console.log(estadoSesion.email);
               // obtener los productos de la venta
@@ -234,14 +271,9 @@ export class VentaProducto extends HTMLElement {
 
             });
             console.log(cantidadyInventario);
-              // obtener el total de la venta en numero
-            let total = parseInt($this.querySelector("#totalVenta").getAttribute("data-total"));
 
-            let abono = parseInt(this.$inputAbono.value);
-            console.log(abono);
-            if (isNaN(abono)) {
-                abono = 0;
-            }
+            let abono = pago > total ? total : pago;
+            console.log(abono, "abono");
 
             let descuento = parseInt($this.querySelector(".inputDescuento").value)
             if (isNaN(descuento)) {
@@ -295,7 +327,6 @@ export class VentaProducto extends HTMLElement {
                     showConfirmButton: false,
                 }).then(() => {
                     this.classList.add('d-none');
-                    this.$inputAbono.value = "";
                     document.dispatchEvent(new CustomEvent('ventaRealizada'));
                 });
             }else{
