@@ -201,7 +201,13 @@ export class ModalServicioTecnico extends HTMLElement {
             });
 
             // TITLE: Manejador del servicio tecnico
-            let vendedor = this.$selectTec.value === 'No asignar' ? estadoSesion.email : this.$selectTec.value;
+
+            let vendedor;
+            if (window.isAdmin) {
+                vendedor = this.$selectTec.value === 'No asignar' ? estadoSesion.email : this.$selectTec.value;
+            } else {
+                vendedor = estadoSesion.email;
+            }
             let observaciones = this.observaciones.value === '' ? 'Sin Observaciones' : this.observaciones.value;
             let abono = this.abono.value === '' ? 0 : parseInt(this.abono.value);
             let total = this.total.value === '' ? 0 : parseInt(this.total.value);
