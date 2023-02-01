@@ -2,6 +2,7 @@ import { obtenerData, obtenerDataWhere, obtenerPedidosDateStarttoEnd } from '../
 import { Cliente } from './Cliente.js';
 import { ListPedidos } from './ListPedidos.js';
 import { ModalVerPedido } from './ModalVerPedido.js';
+import { ModalNuevoPedido } from './modalNuevoPedido.js';
 
 export class Pedidos extends HTMLElement{
     constructor(){
@@ -64,6 +65,7 @@ export class Pedidos extends HTMLElement{
                 </div>
             </div>
             <modal-ver-pedido></modal-ver-pedido>
+            <modal-nuevo-pedido></modal-nuevo-pedido>
         </div>
         `;
 
@@ -145,7 +147,6 @@ export class Pedidos extends HTMLElement{
         }
         
         if (e.target.id === 'nuevoPedido') {
-            // TODO:disparar evento para que se abra el modal de nuevo pedido
             document.dispatchEvent(new CustomEvent('nuevoPedido', { detail: this.cliente }));
             return;
         }
