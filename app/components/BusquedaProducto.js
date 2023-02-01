@@ -150,7 +150,7 @@ export class BusquedaProducto extends HTMLElement {
 
         //si no hay resultados, mostrar mensaje
         if (resultado.length === 0) {
-            this.$resultadosDescripcion.innerHTML = /*html*/ `<li class="list-group-item" tabindex="-1">No hay resultados</li>`;
+            this.$resultadosDescripcion.innerHTML = /*html*/ `<li class="list-group-item" tabindex="-1" id="sinResult">No hay resultados</li>`;
             return;
         }
 
@@ -173,6 +173,7 @@ export class BusquedaProducto extends HTMLElement {
     }
 
     async clickulHandler(e) {
+        if (e.target.id === "sinResult") return;
         async function revisarProducto(id) {
             const $filasTabla = Array.from(document.querySelectorAll(".filaTabla"));
             let existe = false;
@@ -229,20 +230,20 @@ export class BusquedaProducto extends HTMLElement {
     }
 
     connectedCallback() {
-        document.addEventListener('clienteFound', this.clientFoundHandler);
         this.$busquedaID.addEventListener('keyup', this.keyupHandler);
-        this.addEventListener('input', this.inputHandler);
         this.$resultadosDescripcion.addEventListener('click', this.clickulHandler);
+        this.addEventListener('input', this.inputHandler);
         this.addEventListener('click', this.clickResultadosHandler);
+        document.addEventListener('clienteFound', this.clientFoundHandler);
         document.addEventListener('servicioTecnicoRegistrado', this.servicioTecnicoRegistradoHandler);
     }
 
     disconnectedCallback() {
-        document.removeEventListener('clienteFound', this.clientFoundHandler);
         this.$busquedaID.removeEventListener('keyup', this.keyupHandler);
-        this.removeEventListener('input', this.inputHandler);
         this.$resultadosDescripcion.removeEventListener('click', this.clickulHandler);
+        this.removeEventListener('input', this.inputHandler);
         this.removeEventListener('click', this.clickResultadosHandler);
+        document.removeEventListener('clienteFound', this.clientFoundHandler);
         document.removeEventListener('servicioTecnicoRegistrado', this.servicioTecnicoRegistradoHandler);
     }
 }

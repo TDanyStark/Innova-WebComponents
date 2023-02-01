@@ -49,7 +49,6 @@ export class Inventario extends HTMLElement {
     clickHandler = async (e) => {
         if (e.target.id === 'verInventario') {
             this.$listInventario.classList.remove('d-none');
-            console.log('verInventario');
             document.dispatchEvent(new CustomEvent('verInventario'));
         }
     }

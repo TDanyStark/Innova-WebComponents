@@ -59,8 +59,13 @@ export class ModalSaveProduct extends HTMLElement {
 
     }
 
+    inputHandler(e) {
+        if (e.target === this.$proveedor){
+            this.$proveedor.value = this.$proveedor.value.toUpperCase();
+        }
+    }
+
     async clickHandler(e) {
-        console.log(e.target);
         if (e.target.matches('.btn-primary')) {
             if (this.$id.value === '' || this.$descripcion.value === '' || this.$cantidadInventario.value === '' || this.$precioUnidad.value === '' || this.$proveedor.value === '') {
                 Swal.fire('error', 'Todos los campos son obligatorios').then(() => {
@@ -176,12 +181,14 @@ export class ModalSaveProduct extends HTMLElement {
     connectedCallback() {
         console.log('Se ha agregado el componente');
         this.addEventListener('click', this.clickHandler);
+        this.addEventListener('input', this.inputHandler);
         document.addEventListener('saveProduct', this.saveProductHandler);
     }
 
     disconnectedCallback() {
         console.log('Se ha eliminado el componente');
         this.removeEventListener('click', this.clickHandler);
+        this.removeEventListener('input', this.inputHandler);
         document.removeEventListener('saveProduct', this.saveProductHandler);
     }
 }
