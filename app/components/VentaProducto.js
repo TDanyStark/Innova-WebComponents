@@ -208,6 +208,7 @@ export class VentaProducto extends HTMLElement {
                 cancelButtonText: "Cancelar",
                 showLoaderOnConfirm: true,
                 preConfirm: (abono) => {
+                    abono = abono === "" ? 0 : parseInt(abono);
                     pago = abono;
                     return abono;
                 },
