@@ -1,4 +1,4 @@
-import {obtenerDataWhere} from '../helpers/firebase.js';
+import {editDocMerge, obtenerDataWhere} from '../helpers/firebase.js';
 
 export class ListPedidos extends HTMLElement{
     constructor(){
@@ -79,7 +79,7 @@ export class ListPedidos extends HTMLElement{
                         <input type="hidden" id="hiddenFechaEntrega" value="${pedido.fechaEntrega}">
 
                         <button class="btn btn-primary"><i class="fa fa-eye"></i></button>
-                        <button class="btn btn-success" ${pedido.estado == "Entregado" ? "disabled" : ""}><i class="fa-solid fa-check"></i></button>
+                        <button class="btn btn-success" ${pedido.estado == "Entregado" || pedido.estado == "Entregado, Deuda" ? "disabled" : ""}><i class="fa-solid fa-check"></i></button>
                     </td>
                 </tr>
             `;
@@ -129,7 +129,7 @@ export class ListPedidos extends HTMLElement{
         this.pintarPedidos(e.detail);
     }
 
-    clickHandler = (e) => {
+    clickHandler = async (e) => {
         if(e.target.matches('.btn-primary') || e.target.matches('.btn-primary *')){
             let target = e.target.classList.contains('btn-primary') ? e.target : e.target.parentElement;
             
@@ -167,7 +167,100 @@ export class ListPedidos extends HTMLElement{
         }
 
         if(e.target.matches('.btn-success') || e.target.matches('.btn-success *')){
-            //TODO: manejar cuando se vaya a retirar el pedido
+            //TODO: manejar cuando se vaya a retirar el pedido\
+            let target = e.target.classList.contains('btn-success') ? e.target : e.target.parentElement;
+            
+            let id = target.parentElement.querySelector('#hiddenId').value;
+            let cliente = target.parentElement.querySelector('#hiddenCliente').value;
+            let celular = target.parentElement.querySelector('#hiddenCelular').value;
+            let pedido = target.parentElement.querySelector('#hiddenPedido').value;
+            let abono = target.parentElement.querySelector('#hiddenAbono').value;
+            let estado = target.parentElement.querySelector('#hiddenEstado').value;
+            let total = target.parentElement.querySelector('#hiddenTotal').value;
+
+            let pago;
+            // alerta con input para pago
+            let resultado = await Swal.fire({
+                title: pedido + " \nTotal: " + this.funcMiles(total) + " Abono: " + this.funcMiles(abono) + " saldo: " + this.funcMiles(total - abono),
+                text: "Ingrese el monto a pagar",
+                input: "number",
+                inputPlaceholder: "Monto a pagar " + this.funcMiles(total - abono),
+                inputAttributes: {
+                    min: 0,
+                    max: 1000000000,
+                    step: 1,
+                },
+                showCancelButton: true,
+                confirmButtonText: "Aceptar",
+                cancelButtonText: "Cancelar",
+                showLoaderOnConfirm: true,
+                preConfirm: (abono) => {
+                    abono = abono === "" ? 0 : parseInt(abono);
+                    pago = abono;
+                    return abono;
+                },
+                allowOutsideClick: () => !Swal.isLoading(),
+            });
+
+            console.log(resultado);
+            if (resultado.isDesmissed) return;
+            if(resultado.isConfirmed){
+                if (pago >= total - abono) {
+                    let res = await Swal.fire({
+                        title: "El pago es mayor o igual al saldo",
+                        text: "Debes devolver " + this.funcMiles(pago - (total - abono)),
+                        icon: "warning",
+                        showCancelButton: true,
+                        confirmButtonText: "Aceptar",
+                        cancelButtonText: "Cancelar",
+                    });
+                    if (res.isDesmissed) return;
+                    if (res.isConfirmed) {
+                        abono = total;
+                        estado = "Entregado";
+                    }
+                    
+                } else {
+                    let res = await Swal.fire({
+                        title: "El pago es menor al saldo",
+                        text: "Queda una Deuda de: " + this.funcMiles((total - abono) - pago),
+                        icon: "warning",
+                        showCancelButton: true,
+                        confirmButtonText: "Aceptar",
+                        cancelButtonText: "Cancelar",
+                    });
+                    if (res.isDesmissed) return;
+                    if (res.isConfirmed) {
+                        abono = parseInt(abono) + parseInt(pago);
+                        estado = "Entregado, Deuda";
+                    }
+                }
+            }
+
+            console.log(abono, estado, total);
+            abono = parseInt(abono);
+            total = parseInt(total);
+            let pedidoObj = {
+                id,
+                abono,
+                estado,
+                total,
+                fechaEntrega: new Date().getTime()
+            }
+
+            let res = await editDocMerge('pedidos', id, pedidoObj);
+            if(res){
+                Swal.fire({
+                    title: "Pedido Actualizado",
+                    icon: "success",
+                });
+                document.dispatchEvent(new CustomEvent('actualizarPedidos', {detail: {celular}}));
+            }else{
+                Swal.fire({
+                    title: "Error al actualizar el pedido",
+                    icon: "error",
+                });
+            }
         }
     };
 

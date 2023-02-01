@@ -3,7 +3,7 @@ import { Header } from "./Header.js";
 import { ListInventario } from "./ListInventario.js";
 import { ModalSaveProduct } from "./ModalSaveProduct.js";
 
-
+//TODO: manejar el inventario como los pedidos, que solo se muestren todos cuando lo necesite
 export class Inventario extends HTMLElement {
     constructor() {
         super();
