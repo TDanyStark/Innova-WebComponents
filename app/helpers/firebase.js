@@ -353,7 +353,7 @@ export let guardarPedido = async (data) => {
   let { inST, idST, cliente, celular, pedido, estado, abono, total,recibo } = data;
   let id = new Date().getTime();
   const docData = {
-    id: id,
+    id: parseInt(id),
     inST,
     idST,
     recibo,

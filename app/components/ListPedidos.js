@@ -240,7 +240,7 @@ export class ListPedidos extends HTMLElement{
             abono = parseInt(abono);
             total = parseInt(total);
             let pedidoObj = {
-                id,
+                id : parseInt(id),
                 abono,
                 estado,
                 total,

@@ -128,17 +128,18 @@ export class Pedidos extends HTMLElement{
             }
 
             if (isNaN(fechaStart) || isNaN(fechaEnd)) {
-                let today = new Date();
-                let mesAgo = new Date(today.getTime() - 30 * 24 * 60 * 60 * 1000); // 30 dias atras
-                mesAgo = mesAgo.getTime();
+                let today = new Date().getTime();
+                let mesAgo = new Date(today - 30 * 24 * 60 * 60 * 1000).getTime(); // 15 dias atras
 
                 fechaStart = mesAgo;
-                fechaEnd = today.getTime();
+                fechaEnd = today
 
             }
+            console.log(fechaStart, fechaEnd)
 
             // disparar evento para que se llame a listPedidos con todos los pedidos
             let pedidos = await obtenerPedidosDateStarttoEnd(fechaStart, fechaEnd);
+            console.log(pedidos);
             document.dispatchEvent(new CustomEvent('seeAllListPedidos', {detail: pedidos}));
             this.$divListPedidos.classList.remove('d-none');
             this.$divSmsError.classList.add('d-none');

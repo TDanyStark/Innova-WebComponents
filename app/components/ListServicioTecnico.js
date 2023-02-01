@@ -1,4 +1,4 @@
-import { editDocMerge, estadoSesion, obtenerDataWhere, obtenerServiciosTecnicosDateStarttoEnd} from "../helpers/firebase.js";
+import { editDocMerge, estadoSesion, obtenerDataWhere, obtenerServiciosTecnicosDateStarttoEnd, eliminarData} from "../helpers/firebase.js";
 import { ModalViewST  } from "./ModalViewST.js";
 import { ModalRetirarST } from "./ModalRetirarST.js";
 
@@ -20,7 +20,7 @@ export class listServicioTecnico extends HTMLElement {
                                 <th scope="col">Fecha</th>
                                 <th scope="col">Cliente</th>
                                 <th scope="col">Equipo</th>
-                                <th scope="col">Marca</th>
+                                <th scope="col">Marca y Ref</th>
                                 <th scope="col">Total</th>
                                 <th scope="col">Saldo</th>
                                 <th scope="col">Estado</th>
@@ -129,7 +129,8 @@ export class listServicioTecnico extends HTMLElement {
 
                         <button ${element.PagadoATecnico ? "disabled" : ""} class="btn btn-primary" id="btn-ver" data-pagadotec="${element.PagadoATecnico}" data-id="${element.id}"><i data-pagadotec="${element.PagadoATecnico}" data-id="${element.id}" id="btn-ver" class="fa fa-eye"></i></button>
                         <button ${element.PagadoATecnico || element.estado == "Entregado" || element.estado == "Retirado" ? "disabled" : ""} class="btn btn-success" id="btn-retirar" data-pagadotec="${element.PagadoATecnico}" data-id="${element.id}"><i data-pagadotec="${element.PagadoATecnico}" data-id="${element.id}" id="btn-retirar" class="fa-solid fa-check"></i></button>
-                    </td>
+                        ${window.isAdmin ? '<button class="btn btn-danger"><i class="fa fa-trash"></i></button>' : ''}
+                        </td>
                 </tr>
             `;
         });
@@ -220,6 +221,36 @@ export class listServicioTecnico extends HTMLElement {
             }
             
         }
+
+        if (e.target.classList.contains('btn-danger') || e.target.classList.contains('fa-trash')) {
+            // SOlo si es admin
+            let target = e.target.classList.contains('btn-danger') ? e.target : e.target.parentElement;
+            let id = target.parentElement.parentElement.querySelector('#inputId').dataset.info;
+            
+            let res = await Swal.fire({
+                title: '¿Estas seguro de eliminar el registro?',
+                text: "No podras revertir esta accion",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Si, eliminar',
+                cancelButtonText: 'Cancelar'
+            });
+
+            if (res.isConfirmed) {
+                let data = await eliminarData('servicioTecnico', id);
+                if (data) {
+                    Swal.fire(
+                        'Eliminado!',
+                        'El registro ha sido eliminado.',
+                        'success'
+                    );
+                    this.ActualizarTablaSTHandler();
+                }
+            }
+        }
+
         if(e.target.id === "btn-ver"){  
             let td = e.target.closest('td');
             let ST = {

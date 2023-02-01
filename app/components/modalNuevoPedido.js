@@ -25,6 +25,26 @@ export class ModalNuevoPedido extends HTMLElement{
                                     <input type="text" class="form-control" id="inputCelular" disabled>
                                 </div>
                             </div>
+                            <div id="pedidos"> 
+                                <div class="row" >
+                                    <div class="col">
+                                        <label for="inputPedido" class="form-label">Pedido: </label>
+                                        <input type="text" id="inputPedido" class="form-control ultimoPedido" placeholder="Teclado Lenovo s145, memoria Ram o link ML o virtualTronic etc" />
+                                    </div>
+                                    <div class="col-md-2">
+                                        <label for="inputPrecioCompra" class="form-label">Precio Compra: </label>
+                                        <input type="number" class="form-control" id="inputPrecioCompra">
+                                    </div>
+                                    <div class="col-md-2">
+                                        <label for="inputAbonoPedido" class="form-label">Abono: </label>
+                                        <input type="number" class="form-control" id="inputAbonoPedido">
+                                    </div>
+                                    <div class="col-md-2">
+                                        <label for="inputTotalPedido" class="form-label">Valor Pedido: </label>
+                                        <input type="number" class="form-control" id="inputTotalPedido">
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                         <div class="modal-footer">
                             <button type="button" id="btnGuardar" class="btn btn-primary">Guardar</button>
@@ -46,7 +66,7 @@ export class ModalNuevoPedido extends HTMLElement{
 
     nuevoPedidoHandler = (e) => {
         this.ventanaModal.show();
-        this.cliente.value = e.detail.cliente;
+        this.cliente.value = e.detail.nombre;
         this.celular.value = e.detail.celular;
     }
 
