@@ -124,8 +124,6 @@ export class ModalViewST extends HTMLElement {
             </div>
         `;
 
-        //TODO: que cuando el estado cambie a sin solucion el total se ponga en 0
-
         this.modal = this.querySelector('#modalViewST');
         this.ventanaModal = new bootstrap.Modal(this.modal);
 
@@ -228,6 +226,32 @@ export class ModalViewST extends HTMLElement {
     }
 
     changeHandler = async (e) => {
+        let id = this.ID;
+
+        if(e.target === this.estado){
+            console.log(e.target.value);
+            if(e.target.value == "Sin Solucion"){
+                this.total.value = 0;
+                let data = {
+                    total: 0,
+                    estado: e.target.value
+                }
+                let res = await editDocMerge('servicioTecnico', id, data);
+                if(res){
+                    this.isSaved = true;
+                    Swal.fire({
+                        position: 'top-end',
+                        icon: 'success',
+                        title: 'Actualizado',
+                        timer: 1000,
+                        showConfirmButton: false
+                    })
+                }
+                return;
+            }
+        }
+
+
         if(e.target == this.abono){
             if(e.target.value == "") return;
             let abono = parseInt(e.target.value);
@@ -255,7 +279,6 @@ export class ModalViewST extends HTMLElement {
             e.target.focus();
 
         }
-        let id = this.ID;
         let newValue = e.target.value;
         let key = e.target.getAttribute("data-dbkey");
 

@@ -71,12 +71,12 @@ export class ListPedidos extends HTMLElement{
                         <input type="hidden" id="hiddenCelular" value="${pedido.celular}">
                         <input type="hidden" id="hiddenPedido" value="${pedido.pedido}">
                         <input type="hidden" id="hiddenAbono" value="${pedido.abono}">
+                        <input type="hidden" id="hiddenPrecioCompra" value="${pedido.precioCompra}">
                         <input type="hidden" id="hiddenTotal" value="${pedido.total}">
                         <input type="hidden" id="hiddenEstado" value="${pedido.estado}">
                         <input type="hidden" id="hiddenProveedor" value="${pedido.proveedor}">
                         <input type="hidden" id="hiddenVendedor" value="${pedido.vendedor}">
                         <input type="hidden" id="hiddenFechaEntrega" value="${pedido.fechaEntrega}">
-                        
 
                         <button class="btn btn-primary"><i class="fa fa-eye"></i></button>
                         <button class="btn btn-success" ${pedido.estado == "Entregado" ? "disabled" : ""}><i class="fa-solid fa-check"></i></button>
@@ -140,6 +140,7 @@ export class ListPedidos extends HTMLElement{
             let celular = target.parentElement.querySelector('#hiddenCelular').value;
             let pedido = target.parentElement.querySelector('#hiddenPedido').value;
             let abono = target.parentElement.querySelector('#hiddenAbono').value;
+            let precioCompra = target.parentElement.querySelector('#hiddenPrecioCompra').value;
             let total = target.parentElement.querySelector('#hiddenTotal').value;
             let estado = target.parentElement.querySelector('#hiddenEstado').value;
             let proveedor = target.parentElement.querySelector('#hiddenProveedor').value;
@@ -154,6 +155,7 @@ export class ListPedidos extends HTMLElement{
                 celular,
                 pedido,
                 abono,
+                precioCompra,
                 total,
                 estado,
                 proveedor,

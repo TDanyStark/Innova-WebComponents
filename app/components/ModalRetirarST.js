@@ -119,7 +119,7 @@ export class ModalRetirarST extends HTMLElement{
 
         this.validacionSaldo();
     }
-    //TODO: si el total es  0 se retira pero el estado ya no seria entregado si no Retirado
+
     async clickHandler(e){
         if(e.target == this.$btnRetirar){
             let abono = parseInt(this.$abono.dataset.abono);
@@ -127,17 +127,26 @@ export class ModalRetirarST extends HTMLElement{
             let pago = isNaN(parseInt(this.$inputPago.value)) ? 0 : parseInt(this.$inputPago.value);
 
             abono += pago;
+            // para poder usar el abono original para mandan un mensaje al retirar
+            let antAbono = abono;
+            console.log(antAbono, 'antAbono');
 
             let id = this.ID
+
+            let estado = total == 0 ? "Retirado" : "Entregado";
+            // si el total es 0 tambien se resetea el abono a 0
+            abono = total == 0 ? 0 : abono;
+            console.log(abono, 'abono');
+
+            
 
             let data = {
                 abono,
                 total,
                 fechaSalida: new Date().getTime(),
-                estado: 'Entregado'
+                estado,
             }
 
-            // TODO: si el total es 0 se retira pero el estado ya no seria entregado si no Retirado y si hay abono se envie un mensaje que hay
             // un abono pendiente para entregar
             // tambien que haya un confirmacion si se va a retirar y el saldo es 0
             let res = await editDocMerge('servicioTecnico', id, data);
@@ -148,6 +157,13 @@ export class ModalRetirarST extends HTMLElement{
                     title: 'Salida de ST',
                     text: 'Salida de ST exitosa',
                 }).then(() => {
+                    if (estado == "Retirado" && antAbono != 0) {
+                        Swal.fire({
+                            icon: 'info',
+                            title: 'Abono pendiente',
+                            text: 'El cliente tiene un abono pendiente: '+ this.milesFuncion(antAbono),
+                        })
+                    }
                     document.dispatchEvent(new CustomEvent('ActualizarTablaST'));
                     this.ventanaModal.hide();
                 });

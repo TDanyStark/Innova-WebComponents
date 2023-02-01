@@ -46,6 +46,10 @@ export class ModalVerPedido extends HTMLElement{
                                     <p class="form-label" id="totalAbono" style="font-size: 1.5rem;"></p>
                                 </div>
                                 <div class="col">
+                                    <label for="inputPrecioCompra" class="form-label">Precio Compra: </label>
+                                    <input type="number" class="form-control" id="inputPrecioCompra">
+                                </div>
+                                <div class="col">
                                     <label for="inputTotal" class="form-label">Total: </label>
                                     <input type="number" class="form-control" id="inputTotal">
                                 </div>
@@ -91,6 +95,7 @@ export class ModalVerPedido extends HTMLElement{
 
         this.inputAbono = this.querySelector('#inputAbono');
         this.totalAbono = this.querySelector('#totalAbono');
+        this.inputPrecioCompra = this.querySelector('#inputPrecioCompra');
         this.inputTotal = this.querySelector('#inputTotal');
 
         this.inputFechaIngreso = this.querySelector('#inputFechaIngreso');
@@ -103,7 +108,6 @@ export class ModalVerPedido extends HTMLElement{
 
     }
 
-    //TODO: Añadir un precio de compra y un precio de venta
 
     milesFuncion = (precio) => precio.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
 
@@ -125,6 +129,7 @@ export class ModalVerPedido extends HTMLElement{
 
         this.totalAbono.textContent = this.milesFuncion(e.detail.abono);
         this.totalAbono.dataset.abono = e.detail.abono;
+        this.inputPrecioCompra.value = e.detail.precioCompra;
         this.inputAbono.value = '';
         
         this.inputTotal.value = e.detail.total;
@@ -143,7 +148,6 @@ export class ModalVerPedido extends HTMLElement{
             let abono = parseInt(e.target.value);
             let totalAbono = parseInt(this.totalAbono.dataset.abono);
             let total = parseInt(this.inputTotal.value);
-
 
             if(abono + totalAbono > total){
                 inputAbono.value = "";
@@ -174,6 +178,7 @@ export class ModalVerPedido extends HTMLElement{
             let estado = this.inputEstado.value;
             let pedido = this.pedido.value;
             let proveedor = this.proveedor.value;
+            let precioCompra = parseInt(this.inputPrecioCompra.value);
 
             let pedidoObj = {
                 abono,
@@ -181,9 +186,10 @@ export class ModalVerPedido extends HTMLElement{
                 estado,
                 pedido,
                 proveedor,
+                precioCompra,
             }
 
-            console.log(pedido);
+            console.log('PedidoObj ',pedidoObj);
             this.ventanaModal.hide();
             let res = await editDocMerge('pedidos', id, pedidoObj);
             console.log('pedido editado', res);

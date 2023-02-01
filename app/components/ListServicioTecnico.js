@@ -60,7 +60,6 @@ export class listServicioTecnico extends HTMLElement {
         return "$ "+num.toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1,')
     }
 
-    //TODO: si el estado es Entregado, sin Solucion o Retirado, el color es amarillo
     async llenarTabla(data) {
 
         this.$tbody.innerHTML = '';
@@ -129,7 +128,7 @@ export class listServicioTecnico extends HTMLElement {
                         <input type="hidden" id="inputExistePedido" data-info="${element.existePedido}" />
 
                         <button ${element.PagadoATecnico ? "disabled" : ""} class="btn btn-primary" id="btn-ver" data-pagadotec="${element.PagadoATecnico}" data-id="${element.id}"><i data-pagadotec="${element.PagadoATecnico}" data-id="${element.id}" id="btn-ver" class="fa fa-eye"></i></button>
-                        <button ${element.PagadoATecnico || element.estado == "Entregado" ? "disabled" : ""} class="btn btn-success" id="btn-retirar" data-pagadotec="${element.PagadoATecnico}" data-id="${element.id}"><i data-pagadotec="${element.PagadoATecnico}" data-id="${element.id}" id="btn-retirar" class="fa-solid fa-check"></i></button>
+                        <button ${element.PagadoATecnico || element.estado == "Entregado" || element.estado == "Retirado" ? "disabled" : ""} class="btn btn-success" id="btn-retirar" data-pagadotec="${element.PagadoATecnico}" data-id="${element.id}"><i data-pagadotec="${element.PagadoATecnico}" data-id="${element.id}" id="btn-retirar" class="fa-solid fa-check"></i></button>
                     </td>
                 </tr>
             `;
