@@ -129,7 +129,7 @@ export class listServicioTecnico extends HTMLElement {
 
                         <button ${element.PagadoATecnico ? "disabled" : ""} class="btn btn-primary" id="btn-ver" data-pagadotec="${element.PagadoATecnico}" data-id="${element.id}"><i data-pagadotec="${element.PagadoATecnico}" data-id="${element.id}" id="btn-ver" class="fa fa-eye"></i></button>
                         <button ${element.PagadoATecnico || element.estado == "Entregado" || element.estado == "Retirado" ? "disabled" : ""} class="btn btn-success" id="btn-retirar" data-pagadotec="${element.PagadoATecnico}" data-id="${element.id}"><i data-pagadotec="${element.PagadoATecnico}" data-id="${element.id}" id="btn-retirar" class="fa-solid fa-check"></i></button>
-                        ${window.isAdmin ? '<button class="btn btn-danger"><i class="fa fa-trash"></i></button>' : ''}
+                        ${window.isAdmin ? '<button class="btn btn-danger btnEliminar"><i class="fa fa-trash"></i></button>' : ''}
                         </td>
                 </tr>
             `;
@@ -222,9 +222,9 @@ export class listServicioTecnico extends HTMLElement {
             
         }
 
-        if (e.target.classList.contains('btn-danger') || e.target.classList.contains('fa-trash')) {
+        if (e.target.classList.contains('btnEliminar') || e.target.parentElement.classList.contains('btnEliminar')) {
             // SOlo si es admin
-            let target = e.target.classList.contains('btn-danger') ? e.target : e.target.parentElement;
+            let target = e.target.classList.contains('btnEliminar') ? e.target : e.target.parentElement;
             let id = target.parentElement.parentElement.querySelector('#inputId').dataset.info;
             
             let res = await Swal.fire({
