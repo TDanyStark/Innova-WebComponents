@@ -183,9 +183,7 @@ export class VentaProducto extends HTMLElement {
             sumarTotal();
         }
         if (e.target.matches('#btnCobrarVenta')) {
-            //TODO: cambiar el funcionamiento de abono, cuando se de click aparezca un input para ingresar el pago
-            //TODO: si el abono es mayor al total de la venta, mostrar el dinero que se debe devolver, pero si es menor que quede como abono
-            if ($this.querySelector("#tablaVTotal") === null) {
+           if ($this.querySelector("#tablaVTotal") === null) {
                 Swal.fire({
                     icon: "error",
                     title: "Oops...",

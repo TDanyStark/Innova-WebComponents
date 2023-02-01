@@ -165,6 +165,10 @@ export class ListPedidos extends HTMLElement{
 
             document.dispatchEvent(new CustomEvent('modalVerPedido', {detail: pedidoObj}));
         }
+
+        if(e.target.matches('.btn-success') || e.target.matches('.btn-success *')){
+            //TODO: manejar cuando se vaya a retirar el pedido
+        }
     };
 
     actualizarPedidosHandler = async (e) => {
