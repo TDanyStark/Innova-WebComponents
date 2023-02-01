@@ -116,7 +116,7 @@ export class ModalSaveProduct extends HTMLElement {
             let res= await guardarProducto(producto);
             console.log(res);
             if (res) {
-                Swal.fire({
+                await Swal.fire({
                     position: 'top-end',
                     icon: 'success',
                     title: 'Guardado con exito, actualizando inventario...',
@@ -125,6 +125,8 @@ export class ModalSaveProduct extends HTMLElement {
                 });
                     this.ventanaModal.hide();
                     document.dispatchEvent(new CustomEvent('productoFound', { bubbles: true, detail: producto }));
+                    // esto es provisional. hacer focus en el input ID
+                    document.querySelector('#busquedaID').focus();
             } else {
                 Swal.fire('error', 'No se pudo guardar el producto');
             }

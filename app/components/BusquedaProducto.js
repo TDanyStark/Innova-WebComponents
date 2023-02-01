@@ -229,6 +229,7 @@ export class BusquedaProducto extends HTMLElement {
         this.$busquedaID.focus();
     }
 
+
     connectedCallback() {
         this.$busquedaID.addEventListener('keyup', this.keyupHandler);
         this.$resultadosDescripcion.addEventListener('click', this.clickulHandler);

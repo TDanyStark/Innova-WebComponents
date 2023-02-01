@@ -78,7 +78,7 @@ export class ListInventario extends HTMLElement {
                     "previous": "Anterior"
                 },
             },
-            pageLength: 5,
+            pageLength: 8,
             pagingType: "simple_numbers",
         });
     }

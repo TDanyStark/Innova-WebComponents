@@ -1,4 +1,4 @@
-import {editDocMerge, obtenerDataWhere} from '../helpers/firebase.js';
+import {editDocMerge, obtenerDataWhere, eliminarData} from '../helpers/firebase.js';
 
 export class ListPedidos extends HTMLElement{
     constructor(){
@@ -80,11 +80,11 @@ export class ListPedidos extends HTMLElement{
 
                         <button class="btn btn-primary"><i class="fa fa-eye"></i></button>
                         <button class="btn btn-success" ${pedido.estado == "Entregado" || pedido.estado == "Entregado, Deuda" ? "disabled" : ""}><i class="fa-solid fa-check"></i></button>
+                        <button class="btn btn-danger btnEliminar" ${window.isAdmin ? "" : "disabled"}><i class="fa-solid fa-trash"></i></button>
                     </td>
                 </tr>
             `;
         });
-        //TODO: agregar boton eliminar con validacion de estado
 
         $('#tablaPedidos').DataTable({
             "order": [[ 0, "desc" ]],
@@ -260,6 +260,37 @@ export class ListPedidos extends HTMLElement{
                     title: "Error al actualizar el pedido",
                     icon: "error",
                 });
+            }
+        }
+
+        if(e.target.matches('.btnEliminar') || e.target.matches('.btnEliminar *')){
+            let target = e.target.classList.contains('btnEliminar') ? e.target : e.target.parentElement;
+            let id = target.parentElement.querySelector('#hiddenId').value;
+
+            let res = await Swal.fire({
+                title: "¿Estas seguro de eliminar el pedido?",
+                text: "No se podra recuperar el pedido",
+                icon: "warning",
+                showCancelButton: true,
+                confirmButtonText: "Aceptar",
+                cancelButtonText: "Cancelar",
+            });
+            if (res.isDesmissed) return;
+            if (res.isConfirmed) {
+                let res = await eliminarData('pedidos', id);
+                if(res){
+                    Swal.fire({
+                        title: "Pedido Eliminado",
+                        icon: "success",
+                    });
+                    //TODO: celular no lo reconoce
+                    document.dispatchEvent(new CustomEvent('actualizarPedidos', {detail: {celular}}));
+                }else{
+                    Swal.fire({
+                        title: "Error al eliminar el pedido",
+                        icon: "error",
+                    });
+                }
             }
         }
     };
