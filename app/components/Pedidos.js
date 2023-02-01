@@ -51,11 +51,8 @@ export class Pedidos extends HTMLElement{
                     </div>
                     <div class="row">
                         <div id="smsError" class="col d-none">
-                            <div class="alert alert-danger" role="alert">
-                                <h4 class="alert-heading">Error!</h4>
-                                <p id="smsErrorText">No se Encontraron Pedidos para este cliente</p>
-                                <hr>
-                                <p class="mb-0">Por favor, añada un pedido, o busque otro cliente</p>
+                            <div class="alert alert-dark" role="alert">
+                                No se encontraron pedidos para este cliente
                             </div>
                         </div>
                         <div id="listPedidos" class="col d-none">

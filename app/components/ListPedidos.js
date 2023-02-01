@@ -84,6 +84,7 @@ export class ListPedidos extends HTMLElement{
                 </tr>
             `;
         });
+        //TODO: agregar boton eliminar con validacion de estado
 
         $('#tablaPedidos').DataTable({
             "order": [[ 0, "desc" ]],
