@@ -145,7 +145,7 @@ export class ModalRetirarST extends HTMLElement{
             console.log(abono, 'abono');
 
             let fechaSalida = new Date().getTime();
-            
+            //TODO: validar que los pedidos se editen correctamente
             // le damos estado y fehca de salida a los pedidos asociados
             if (this.pedidos.length > 0) {
                 this.pedidos.forEach(async pedido => {
