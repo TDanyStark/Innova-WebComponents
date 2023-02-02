@@ -47,6 +47,20 @@ export class ModalRetirarST extends HTMLElement{
                                     <p id="saldo" style="font-size:2rem; margin-top:-1.2rem;"></p>
                                 </div>
                             </div>
+                            <div class="row">
+                                <div class="col text-center">
+                                <h4>Metodos de Pago: </h4>
+                                    <select id="paymentMethod" class="form-select" style="width: 95%;" aria-label="Default select example">
+                                        <option selected value="Efectivo" data-value="Efectivo">Efectivo</option>
+                                        <option value="Davivienda - Daniel" data-value="4884 0357 8609">Davivienda - Daniel</option>
+                                        <option value="Nequi - Daniel" data-value="314 431 6062">Nequi - Daniel</option>
+                                        <option value="Ahorro a la Mano - Daniel" data-value="0 314 431 6062">Ahorro a la Mano - Daniel</option>
+                                        <option value="Davivienda - Oscar" data-value="5064 0007 0146">Davivienda - Oscar</option>
+                                        <option value="Daviplata - Oscar" data-value="310 346 9101">Daviplata - Oscar</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
                         <div class="modal-footer">
                             <div class="row">
                                 <div class="col text-center">

@@ -202,7 +202,40 @@ export class ListPedidos extends HTMLElement{
             });
 
             console.log(resultado);
-            if (resultado.isDesmissed) return;
+            if (resultado.isDismissed) return;
+
+            let paymentMethod = "";
+            let method = {};
+            if (resultado.isConfirmed){
+                method =  await Swal.fire({
+                    title: 'Seleccione un Metodo de pago',
+                    input: 'select',
+                    inputOptions: {
+                        'Davivienda - Daniel': 'Davivienda - Daniel - 4884 0357 8609',
+                        'Nequi - Daniel': 'Nequi - Daniel - 314 431 6062',
+                        'Ahorro a la Mano - Daniel': 'Ahorro a la Mano - Daniel - 0314 431 6062',
+                        'Davivienda - Oscar': 'Davivienda - Oscar - 5064 0007 0146',
+                        'Nequi - Oscar': 'Nequi - Oscar - 310 346 9101',
+                    },
+                    inputPlaceholder: 'Efectivo',
+                    showCancelButton: true,
+                    inputValidator: (value) => {
+                        return new Promise((resolve) => {
+                            if (value === '') {
+                                paymentMethod = "Efectivo";
+                            }else{
+                                paymentMethod = value;
+                            }
+                            resolve()
+                        })
+                    }
+                })
+                console.log(paymentMethod);
+            }
+
+            if (method.isDismissed) return;
+            
+
             if(resultado.isConfirmed){
                 if (pago >= total - abono) {
                     let res = await Swal.fire({
@@ -213,7 +246,7 @@ export class ListPedidos extends HTMLElement{
                         confirmButtonText: "Aceptar",
                         cancelButtonText: "Cancelar",
                     });
-                    if (res.isDesmissed) return;
+                    if (res.isDismissed) return;
                     if (res.isConfirmed) {
                         abono = total;
                         estado = "Entregado";
@@ -228,7 +261,7 @@ export class ListPedidos extends HTMLElement{
                         confirmButtonText: "Aceptar",
                         cancelButtonText: "Cancelar",
                     });
-                    if (res.isDesmissed) return;
+                    if (res.isDismissed) return;
                     if (res.isConfirmed) {
                         abono = parseInt(abono) + parseInt(pago);
                         estado = "Entregado, Deuda";
@@ -243,6 +276,7 @@ export class ListPedidos extends HTMLElement{
                 id : parseInt(id),
                 abono,
                 estado,
+                metodoPago: paymentMethod,
                 total,
                 fechaEntrega: new Date().getTime()
             }
@@ -275,7 +309,7 @@ export class ListPedidos extends HTMLElement{
                 confirmButtonText: "Aceptar",
                 cancelButtonText: "Cancelar",
             });
-            if (res.isDesmissed) return;
+            if (res.isDismissed) return;
             if (res.isConfirmed) {
                 let res = await eliminarData('pedidos', id);
                 if(res){
