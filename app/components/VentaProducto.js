@@ -195,6 +195,7 @@ export class VentaProducto extends HTMLElement {
 
             let resultado = await Swal.fire({
                 title: "Pago",
+                text: "Ingrese el Dinero Recibido",
                 input: "number",
                 inputAttributes: {
                     min: 0,

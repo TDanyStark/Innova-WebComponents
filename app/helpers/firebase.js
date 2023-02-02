@@ -42,7 +42,7 @@ const analytics = getAnalytics(app);
 let enviarMensaje = async (sms) => {
   let TOKEN = '6158754389:AAHgxVsb6hOVqah1I7f7L_8Gwf3PPr4mjKE'
   let URL = `https://api.telegram.org/bot${TOKEN}/sendMessage`
-  let chat_id = -889461248
+  let chat_id = -1001461846906
 
   let data = {
     chat_id,
@@ -210,9 +210,9 @@ export let guardarProducto = async (data) => {
 
     let sms =`<b>📦 Nuevo Producto 📦</b> \n`;
     sms += `<b>Descripcion:</b> ${descripcion} \n`;
-    sms += `<b>Precio:</b> ${precio} \n`;
-    sms += `<b>Precio Compra:</b> ${precio_compra} \n`;
     sms += `<b>Cantidad:</b> ${cantidad_inventario} \n`;
+    sms += `<b>Precio Compra:</b> ${precio_compra} \n`;
+    sms += `<b>Precio:</b> ${precio} \n`;
     sms += `<b>Usuario:</b> ${usuario} \n`;
     
     enviarMensaje(sms);
