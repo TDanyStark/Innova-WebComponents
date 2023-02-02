@@ -68,7 +68,8 @@ export class BusquedaProducto extends HTMLElement {
     }
 
     async keyupHandler(e) {
-        if (e.key === 'Enter') {
+        console.log(e.key);
+        if (e.key === 'Enter' || e.key === ' ') {
             if (this.$busquedaID.value === '') return;
 
             if(this.$busquedaID.value === 'ST'){
@@ -135,6 +136,8 @@ export class BusquedaProducto extends HTMLElement {
          // para que el id busqueda se ponga en mayusculas instantaneamente
         if (e.target.id === "busquedaID" || e.target.id === "idProducto") {
             e.target.value = e.target.value.toUpperCase();
+            // quitar los espacios en blanco
+            e.target.value = e.target.value.replace(/\s/g, "");
             return;
         }
         if (this.$busquedaDescripcion.value === "" || this.$busquedaDescripcion.value.length < 3) {
