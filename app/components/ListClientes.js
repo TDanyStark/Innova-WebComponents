@@ -1,4 +1,4 @@
-import { obtenerData, eliminarData } from "../helpers/firebase.js";
+import { obtenerData, eliminarData, obtenerDataWhere } from "../helpers/firebase.js";
 
 export class ListClientes extends HTMLElement {
     constructor() {
@@ -47,13 +47,7 @@ export class ListClientes extends HTMLElement {
         this.isBusqueda = false;
         this.rowsPerPage = 5;
         this.currentPage = 1;
-        this.filterClientes = [];
         this.clientes = [];
-        obtenerData('clientes').then((clientes) => {
-            this.clientes = clientes;
-            this.generateRows(this.clientes, this.rowsPerPage);
-            this.generatePaginationControls(this.clientes, this.rowsPerPage);
-        });
     }
 
     generateRows(data, rowsPerPage) {
@@ -75,7 +69,7 @@ export class ListClientes extends HTMLElement {
                 <td>${cliente.nombre}</td>
                 <td>
                     <a class="btn btn-success" href="#/cliente/${cliente.id}/${cliente.nombre.replace(" ", '@@')}" id="btnVerCliente" data-cliente="${cliente.id}"><i title="ver cliente" class="fa-solid fa-eye"></i></a>
-                    <button class="btn btn-danger" id="btnEliminarCliente" data-cliente="${cliente.id}"><i data-cliente="${cliente.id}"  class="fa fa-trash"></i></button>
+                    <button class="btn btn-danger btnEliminar" id="btnEliminarCliente" data-cliente="${cliente.id}"><i data-cliente="${cliente.id}"  class="fa fa-trash"></i></button>
                 </td>
             `;
             tableBody.appendChild(tr);
@@ -132,24 +126,19 @@ export class ListClientes extends HTMLElement {
     }
 
     async clienteFoundHandler(e) {
-        obtenerData('clientes').then((clientes) => {
-            this.clientes = clientes;
+        const celular = e.detail.celular;
+        let pedidos = await obtenerDataWhere('clientes', 'celular', '==', celular)
+        console.log('pedidos ',pedidos);
+        if (pedidos.length > 0) {
+            this.clientes = pedidos;
             this.generateRows(this.clientes, this.rowsPerPage);
             this.generatePaginationControls(this.clientes, this.rowsPerPage);
-            // colocar en el input busqueda el celular del cliente encontrado
-            this.$inputSearchCliente.value = e.detail.celular;
-             // Crea un nuevo evento de entrada
-            const inputEvent = new Event('input');
-            // Asigna el evento al input
-            this.$inputSearchCliente.dispatchEvent(inputEvent);
-        });
-
-
+        } 
     }
 
     clickHandler(e) {
         //comprobar si el id del boton es btnEliminarCliente
-        if (e.target.id === 'btnEliminarCliente') {
+        if (e.target.id === 'btnEliminarCliente' || e.target.matches('.btnEliminar *')) {
             this.isBusqueda = false;
             //obtener el id del cliente
             const idCliente = e.target.dataset.cliente;
@@ -168,6 +157,12 @@ export class ListClientes extends HTMLElement {
                 }
             });
         }
+    }
+
+    verClientesHandler = async () => {
+        this.clientes = await obtenerData('clientes');
+        this.generateRows(this.clientes, this.rowsPerPage);
+        this.generatePaginationControls(this.clientes, this.rowsPerPage);
     }
     
 
@@ -211,16 +206,18 @@ export class ListClientes extends HTMLElement {
             this.currentPage = Number(event.target.value);
             if (this.isBusqueda) {
                 this.generateRows(this.filterClientes, this.rowsPerPage);
-            } else {
-                this.generateRows(this.clientes, this.rowsPerPage);
-            }
-        });
+                } else {
+                    this.generateRows(this.clientes, this.rowsPerPage);
+                }
+            });
         // agregar evento de cambio al input de búsqueda
         this.$inputSearchCliente.addEventListener('input', this.searchTable);
 
         document.addEventListener('clienteFound', this.clienteFoundHandler);
 
         this.addEventListener('click', this.clickHandler);
+
+        document.addEventListener('verClientes', this.verClientesHandler);
     }
 
     disconnectedCallback() {
@@ -252,7 +249,7 @@ export class ListClientes extends HTMLElement {
 
         this.removeEventListener('click', this.clickHandler);
 
-
+        document.removeEventListener('verClientes', this.verClientesHandler);
     }
 }
 
