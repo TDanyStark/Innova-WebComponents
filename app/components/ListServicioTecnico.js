@@ -272,7 +272,6 @@ export class listServicioTecnico extends HTMLElement {
                 existePedido: td.querySelector('#inputExistePedido').dataset.info,
             }
             document.dispatchEvent(new CustomEvent('verST', {detail: ST}));
-            //TODO: manejar los pedidos que tenga asociados el servicio tecnico
         }
 
         if(e.target.id === "btn-retirar"){
@@ -298,7 +297,6 @@ export class listServicioTecnico extends HTMLElement {
 
             }
             document.dispatchEvent(new CustomEvent('retirarST', {detail: ST}));
-            //TODO: manejar los pedidos que tenga asociados el servicio tecnico
         }
     }
 

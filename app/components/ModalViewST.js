@@ -1,4 +1,4 @@
-import { obtenerData, editDocMerge }  from '../helpers/firebase.js';
+import { obtenerData, editDocMerge, obtenerDataWhere }  from '../helpers/firebase.js';
 
 export class ModalViewST extends HTMLElement {
     constructor() {
@@ -91,6 +91,15 @@ export class ModalViewST extends HTMLElement {
                                         <p style="margin: 0;">Despues de 2 meses de recibido el producto no se responde...</p>
                                     </div>
                                 </div>
+                                <hr />
+                                <div class="row">
+                                    <div>
+                                        <h5>Pedidos</h5>
+                                        <ul id=pedidos>
+                                            <li class="text-white">sdfsdfsdfdf</li>
+                                        </ul>
+                                    </div>
+                                </div>
                                 <div class="row">
                                     <div class="col-md">
                                         <label for="inputFechaIngreso" class="form-label">Fecha de Ingreso: </label>
@@ -145,6 +154,8 @@ export class ModalViewST extends HTMLElement {
         this.$selectTec = this.querySelector('#selectTec');
 
         this.Nrecibo = this.querySelector('#Nrecibo');
+
+        this.pedidos = this.querySelector('#pedidos');
 
         this.btnCerrar2 = this.querySelector('#btnCerrarTwo');
         this.btnCerrar = this.querySelector('#btnCerrar');
@@ -221,6 +232,24 @@ export class ModalViewST extends HTMLElement {
             this.$selectTec.value = st.vendedor;
         }
 
+        this.pedidos.innerHTML = "";
+        let idST = parseInt(st.id);
+        console.log('idST ',idST);
+        let pedidos = await obtenerDataWhere('pedidos', 'idST', '==', idST);
+
+        if(pedidos.length > 0){
+            pedidos.forEach(pedido => {
+                console.log(pedido.precio);
+                let precio = pedido.precio == undefined ? "Sin Precio Aun" : pedido.precio;
+                const $li = document.createElement('li');
+                $li.textContent = pedido.pedido + " - " + pedido.estado + " - " + precio;
+                this.pedidos.appendChild($li);
+            });
+        }else{
+            const $li = document.createElement('li');
+            $li.textContent = "No hay pedidos";
+            this.pedidos.appendChild($li);
+        }
 
         this.ventanaModal.show();
     }
