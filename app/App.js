@@ -12,7 +12,7 @@ export async function App(){
     }
 
     if (location.hash == "#/login" && estadoSesion != false) {
-        location.hash = "#/home";
+        location.hash = "#/inicio";
     }
 
     let lastHash = location.hash

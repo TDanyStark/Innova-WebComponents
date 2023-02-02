@@ -1,7 +1,7 @@
 import { App } from './app.js';
 import { Router } from './Router.js';
 
-window.hashDisponibles = ["#/login", "#/home", "#/ventas", "#/inventario", "#/clientes", "#/pedidos", "#/usuarios", "#/prestamos", "#/stecnico"];
+window.hashDisponibles = ["#/login", "#/inicio", "#/ventas", "#/inventario", "#/clientes", "#/pedidos", "#/usuarios", "#/prestamos", "#/stecnico", "#/pagos"];
 
 document.addEventListener("DOMContentLoaded", App);
 window.addEventListener("popstate", Router);

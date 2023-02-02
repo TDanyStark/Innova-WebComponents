@@ -7,10 +7,13 @@ export class Home extends HTMLElement {
         container.innerHTML = /*html*/`
             <header-element></header-element>
             <div class="container">
+                
                 <div class="row">
                     <div class="col-12">
-                        <h1>Home</h1>
                     </div>
+                </div>
+                <div class="img-container">
+                    <img src="./app/assets/logo.png">
                 </div>
             </div>
         `;

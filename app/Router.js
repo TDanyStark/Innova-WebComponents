@@ -7,6 +7,7 @@ import { Inventario } from "./components/Inventario.js";
 import { VistaCliente } from "./components/VistaCliente.js";
 import { ServicioTecnico } from "./components/ServicioTecnico.js";
 import { Pedidos } from "./components/Pedidos.js";
+import { Pagos } from "./components/Pagos.js";
 import { estadoSesion, Admin } from "./helpers/firebase.js";
 
 
@@ -28,7 +29,7 @@ export async function Router(){
         }, 250);
         return;
     }else if (location.hash == "#/login" && estadoSesion != false) {
-        location.hash = "#/home";
+        location.hash = "#/inicio";
         return;
     }
 
@@ -37,7 +38,7 @@ export async function Router(){
         window.isAdmin = await Admin(estadoSesion.uid);
     }
     console.log(window.isAdmin)
-    if(hash === '#/home'){
+    if(hash === '#/inicio'){
         $root.innerHTML = "";
         $root.innerHTML = '<home-element></home-element>';
 
@@ -72,6 +73,10 @@ export async function Router(){
     } else if(hash === '#/pedidos'){
         $root.innerHTML = "";
         $root.innerHTML = '<pedidos-element></pedidos-element>';
+
+    } else if(hash === '#/pagos'){
+        $root.innerHTML = "";
+        $root.innerHTML = '<pagos-element></pagos-element>';
 
     } else if(hash.includes('#/cliente/')){
         const idCliente = hash.split('/')[2];

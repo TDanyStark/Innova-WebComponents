@@ -40,6 +40,7 @@ const analytics = getAnalytics(app);
 // TITLE: SMS Bot Telegram
 
 let enviarMensaje = async (sms) => {
+  return;
   let TOKEN = '6158754389:AAHgxVsb6hOVqah1I7f7L_8Gwf3PPr4mjKE'
   let URL = `https://api.telegram.org/bot${TOKEN}/sendMessage`
   let chat_id = -1001461846906
