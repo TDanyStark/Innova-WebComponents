@@ -35,7 +35,7 @@ export class ListPedidos extends HTMLElement{
 
             this.$inputSearch;
             this.$wrapper;
-            
+
     }
 
     validarUndefined = (value) => {
@@ -125,7 +125,6 @@ export class ListPedidos extends HTMLElement{
     }
 
     verlistPedidosHandler(e){
-        console.log(e.detail)
         $('#tablaPedidos').DataTable().destroy();
         this.pintarPedidos(e.detail);
     }
@@ -266,6 +265,7 @@ export class ListPedidos extends HTMLElement{
         if(e.target.matches('.btnEliminar') || e.target.matches('.btnEliminar *')){
             let target = e.target.classList.contains('btnEliminar') ? e.target : e.target.parentElement;
             let id = target.parentElement.querySelector('#hiddenId').value;
+            let celular = target.parentElement.querySelector('#hiddenCelular').value;
 
             let res = await Swal.fire({
                 title: "¿Estas seguro de eliminar el pedido?",
@@ -283,7 +283,6 @@ export class ListPedidos extends HTMLElement{
                         title: "Pedido Eliminado",
                         icon: "success",
                     });
-                    //TODO: celular no lo reconoce
                     document.dispatchEvent(new CustomEvent('actualizarPedidos', {detail: {celular}}));
                 }else{
                     Swal.fire({

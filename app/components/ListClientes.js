@@ -154,6 +154,7 @@ export class ListClientes extends HTMLElement {
             //obtener el id del cliente
             const idCliente = e.target.dataset.cliente;
             //eliminar el cliente
+            console.log(idCliente);
             eliminarData('clientes', idCliente).then((response) => {
                 if (response) {
                     obtenerData('clientes').then((clientes) => {
