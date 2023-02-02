@@ -77,7 +77,6 @@ export class ModalNuevoPedido extends HTMLElement{
         this.celular.value = e.detail.celular;
     }
 
-    //TODO: revisar que abono queda como NaN
 
     clickHandler = async (e) => {
         if(e.target.id === 'btnGuardar'){
@@ -86,15 +85,18 @@ export class ModalNuevoPedido extends HTMLElement{
             let proveedor = 'Por definir'
             let vendedor = estadoSesion.email
             let recibo = 'SR'
+            let abono = isNaN(parseInt(this.abonoPedido.value)) ? 0 : parseInt(this.abonoPedido.value);
+            let total = isNaN(parseInt(this.totalPedido.value)) ? 0 : parseInt(this.totalPedido.value);
+            let precioCompra = isNaN(parseInt(this.precioCompra.value)) ? 0 : parseInt(this.precioCompra.value);
             let data = {
                 id,
                 recibo,
                 cliente: this.cliente.value,
                 celular: this.celular.value,
                 pedido: this.pedido.value,
-                precioCompra: parseInt(this.precioCompra.value),
-                abono: parseInt(this.abonoPedido.value),
-                total: parseInt(this.totalPedido.value),
+                precioCompra,
+                abono,
+                total,
                 estado,
                 proveedor,
                 vendedor,

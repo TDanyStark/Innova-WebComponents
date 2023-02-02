@@ -183,16 +183,17 @@ export class ModalRetirarST extends HTMLElement{
             let resUpdate;
             if (this.pedidos.length > 0) {
                 resUpdate = await updatePedidosAsync(this.pedidos);
-            }else{
-                resUpdate = true;
             }
+            
             if (resUpdate){
                 Swal.fire({
                     icon: 'success',
                     title: 'Pedidos actualizados',
                     text: 'Pedidos actualizados correctamente',
                 })
-            }else{
+            } else if (resUpdate == undefined){
+                // NO Hacer Nada
+            } else{
                 Swal.fire({
                     icon: 'error',
                     title: 'Pedidos no actualizados',

@@ -68,7 +68,6 @@ export class BusquedaProducto extends HTMLElement {
     }
 
     async keyupHandler(e) {
-        console.log(e.key);
         if (e.key === 'Enter') {
             if (this.$busquedaID.value === '') return;
 
