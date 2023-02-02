@@ -10,7 +10,6 @@ export async function App(){
         }, 250);
         return;
     }
-    
 
     if (location.hash == "#/login" && estadoSesion != false) {
         location.hash = "#/home";

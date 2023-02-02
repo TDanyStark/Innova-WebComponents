@@ -285,7 +285,7 @@ export let guardarVenta = async (data) => {
     sms += `<b>Total:</b> ${total} \n`;
     sms += `<b>Descuento:</b> ${descuento} \n`;
     sms += `<b>Metodo de Pago:</b> ${metodoPago} \n`;
-    sms += `<b>Vendedor:</b> ${vendedor} \n`;
+    sms += `<b>Vendedor:</b> ${vendedor.split("@")[0]} \n`;
     enviarMensaje(sms);
 
     return true;
@@ -403,7 +403,7 @@ export let guardarServicioTecnico = async (data) => {
     sms += `<b>Falla:</b> ${fallaReportada} \n`;
     sms += `<b>Abono:</b> ${abono} \n`;
     sms += `<b>Total:</b> ${total} \n`;
-    sms += `<b>Vendedor:</b> ${vendedor} \n`;
+    sms += `<b>Vendedor:</b> ${vendedor.split("@")[0]} \n`;
 
     enviarMensaje(sms);
 
@@ -454,7 +454,7 @@ export let guardarPedido = async (data) => {
     sms += `<b>Equipo:</b> ${pedido} \n`;
     sms += `<b>Abono:</b> ${abono} \n`;
     sms += `<b>Total:</b> ${total} \n`;
-    sms += `<b>Vendedor:</b> ${estadoSesion.email} \n`;
+    sms += `<b>Vendedor:</b> ${estadoSesion.email.split("@")[0]} \n`;
     enviarMensaje(sms);
 
     return true;
