@@ -280,7 +280,7 @@ export class VentaProducto extends HTMLElement {
             }
               //cliente, productos, total, descuento, vendedor
             let dataVenta = {
-                cliente: $this.cliente.celular,
+                celular: $this.cliente.celular,
                 nombre: $this.cliente.nombre,
                 productos: productosVenta,
                 abono,

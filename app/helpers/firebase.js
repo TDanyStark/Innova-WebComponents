@@ -37,6 +37,35 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const analytics = getAnalytics(app);
 
+// TITLE: SMS Bot Telegram
+
+let enviarMensaje = async (sms) => {
+  let TOKEN = '6158754389:AAHgxVsb6hOVqah1I7f7L_8Gwf3PPr4mjKE'
+  let URL = `https://api.telegram.org/bot${TOKEN}/sendMessage`
+  let chat_id = -889461248
+
+  let data = {
+    chat_id,
+    text: sms,
+    parse_mode: 'HTML'
+  }  
+  
+  fetch(URL, {
+      method: 'POST',
+      body: JSON.stringify(data),
+      headers: {
+          'Content-Type': 'application/json'
+      }
+  })
+}
+
+let sms = '📦';
+// enviarMensaje(sms);
+
+
+
+//////////////////
+
 let auth = getAuth();
 let estadoSesion = null;
 let intervalo;
@@ -148,6 +177,12 @@ export let guardarCliente = async (data) => {
   };
   try {
     await setDoc(doc(db, "clientes", $celular), docData);
+
+    let sms =`<b>🥳 Nuevo Cliente 🥳 </b> \n`;
+    sms += `<b>Nombre: </b> ${$nombre} \n`;
+    sms += `<b>Celular: </b> ${$celular} \n`;
+    enviarMensaje(sms);
+
     return true;
   } catch (e) {
     return e;
@@ -172,6 +207,16 @@ export let guardarProducto = async (data) => {
   console.log(docData)
   try {
     await setDoc(doc(db, "productos", id), docData);
+
+    let sms =`<b>📦 Nuevo Producto 📦</b> \n`;
+    sms += `<b>Descripcion:</b> ${descripcion} \n`;
+    sms += `<b>Precio:</b> ${precio} \n`;
+    sms += `<b>Precio Compra:</b> ${precio_compra} \n`;
+    sms += `<b>Cantidad:</b> ${cantidad_inventario} \n`;
+    sms += `<b>Usuario:</b> ${usuario} \n`;
+    
+    enviarMensaje(sms);
+
     return true;
   } catch (e) {
     console.error(e);
@@ -211,11 +256,11 @@ export let buscarProductoDescripcionLike = async (descripcion) => {
 
 //guardar en la base de datos firestore una venta
 export let guardarVenta = async (data) => {
-  let { cliente, nombre, productos, metodoPago, abono, total, descuento, vendedor } = data;
+  let { celular, nombre, productos, metodoPago, abono, total, descuento, vendedor } = data;
   let id = new Date().getTime();
   const docData = {
     id,
-    cliente,
+    celular,
     nombre,
     productos,
     abono,
@@ -229,6 +274,20 @@ export let guardarVenta = async (data) => {
   // console.log(docData);
   try {
     await setDoc(doc(db, "ventas", id), docData);
+
+    let sms =`<b>✅ Nueva Venta ✅ </b> \n`;
+    sms += `<b>Cliente:</b> ${nombre} \n`;
+    sms += `<b>Productos:</b> \n`;
+    productos.forEach((producto) => {
+      sms += `=> <i>${producto.descripcion}</i> \n`;
+    });
+    sms += `<b>Abono:</b> ${abono} \n`;
+    sms += `<b>Total:</b> ${total} \n`;
+    sms += `<b>Descuento:</b> ${descuento} \n`;
+    sms += `<b>Metodo de Pago:</b> ${metodoPago} \n`;
+    sms += `<b>Vendedor:</b> ${vendedor} \n`;
+    enviarMensaje(sms);
+
     return true;
   } catch (e) {
     console.log(e);
@@ -261,6 +320,12 @@ export let obtenerData = async (collectionName) => {
 export let eliminarData = async (collectionName, id) => {
   try {
     await deleteDoc(doc(db, collectionName, id));
+
+    let sms =`<b>❌ Datos Eliminados ❌ </b> \n`;
+    sms += `<b>Id:</b> ${id} \n`;
+    sms += `<b>Collection:</b> ${collectionName} \n`;
+    enviarMensaje(sms);
+
     return true;
   } catch (e) {
     console.log(e);
@@ -329,6 +394,19 @@ export let guardarServicioTecnico = async (data) => {
   id = id.toString();
   try {
     await setDoc(doc(db, "servicioTecnico", id), docData);
+
+    let sms =`<b>⚙️ Nuevo Servicio Técnico 🪛</b> \n`;
+    sms += `<b>Cliente:</b> ${cliente} \n`;
+    sms += `<b>Equipo:</b> ${equipo} \n`;
+    sms += `<b>Marca:</b> ${marca} \n`;
+    sms += `<b>Cargador:</b> ${cargador} \n`;
+    sms += `<b>Falla:</b> ${fallaReportada} \n`;
+    sms += `<b>Abono:</b> ${abono} \n`;
+    sms += `<b>Total:</b> ${total} \n`;
+    sms += `<b>Vendedor:</b> ${vendedor} \n`;
+
+    enviarMensaje(sms);
+
     return true;
   } catch (e) {
     console.log(e);
@@ -370,6 +448,15 @@ export let guardarPedido = async (data) => {
   console.log(docData);
   try {
     await setDoc(doc(db, "pedidos", id), docData);
+
+    let sms =`<b>💸 Nuevo Pedido 💸 </b> \n`;
+    sms += `<b>Cliente:</b> ${cliente} \n`;
+    sms += `<b>Equipo:</b> ${pedido} \n`;
+    sms += `<b>Abono:</b> ${abono} \n`;
+    sms += `<b>Total:</b> ${total} \n`;
+    sms += `<b>Vendedor:</b> ${estadoSesion.email} \n`;
+    enviarMensaje(sms);
+
     return true;
   } catch (e) {
     console.log(e);
@@ -397,15 +484,19 @@ export let guardarData = async (collectionName, data) => {
   id = id.toString();
   try {
     await setDoc(doc(db, collectionName, id), docData);
+
+    let sms =`<b>👨🏻‍💻 Nuevos Datos En el Sistema 👨🏻‍💻 </b> \n`;
+    sms += `<b>ID:</b> ${id} \n`;
+    sms += `<b>Coleccion:</b> ${collectionName} \n`;
+    enviarMensaje(sms);
+
+
     return true;
   } catch (e) {
     console.log(e);
     return false;
   }
 };
-
-
-
 
 
 
