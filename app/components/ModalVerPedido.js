@@ -69,6 +69,7 @@ export class ModalVerPedido extends HTMLElement{
                                         <option value="Pendiente">Pendiente</option>
                                         <option value="En Oficina">En Oficina</option>
                                         <option value="Entregado" disabled>Entregado</option>
+                                        <option value="Retirado">Retirado</option>
                                         <option value="Reembolso">Reembolso</option>
                                     </select>
                                 </div>

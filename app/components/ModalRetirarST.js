@@ -1,4 +1,4 @@
-import {editDocMerge} from '../helpers/firebase.js';
+import {editDocMerge, obtenerDataWhere} from '../helpers/firebase.js';
 
 export class ModalRetirarST extends HTMLElement{
     constructor(){
@@ -81,6 +81,8 @@ export class ModalRetirarST extends HTMLElement{
         this.$btnRetirar = this.querySelector('button.btn-primary');
         this.ID = '';
 
+        this.pedidos = [];
+
     }
 
     milesFuncion(precio){
@@ -96,9 +98,12 @@ export class ModalRetirarST extends HTMLElement{
         }
     }
 
-    retirarSTHandler(e){
+    async retirarSTHandler(e){
         this.ventanaModal.show();
         console.log(e.detail);
+        let idST = parseInt(e.detail.id);
+        this.pedidos = await obtenerDataWhere('pedidos', 'idST', '==', idST);
+
         this.ID = e.detail.id;
         this.$inputPago.value = '';
 
@@ -134,16 +139,29 @@ export class ModalRetirarST extends HTMLElement{
             let id = this.ID
 
             let estado = total == 0 ? "Retirado" : "Entregado";
+
             // si el total es 0 tambien se resetea el abono a 0
             abono = total == 0 ? 0 : abono;
             console.log(abono, 'abono');
 
+            let fechaSalida = new Date().getTime();
             
+            // le damos estado y fehca de salida a los pedidos asociados
+            if (this.pedidos.length > 0) {
+                this.pedidos.forEach(async pedido => {
+                    let data = {
+                        estado,
+                        fechaSalida,
+                    }
+                    let res = await editDocMerge('pedidos', pedido.id, data);
+                    console.log('res de editar el pedido',res);
+                });
+            }
 
             let data = {
                 abono,
                 total,
-                fechaSalida: new Date().getTime(),
+                fechaSalida,
                 estado,
             }
 

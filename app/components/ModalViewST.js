@@ -91,15 +91,6 @@ export class ModalViewST extends HTMLElement {
                                         <p style="margin: 0;">Despues de 2 meses de recibido el producto no se responde...</p>
                                     </div>
                                 </div>
-                                <hr />
-                                <div class="row">
-                                    <div>
-                                        <h5>Pedidos</h5>
-                                        <ul id=pedidos>
-                                            <li class="text-white">sdfsdfsdfdf</li>
-                                        </ul>
-                                    </div>
-                                </div>
                                 <div class="row">
                                     <div class="col-md">
                                         <label for="inputFechaIngreso" class="form-label">Fecha de Ingreso: </label>
@@ -122,6 +113,32 @@ export class ModalViewST extends HTMLElement {
                                             <option value="Entregado" disabled>Entregado</option>
                                         </select>
                                     </div>
+                                </div>
+                                <hr />
+                                <div class="row">
+                                    <h5>Pedidos</h5>
+                                    <table class="table text-white">
+                                        <thead>
+                                            <tr>
+                                                <th>Producto</th>
+                                                <th>Abono</th>
+                                                <th>Total</th>
+                                                <th>Saldo</th>
+                                                <th>Estado</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="tbodyPedidos">
+                                        </tbody>
+                                        <tfoot>
+                                            <tr>
+                                                <td>Total: </td>
+                                                <td id="totalAbonos"></td>
+                                                <td id="totalPedidos"></td>
+                                                <td id="totalSaldos"></td>
+                                                <td></td>
+                                            </tr>
+                                        </tfoot>
+                                    </table>
                                 </div>
                             </div>
                         </div>
@@ -155,7 +172,7 @@ export class ModalViewST extends HTMLElement {
 
         this.Nrecibo = this.querySelector('#Nrecibo');
 
-        this.pedidos = this.querySelector('#pedidos');
+        this.pedidos = this.querySelector('#tbodyPedidos');
 
         this.btnCerrar2 = this.querySelector('#btnCerrarTwo');
         this.btnCerrar = this.querySelector('#btnCerrar');
@@ -232,23 +249,47 @@ export class ModalViewST extends HTMLElement {
             this.$selectTec.value = st.vendedor;
         }
 
-        this.pedidos.innerHTML = "";
         let idST = parseInt(st.id);
-        console.log('idST ',idST);
         let pedidos = await obtenerDataWhere('pedidos', 'idST', '==', idST);
+        const $totalAbonos = this.querySelector('#totalAbonos');
+        const $totalPedidos = this.querySelector('#totalPedidos');
+        const $totalSaldos = this.querySelector('#totalSaldos');
+        $totalAbonos.textContent = "";
+        $totalPedidos.textContent = "";
+        $totalSaldos.textContent = "";
+        this.pedidos.innerHTML = "";
 
         if(pedidos.length > 0){
-            pedidos.forEach(pedido => {
-                console.log(pedido.precio);
-                let precio = pedido.precio == undefined ? "Sin Precio Aun" : pedido.precio;
-                const $li = document.createElement('li');
-                $li.textContent = pedido.pedido + " - " + pedido.estado + " - " + precio;
-                this.pedidos.appendChild($li);
+            let totalAbonos = 0;
+            let totalPedidos = 0;
+            let totalSaldos = 0;
+
+            pedidos.forEach(el => {
+                totalAbonos += el.abono;
+                totalPedidos += el.total;
+                totalSaldos += el.total - el.abono;
+
+                const $tr = document.createElement('tr');
+                $tr.innerHTML = `
+                    <td>${el.pedido}</td>
+                    <td>${this.milesFuncion(el.abono)}</td>
+                    <td>${this.milesFuncion(el.total)}</td>
+                    <td>${this.milesFuncion(el.total - el.abono)}</td>
+                    <td>${el.estado}</td>
+                `;
+
+                this.pedidos.appendChild($tr);
             });
+            $totalAbonos.textContent = this.milesFuncion(totalAbonos);
+            $totalPedidos.textContent = this.milesFuncion(totalPedidos);
+            $totalSaldos.textContent = this.milesFuncion(totalSaldos);
         }else{
-            const $li = document.createElement('li');
-            $li.textContent = "No hay pedidos";
-            this.pedidos.appendChild($li);
+           
+            const $tr = document.createElement('tr');
+            $tr.innerHTML = `
+                <td colspan="5">No hay pedidos</td>
+            `;
+            this.pedidos.appendChild($tr);
         }
 
         this.ventanaModal.show();
