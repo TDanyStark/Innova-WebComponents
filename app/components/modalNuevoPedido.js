@@ -77,6 +77,8 @@ export class ModalNuevoPedido extends HTMLElement{
         this.celular.value = e.detail.celular;
     }
 
+    //TODO: revisar que abono queda como NaN
+
     clickHandler = async (e) => {
         if(e.target.id === 'btnGuardar'){
             let id = new Date().getTime();

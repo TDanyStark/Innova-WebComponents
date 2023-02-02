@@ -39,7 +39,7 @@ export class ListPedidos extends HTMLElement{
     }
 
     validarUndefined = (value) => {
-        if(value == undefined){
+        if(value == undefined || value == "undefined"){
             return 'No Asignado';
         }else{
             return value;

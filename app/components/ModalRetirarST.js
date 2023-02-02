@@ -51,12 +51,12 @@ export class ModalRetirarST extends HTMLElement{
                                 <div class="col text-center">
                                 <h4>Metodos de Pago: </h4>
                                     <select id="paymentMethod" class="form-select" style="width: 95%;" aria-label="Default select example">
-                                        <option selected value="Efectivo" data-value="Efectivo">Efectivo</option>
-                                        <option value="Davivienda - Daniel" data-value="4884 0357 8609">Davivienda - Daniel</option>
-                                        <option value="Nequi - Daniel" data-value="314 431 6062">Nequi - Daniel</option>
-                                        <option value="Ahorro a la Mano - Daniel" data-value="0 314 431 6062">Ahorro a la Mano - Daniel</option>
-                                        <option value="Davivienda - Oscar" data-value="5064 0007 0146">Davivienda - Oscar</option>
-                                        <option value="Daviplata - Oscar" data-value="310 346 9101">Daviplata - Oscar</option>
+                                        <option selected value="Efectivo" >Efectivo</option>
+                                        <option value="Davivienda - Daniel">Davivienda - Daniel - 4884 0357 8609</option>
+                                        <option value="Nequi - Daniel">Nequi - Daniel - 314 431 6062</option>
+                                        <option value="Ahorro a la Mano - Daniel">Ahorro a la Mano - Daniel - 0 314 431 6062</option>
+                                        <option value="Davivienda - Oscar">Davivienda - Oscar - 5064 0007 0146</option>
+                                        <option value="Daviplata - Oscar">Daviplata - Oscar - 310 346 9101</option>
                                     </select>
                                 </div>
                             </div>
@@ -97,6 +97,8 @@ export class ModalRetirarST extends HTMLElement{
 
         this.pedidos = [];
 
+        this.paymentMethod = this.querySelector('#paymentMethod');
+
     }
 
     milesFuncion(precio){
@@ -116,6 +118,8 @@ export class ModalRetirarST extends HTMLElement{
         this.ventanaModal.show();
         console.log(e.detail);
         let idST = parseInt(e.detail.id);
+        console.log(this.pedidos.length)
+        this.pedidos = [];
         this.pedidos = await obtenerDataWhere('pedidos', 'idST', '==', idST);
 
         this.ID = e.detail.id;
@@ -144,6 +148,8 @@ export class ModalRetirarST extends HTMLElement{
             let abono = parseInt(this.$abono.dataset.abono);
             let total = parseInt(this.$total.dataset.total);
             let pago = isNaN(parseInt(this.$inputPago.value)) ? 0 : parseInt(this.$inputPago.value);
+            let metodoPago = this.paymentMethod.options[this.paymentMethod.selectedIndex].value;
+
 
             abono += pago;
             // para poder usar el abono original para mandan un mensaje al retirar
@@ -159,17 +165,40 @@ export class ModalRetirarST extends HTMLElement{
             console.log(abono, 'abono');
 
             let fechaSalida = new Date().getTime();
-            //TODO: validar que los pedidos se editen correctamente
             // le damos estado y fehca de salida a los pedidos asociados
-            if (this.pedidos.length > 0) {
-                this.pedidos.forEach(async pedido => {
-                    let data = {
+
+            async function updatePedidosAsync (pedidos){
+                let resPedido;
+                for (const pedido of pedidos) {
+                    const data = {
                         estado,
                         fechaSalida,
-                    }
-                    let res = await editDocMerge('pedidos', pedido.id, data);
-                    console.log('res de editar el pedido',res);
-                });
+                        metodoPago,
+                    };
+                    resPedido = await editDocMerge('pedidos', pedido.id.toString(), data);
+                }
+                console.log(resPedido);
+                return resPedido;
+            }
+            let resUpdate;
+            if (this.pedidos.length > 0) {
+                resUpdate = await updatePedidosAsync(this.pedidos);
+            }else{
+                resUpdate = true;
+            }
+            if (resUpdate){
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Pedidos actualizados',
+                    text: 'Pedidos actualizados correctamente',
+                })
+            }else{
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Pedidos no actualizados',
+                    text: 'No se pudieron actualizar los pedidos, Vuelve a intentarlo',
+                })
+                return;
             }
 
             let data = {
@@ -177,6 +206,7 @@ export class ModalRetirarST extends HTMLElement{
                 total,
                 fechaSalida,
                 estado,
+                metodoPago,
             }
 
             // un abono pendiente para entregar
