@@ -28,6 +28,17 @@ export class Cliente extends HTMLElement {
                         <div class="invalid-feedback">
                             Debe tener un nombre.
                         </div>
+                        <div id="resultadosNombre">
+                            <ul 
+                            class="list-group bg-dark d-none" 
+                            style="
+                                position:absolute;
+                                max-height: 200px; 
+                                overflow-y: auto;
+                                cursor:pointer; 
+                                z-index:999;
+                            "></ul>
+                        </div>
                     </div>
                     <div class="form-group mx-auto" style="text-align: right; margin-top:10px;">
                         <button id="btnGuardarCliente" class="btn btn-primary" type="submit"><i class="fa-solid fa-floppy-disk"></i>  Guardar</button>
@@ -76,7 +87,7 @@ export class Cliente extends HTMLElement {
             if (existClient.nombre == undefined) {
 
                 // si es undefined, significa que no existe el cliente en la base de datos
-                $nombre.value = "";
+                // $nombre.value = "";
                 $nombre.focus();
                 $btnGuardar.disabled = false;
 

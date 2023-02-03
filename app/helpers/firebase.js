@@ -190,6 +190,21 @@ export let guardarCliente = async (data) => {
   }
 };
 
+//busqueda por nombre del cliente
+export let buscarClienteByName = async (nombre) => {
+  const querySnapshot = await getDocs(collection(db, "clientes"));
+  let docs = [];
+
+  nombre = nombre.toLowerCase();
+
+  if 
+
+  querySnapshot.forEach((doc) => {
+    docs.push({ id: doc.id, ...doc.data() });
+  }
+
+};
+
 // guardar en la base datos firestore un producto
 export let guardarProducto = async (data) => {
   let { id, descripcion, precio_compra, precio, cantidad_inventario, proveedor, usuario } = data;
