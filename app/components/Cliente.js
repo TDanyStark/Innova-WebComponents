@@ -1,4 +1,4 @@
-import { clienteFound, guardarCliente } from '../helpers/firebase.js';
+import { clienteFound, guardarCliente, buscarClienteByName } from '../helpers/firebase.js';
 let form;
 export class Cliente extends HTMLElement {
     constructor() {
@@ -130,10 +130,12 @@ export class Cliente extends HTMLElement {
         }
     }
 
-    keyupNombreHandler(e) {
+    async keyupNombreHandler(e) {
         const $nombre = document.querySelector("#validationCustom01");
         if ($nombre.value.length > 3) {
             $nombre.classList.add("is-valid");
+            let res = await buscarClienteByName(e.target.value)
+            console.log(res)
         }else{
             $nombre.classList.remove("is-valid");
         }

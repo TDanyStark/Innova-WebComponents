@@ -194,14 +194,14 @@ export let guardarCliente = async (data) => {
 export let buscarClienteByName = async (nombre) => {
   const querySnapshot = await getDocs(collection(db, "clientes"));
   let docs = [];
-
   nombre = nombre.toLowerCase();
-
-  if 
-
   querySnapshot.forEach((doc) => {
-    docs.push({ id: doc.id, ...doc.data() });
-  }
+    let dbNombre = doc.data().nombre.toLowerCase();
+    if (dbNombre.includes(nombre)) {
+      docs.push({ id: doc.id, ...doc.data() });
+    }  
+  });
+  return docs;
 
 };
 
